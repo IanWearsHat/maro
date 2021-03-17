@@ -27,16 +27,6 @@ public class Game extends JFrame{
         //Makes the frame visable to the user.
         setVisible(true);
 
-        addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                int key = e.getKeyCode();
-                switch(key) {
-                    case KeyEvent.VK_Z:
-                        x++;
-                }
-            }
-        });
-
         //Creates our object for buffer strategy. We now have the ablity to add 3 buffers to buffer stretegy.
         canvas.createBufferStrategy(3);
         BufferStrategy bufferStrategy = canvas.getBufferStrategy();
