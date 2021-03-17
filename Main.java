@@ -5,11 +5,14 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("maromaromaromaro");
         // new Game();
-        System.out.println(args[0]);
-        String bruh = args[0];
-        if (args[0] == bruh) {
+        int id = Integer.parseInt(args[0]);
+        if (id == 1) {
             SocketTest test = new SocketTest();
             test.doSomething();
+        }
+        else if (id == 2) {
+            SocketReceive test = new SocketReceive();
+            test.serverTry();
         }
         
     }

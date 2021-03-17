@@ -20,7 +20,6 @@ public class SocketTest {
             BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
             
             out.println("bruh");
-
             System.out.println("echo: " + in.readLine());
 
 
