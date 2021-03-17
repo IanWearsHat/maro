@@ -1,4 +1,6 @@
+
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class SocketTest {
@@ -10,19 +12,21 @@ public class SocketTest {
     public void doSomething() {
 
         try {
-            String hostName = "ianpc";
-            Socket echoSocket = new Socket(hostName, 69);
+            InetAddress address;
+            address = InetAddress.getLocalHost();
+            Socket echoSocket = new Socket(address, 69);
+            System.out.println("Connected");
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-            BufferedReader stdIn = new BufferedReader( new InputStreamReader(System.in));
             
-            String userInput;
-            while ((userInput = stdIn.readLine()) != null) {
-                out.println(userInput);
-                System.out.println("echo: " + in.readLine());
-            }
+            out.println("bruh");
+
+            System.out.println("echo: " + in.readLine());
+
+
         }
         catch(Exception e) {
+            System.out.println("break");
             System.exit(1);
         }
     }

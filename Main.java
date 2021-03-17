@@ -1,19 +1,16 @@
+
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("maromaromaromaro");
         // new Game();
-        if (args.length == 1) {
-            if (args[0] == "server") {
-                SocketReceive serv = new SocketReceive();
-            }
-            else if (args[0] == "client") {
-                SocketTest clien = new SocketTest();
-            }
-            else { System.exit(1); }
+        System.out.println(args[0]);
+        String bruh = args[0];
+        if (args[0] == bruh) {
+            SocketTest test = new SocketTest();
+            test.doSomething();
         }
-        else {
-            System.out.println("Must use 2 arguments.");
-            System.exit(1);
-        }
+        
     }
 }
