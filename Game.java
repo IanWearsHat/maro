@@ -6,10 +6,10 @@ import java.awt.image.BufferStrategy;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class Game extends JFrame{
-
+public class Game extends JFrame implements Runnable{
+ 
     private Canvas canvas = new Canvas();
-
+    
     public Game(){
 
         //Make our program shutdown when we exit out
@@ -29,20 +29,17 @@ public class Game extends JFrame{
 
         //Creates our object for buffer strategy. We now have the ablity to add 3 buffers to buffer stretegy.
         canvas.createBufferStrategy(3);
-        BufferStrategy bufferStrategy = canvas.getBufferStrategy();
 
-        int i = 0;
-        int x= 50;
+    }
 
-        while(true){
-            i++;
-            if (i ==10){
-                i = 0;
-                x++;
-            }
-            if (x == 500){
-                x = 0;
-            }
+    public void update(){
+        x+=1;
+    }
+
+    private int x = 0;
+
+    public void render(){
+            BufferStrategy bufferStrategy = canvas.getBufferStrategy();
             //Get's current buffer 
             bufferStrategy = canvas.getBufferStrategy();
             //Get's graphics from buffer
@@ -60,6 +57,31 @@ public class Game extends JFrame{
 
             graphics.dispose();
             bufferStrategy.show();
+    }
+
+    @Override
+    public void run() {
+        BufferStrategy bufferStrategy = canvas.getBufferStrategy();
+        int i = 0;
+
+        long lastTime = System.nanoTime();
+        double nanoSecondsCoversion = 1000000000/60;//60 frames per second.
+        double changeInSeconds = 0;
+        while(true){
+            long now = System.nanoTime();
+
+            //Frames per second
+            changeInSeconds += (now-lastTime) / nanoSecondsCoversion;
+
+
+            while(changeInSeconds >= 1){
+                System.out.println(changeInSeconds);
+                update();
+                changeInSeconds = 0;
+            }
+
+            render();
+            lastTime = now;
         }
 
     }
