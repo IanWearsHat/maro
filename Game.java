@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 public class Game extends JFrame implements Runnable{
  
     private Canvas canvas = new Canvas();
+    private RenderHandler renderer;
+
     
     public Game(){
 
@@ -27,16 +29,16 @@ public class Game extends JFrame implements Runnable{
         //Makes the frame visable to the user.
         setVisible(true);
 
+        renderer = new RenderHandler(getWidth(), getHeight());
+
         //Creates our object for buffer strategy. We now have the ablity to add 3 buffers to buffer stretegy.
         canvas.createBufferStrategy(3);
 
     }
 
     public void update(){
-        x+=1;
+        
     }
-
-    private int x = 0;
 
     public void render(){
             BufferStrategy bufferStrategy = canvas.getBufferStrategy();
@@ -44,16 +46,9 @@ public class Game extends JFrame implements Runnable{
             bufferStrategy = canvas.getBufferStrategy();
             //Get's graphics from buffer
             Graphics graphics = bufferStrategy.getDrawGraphics();
-
             super.paint(graphics);
 
-            //setbackground color
-            graphics.setColor(Color.CYAN);
-            graphics.fillRect(0, 0, getWidth(), getHeight());
-
-            //Painting the oval
-            graphics.setColor(Color.red);
-            graphics.fillOval(x, 400, 100, 50);
+            renderer.render(graphics);
 
             graphics.dispose();
             bufferStrategy.show();
