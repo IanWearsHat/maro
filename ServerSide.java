@@ -3,17 +3,22 @@ import java.io.BufferedReader;
 import java.io.*;
 import java.net.*;
 
-public class SocketReceive {
-    public SocketReceive() {
+public class ServerSide {
+
+    public ServerSide() {
         
      }
 
-    public void serverTry() {
+    public void startServer() {
         try {
-            int portNumber = 69;
+            //TODO: setup port forwarding so networks can connect instead of only local networks
+            //also, thread for networking has to be made so it starts in Game class
+
+            int portNumber = 9696;
             ServerSocket serverSocket = new ServerSocket(portNumber);
             Socket clientSocket = serverSocket.accept();
-            System.out.println("Established connection");
+            System.out.println("Established connection to client");
+
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 

@@ -5,14 +5,19 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("maromaromaromaro");
         // new Game();
-        int id = Integer.parseInt(args[0]);
-        if (id == 1) {
-            SocketTest test = new SocketTest();
-            test.doSomething();
-        }
-        else if (id == 2) {
-            SocketReceive test = new SocketReceive();
-            test.serverTry();
+        // ClientSide test1 = new ClientSide();
+        // test1.startClient();
+
+        if (args.length == 1) {
+            int id = Integer.parseInt(args[0]);
+            if (id == 1) {
+                ClientSide test = new ClientSide();
+                test.startClient();
+            }
+            else if (id == 2) {
+                ServerSide test = new ServerSide();
+                test.startServer();
+            }
         }
         
     }
