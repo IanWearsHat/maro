@@ -1,6 +1,8 @@
 package network;
 
 import java.io.*;
+import java.net.*;
+
 import java.net.ConnectException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -18,11 +20,12 @@ public class ClientSide {
         try {
             //TODO: setup port forwarding so networks can connect instead of only local networks
             //also, thread for networking has to be made so it starts in Game class
-            
-            InetAddress address;
-            address = InetAddress.getLocalHost();
+            //45.51.187.16
 
-            Socket echoSocket = new Socket(address, 9696);
+            InetAddress localAddress = InetAddress.getLocalHost();
+            String remoteAddress = InetAddress.getLocalHost().getHostAddress();
+
+            Socket echoSocket = new Socket(remoteAddress, 9696, localAddress, 0);
             System.out.println("Connected to server.");
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
@@ -36,7 +39,7 @@ public class ClientSide {
 
         }
         catch (ConnectException e) {
-            System.out.println("No server found.");
+            System.out.println("No server found. Exiting...");
             System.exit(1);
         }
         catch (IOException e) {
