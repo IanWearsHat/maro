@@ -24,12 +24,24 @@ public class RenderHandler {
         //Creates an array of pixels
         pixels = ((DataBufferInt) view.getRaster().getDataBuffer()).getData();
 
+
+        for (int heightindex = 0; heightindex < height; heightindex++){
+            
+            int randomPixel = (int) (Math.random() * 0xFFFFFF);
+
+            for(int widthIndex = 0; widthIndex < width; widthIndex++){
+                pixels[heightindex * width + widthIndex] = randomPixel;
+            }
+        }
+
     }
 
     public void render(Graphics graphics){
-        for (int index = 0; index < pixels.length; index++){
-            pixels[index] = (int) (Math.random() * 0xFFFF);
-        }
+
+        //Cool randomize color image.
+        // for (int index = 0; index < pixels.length; index++){
+        //     pixels[index] = (int) (Math.random() * 0xFFFFFF);
+        // }
 
         graphics.drawImage(view, 0, 0, view.getWidth(), view.getHeight(), null);
     }

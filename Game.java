@@ -29,10 +29,10 @@ public class Game extends JFrame implements Runnable{
         //Makes the frame visable to the user.
         setVisible(true);
 
-        renderer = new RenderHandler(getWidth(), getHeight());
-
         //Creates our object for buffer strategy. We now have the ablity to add 3 buffers to buffer stretegy.
         canvas.createBufferStrategy(3);
+
+        renderer = new RenderHandler(getWidth(), getHeight());
 
     }
 
