@@ -70,7 +70,6 @@ public class Game extends JFrame implements Runnable{
 
 
             while(changeInSeconds >= 1){
-                System.out.println(changeInSeconds);
                 update();
                 changeInSeconds = 0;
             }
