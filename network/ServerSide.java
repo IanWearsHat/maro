@@ -17,6 +17,7 @@ public class ServerSide {
 
             int portNumber = 9696;
             ServerSocket serverSocket = new ServerSocket(portNumber);
+            System.out.println("Attempting to receive connection...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("Established connection to client");
 

@@ -23,6 +23,7 @@ public class ClientSide {
 
             Socket echoSocket = new Socket();
             echoSocket.bind(new InetSocketAddress(localAddress, 5124));
+            System.out.println("Attempting Connection...");
             echoSocket.connect(new InetSocketAddress("45.51.187.16", 9696));
 
             System.out.println("Connected to server.");
@@ -38,6 +39,7 @@ public class ClientSide {
 
         }
         catch (ConnectException e) {
+            e.printStackTrace();
             System.out.println("No server found. Exiting...");
             System.exit(1);
         }
