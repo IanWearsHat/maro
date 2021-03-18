@@ -1,5 +1,7 @@
+package game;
 
 import java.io.IOException;
+import network.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {

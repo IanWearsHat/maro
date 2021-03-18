@@ -1,3 +1,6 @@
+package game;
+
+import network.*;
 
 import javax.swing.JFrame;
 import java.awt.Color;
