@@ -10,6 +10,9 @@ public class Main {
         ClientSide test1 = new ClientSide();
         test1.startClient();
 
+        // ServerSide test2 = new ServerSide();
+        // test2.startServer();
+
         // if (args.length == 1) {
         //     int id = Integer.parseInt(args[0]);
         //     if (id == 1) {

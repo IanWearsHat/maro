@@ -3,11 +3,6 @@ package network;
 import java.io.*;
 import java.net.*;
 
-import java.net.ConnectException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.Socket;
-
 public class ClientSide {
     
 
@@ -21,11 +16,15 @@ public class ClientSide {
             //TODO: setup port forwarding so networks can connect instead of only local networks
             //also, thread for networking has to be made so it starts in Game class
             //45.51.187.16
+            //remoteAddress, 9696, localAddress, 0
 
             InetAddress localAddress = InetAddress.getLocalHost();
             String remoteAddress = InetAddress.getLocalHost().getHostAddress();
 
-            Socket echoSocket = new Socket(remoteAddress, 9696, localAddress, 0);
+            Socket echoSocket = new Socket();
+            echoSocket.bind(new InetSocketAddress(localAddress, 5124));
+            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696), 15*1000);
+
             System.out.println("Connected to server.");
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
