@@ -19,11 +19,11 @@ public class ClientSide {
             //remoteAddress, 9696, localAddress, 0
 
             InetAddress localAddress = InetAddress.getLocalHost();
-            String remoteAddress = InetAddress.getLocalHost().getHostAddress();
+            // String remoteAddress = InetAddress.getLocalHost().getHostAddress();
 
             Socket echoSocket = new Socket();
             echoSocket.bind(new InetSocketAddress(localAddress, 5124));
-            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696), 100000000);
+            echoSocket.connect(new InetSocketAddress("45.51.187.16", 9696));
 
             System.out.println("Connected to server.");
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
