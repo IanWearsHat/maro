@@ -23,7 +23,7 @@ public class ClientSide {
 
             Socket echoSocket = new Socket();
             echoSocket.bind(new InetSocketAddress(localAddress, 5124));
-            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696), 15*1000);
+            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696), 100000000);
 
             System.out.println("Connected to server.");
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
