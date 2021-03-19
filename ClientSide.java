@@ -1,10 +1,10 @@
-package network;
+
 
 import java.io.*;
 import java.net.*;
 
 public class ClientSide {
-    
+    volatile boolean kill = false;
     public ClientSide() {
         
     }
@@ -27,7 +27,7 @@ public class ClientSide {
             /* Attempts to connect to the remote address at the port specified.
             Port is the same as the port specified in port forwarding for router. */
             System.out.println("Attempting Connection...");
-            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696));
+            echoSocket.connect(new InetSocketAddress("192.168.1.6", 9696));
             System.out.println("Connected to server!");
 
             /* Creates input and output streams for the socket and creates an input stream from the keyboard so the user can provide input */
@@ -38,11 +38,24 @@ public class ClientSide {
             /* Waits for the user to input something in the terminal. 
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). 
             All the server does is return that input to the client through the input stream. (in.readLine()) */
+            new Thread(() -> {
+                while (!kill) {
+                    try {
+                        System.out.println(in.readLine());
+                    }
+                    catch (Exception e) {
+
+                    }
+                    
+                }
+            }).start();
+
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
-                System.out.println("echo: " + in.readLine());
+                // System.out.println(in.readLine());
             }
+            kill = true;
 
         }
         catch (ConnectException e) {
