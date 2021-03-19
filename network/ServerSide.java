@@ -26,7 +26,7 @@ public class ServerSide implements Runnable {
 
             /* Creates a ServerSocket bound to the port specified.
             Port is the same as the port specified in port forwarding for router. */
-            int i = 0;
+            int playerNumber = 0;
             
             ServerSocket serverSocket = new ServerSocket(PORT);
 
@@ -38,13 +38,13 @@ public class ServerSide implements Runnable {
                 System.out.println("Established connection to client!");
                 
                 clientList.add(clientSocket);
-                handler = new ClientHandler(i);
+                handler = new ClientHandler(playerNumber);
 
                 handlerList.add(handler);
 
                 Thread handlerThread = new Thread(handler);
                 handlerThread.start();
-                i++;
+                playerNumber++;
             }
 
         }
