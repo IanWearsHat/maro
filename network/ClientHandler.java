@@ -22,7 +22,7 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
         }
     }
-
+    
     public void run() {
         try {
             clientSocket = ServerSide.clientList.get(clientID);
