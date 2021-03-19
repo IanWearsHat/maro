@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 
 public class ClientSide implements Runnable {
+
     volatile boolean kill = false;
     public ClientSide() {
         
@@ -29,20 +30,23 @@ public class ClientSide implements Runnable {
             /* Attempts to connect to the remote address at the port specified.
             Port is the same as the port specified in port forwarding for router. */
             System.out.println("Attempting Connection...");
-            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696));
+            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696), 10 * 1000);
             System.out.println("Connected to server!");
 
             /* Creates input and output streams for the socket and creates an input stream from the keyboard so the user can provide input */
             BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
             
-            
+            //this thread has to run so that the client can wait for a message from the server
+            //while also waiting for an input from the user.
             new Thread(() -> {
                 while (!kill) {
                     try {
                         System.out.println(in.readLine());
                     }
-                    catch (Exception e) {}
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     
                 }
             }).start();
@@ -52,9 +56,8 @@ public class ClientSide implements Runnable {
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
-                // System.out.println(in.readLine());
             }
-            
+
             kill = true;
 
         }
