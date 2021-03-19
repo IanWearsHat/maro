@@ -1,4 +1,4 @@
-package game;
+package mainGame;
 
 import java.io.IOException;
 import network.*;
