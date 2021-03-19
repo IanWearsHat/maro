@@ -61,7 +61,7 @@ public class ClientSide implements Runnable {
             kill = true;
 
         }
-        catch (ConnectException e) {
+        catch (ConnectException | SocketTimeoutException e) {
             e.printStackTrace();
             System.out.println("No server found. Exiting...");
             System.exit(1);
