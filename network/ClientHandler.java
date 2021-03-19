@@ -7,19 +7,32 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private int clientID;
+    private String name;
     Socket clientSocket;
     
     public ClientHandler(int id) {
         clientID = id;
     }
 
-    public void printMessage(int ID, String message) {
+    //all this does is print a message to the client that the clienthandler is handling
+    //could be expanded to fit any message from the server, but for now it's just for what
+    //another player is saying.
+    private void printMessageToClient(int ID, String message) {
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println("Client " + ID + " says: " + message);
+            out.println(name + " says: " + message);
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    //says a message to every client that's not the broadcaster
+    private void broadcast(String message) {
+        for (int i = 0; i < ServerSide.handlerList.size(); i++) {
+            if (i != clientID) {
+                ServerSide.handlerList.get(i).printMessageToClient(clientID, message);
+            }
         }
     }
     
@@ -28,21 +41,25 @@ public class ClientHandler implements Runnable {
             clientSocket = ServerSide.clientList.get(clientID);
 
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println("Please enter your name: ");
+            name = in.readLine();
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                for (int i = 0; i < ServerSide.handlerList.size(); i++) {
-                    if (i != clientID) {
-                        ServerSide.handlerList.get(i).printMessage(getClientID(), inputLine);
-                    }
-                }
+                broadcast(inputLine);
                 System.out.println(inputLine);
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        //tell every client that a certain client has left. This only runs when the try block finishes, meaning the client leaves. 
+        broadcast(name + " has left the game.");
+        System.out.println("Handler " + clientID + " closing.");
     }
+
     public int getClientID() {
         return clientID;
     }

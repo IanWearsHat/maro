@@ -36,9 +36,7 @@ public class ClientSide implements Runnable {
             BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
             
-            /* Waits for the user to input something in the terminal. 
-            When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). 
-            All the server does is return that input to the client through the input stream. (in.readLine()) */
+            
             new Thread(() -> {
                 while (!kill) {
                     try {
@@ -49,11 +47,14 @@ public class ClientSide implements Runnable {
                 }
             }).start();
 
+            /* Waits for the user to input something in the terminal. 
+            When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
                 // System.out.println(in.readLine());
             }
+            
             kill = true;
 
         }

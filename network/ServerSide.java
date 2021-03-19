@@ -26,20 +26,19 @@ public class ServerSide implements Runnable {
 
             /* Creates a ServerSocket bound to the port specified.
             Port is the same as the port specified in port forwarding for router. */
-            int playerNumber = 0;
-            
             ServerSocket serverSocket = new ServerSocket(PORT);
 
             /* Server waits for a client to attempt connection. When the client successfully connects,
             the socket from the client is stored and the code proceeds. */
+            int playerNumber = 0;
             while (true) {
-                System.out.println("Attempting to receive connection...");
+                System.out.println("Waiting for connection...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Established connection to client!");
                 
                 clientList.add(clientSocket);
+                
                 handler = new ClientHandler(playerNumber);
-
                 handlerList.add(handler);
 
                 Thread handlerThread = new Thread(handler);
