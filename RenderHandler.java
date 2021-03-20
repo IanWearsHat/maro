@@ -27,9 +27,11 @@ public class RenderHandler {
 
         for (int heightindex = 0; heightindex < height; heightindex++){
             
-            int randomPixel = (int) (Math.random() * (0xFFFFFF));
+            int randomPixel = (int) (Math.random() * 0xFFFFFF);
 
             for(int widthIndex = 0; widthIndex < width; widthIndex++){
+
+                //draws multiple random color lines drawn.
                 pixels[heightindex * width + widthIndex] = randomPixel;
             }
         }
