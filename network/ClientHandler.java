@@ -18,10 +18,10 @@ public class ClientHandler implements Runnable {
     //all this does is print a message to the client that the clienthandler is handling.
     //Could be expanded to fit any message from the server, but for now it's just for what
     //another player is saying.
-    private void printMessageToClient(String name, String message) {
+    private void printMessageToClient(String inputName, String message) {
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(name + " says: " + message);
+            out.println(inputName + " says: " + message);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -32,7 +32,7 @@ public class ClientHandler implements Runnable {
     private void broadcast(String message) {
         for (int i = 0; i < ServerSide.handlerList.size(); i++) {
             if (i != clientID) {
-                ServerSide.handlerList.get(i).printMessageToClient(ServerSide.handlerList.get(i).getName(), message);
+                ServerSide.handlerList.get(i).printMessageToClient(name, message);
             }
         }
     }
