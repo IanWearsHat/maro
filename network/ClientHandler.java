@@ -32,7 +32,7 @@ public class ClientHandler implements Runnable {
     private void broadcast(String message) {
         for (int i = 0; i < ServerSide.handlerList.size(); i++) {
             if (i != clientID) {
-                ServerSide.handlerList.get(i).printMessageToClient(clientID, message);
+                ServerSide.handlerList.get(i).printMessageToClient(ServerSide.handlerList.get(i).getClientID(), message);
             }
         }
     }

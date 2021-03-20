@@ -1,9 +1,13 @@
 package network;
 
-// just an information class to be serialized and sent to clients from client handlers
-public class Packet {
+import java.io.Serializable;
 
-    public String message;
+// just an information class to be serialized and sent to clients from client handlers
+public class Packet implements Serializable {
+
+    private static final long serialVersionUID = 4L;
+
+    public String message; //for a message sent by the server (maybe from another client)
 
     public int clientID; //what client sent this packet
     public int x; //x position
