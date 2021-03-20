@@ -51,7 +51,7 @@ public class ServerSide implements Runnable {
             e.printStackTrace();
             System.exit(1);
         }
-        
+
     }
 
     @Override
