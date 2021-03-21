@@ -7,15 +7,12 @@ public class ClientSide implements Runnable {
 
     volatile boolean kill = false;
 
-    
+    public ClientSide() {}
 
-    public ClientSide() {
-        
-    }
-
+    // will be expanded eventually to fit Jframe so that messages from the server won't mix up with your input
     private String userPrompt(BufferedReader in) {
         try {
-            // System.out.print("You: ");
+            System.out.print("You: ");
             String input = in.readLine();
             return input;
         }
@@ -61,7 +58,7 @@ public class ClientSide implements Runnable {
                             System.out.println(receivedPacket.message);
                         }
                         else if (receivedPacket.type == 1) {
-
+                            // eventually, this condition would call the game class to update the position and states of the client that sent this
                         }
                     }
                     catch (Exception e) {

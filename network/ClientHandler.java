@@ -1,18 +1,15 @@
 package network;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
 
     private int clientID;
     private String name;
-    Socket clientSocket;
-    ObjectOutputStream outStream;
+    private Socket clientSocket;
+    private ObjectOutputStream outStream;
     
     public ClientHandler(int id) {
         clientID = id;
@@ -63,8 +60,8 @@ public class ClientHandler implements Runnable {
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
             outStream.writeObject(new Packet(0, "Please enter your name: ")); // first thing the handler does is ask for a name, which will identify who has said what later on
-            Packet received = (Packet) in.readObject();
-            name = received.message;
+            Packet receivedPacket = (Packet) in.readObject();
+            name = receivedPacket.message;
             System.out.println("Name: " + name);
             
             outStream.reset(); //so the client doesn't throw a StreamCorruptedException
@@ -73,8 +70,8 @@ public class ClientHandler implements Runnable {
             String inputLine;
             boolean running = true;
             while (running) {
-                received = (Packet) in.readObject();
-                inputLine = received.message;
+                receivedPacket = (Packet) in.readObject();
+                inputLine = receivedPacket.message;
 
                 if (inputLine != null ) {
                     broadcast(false, inputLine);

@@ -1,7 +1,5 @@
 package network;
 
-import java.io.BufferedReader;
-import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -32,7 +30,6 @@ public class ServerSide implements Runnable {
             the socket from the client is stored and the code proceeds. */
             
             while (true) {
-                
                 System.out.println("Waiting for connection...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Established connection to client!");
