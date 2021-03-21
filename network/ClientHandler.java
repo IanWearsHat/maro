@@ -12,6 +12,7 @@ public class ClientHandler implements Runnable {
     private int clientID;
     private String name;
     Socket clientSocket;
+    ObjectOutputStream outStream;
     
     public ClientHandler(int id) {
         clientID = id;
@@ -26,9 +27,8 @@ public class ClientHandler implements Runnable {
      * @param inputName The name of the client that sent the message if serverMessage is false. Should usually just be name (ex. printMessageToClient(out, false, name, "play val"))
      * @param message The message that is sent, whether from server or otherwise
      */
-    private void printMessageToClient(boolean serverMessage, String inputName, String message) {
+    private void printMessageToClient(ObjectOutputStream outStream, boolean serverMessage, String inputName, String message) {
         try {
-            ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
             if (serverMessage) {
                 outStream.writeObject(new Packet(0, message));
             }
@@ -44,14 +44,13 @@ public class ClientHandler implements Runnable {
 
     /**
      * Broadcasts a message to every client that isn't the client broadcasting.
-     * @param outStream The client's output stream, so we keep using only one output stream
      * @param serverMessage If true, sends a message from the server. if false, the client is saying something that's shared with everyone
      * @param message The message being sent
      */
     private void broadcast(boolean serverMessage, String message) {
         for (int i = 0; i < ServerSide.handlerList.size(); i++) {
             if (i != clientID) {
-                ServerSide.handlerList.get(i).printMessageToClient(serverMessage, name, message);
+                ServerSide.handlerList.get(i).printMessageToClient(ServerSide.handlerList.get(i).getOutStream(), serverMessage, name, message);
             }
         }
     }
@@ -60,7 +59,7 @@ public class ClientHandler implements Runnable {
         try {
             clientSocket = ServerSide.clientList.get(clientID);
 
-            ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
+            outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
             outStream.writeObject(new Packet(0, "Please enter your name: ")); // first thing the handler does is ask for a name, which will identify who has said what later on
@@ -98,7 +97,13 @@ public class ClientHandler implements Runnable {
     public String getName() {
         return name;
     }
+
     public int getClientID() {
         return clientID;
     }
+
+    public ObjectOutputStream getOutStream() {
+        return outStream;
+    }
+
 }
