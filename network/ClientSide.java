@@ -6,13 +6,16 @@ import java.net.*;
 public class ClientSide implements Runnable {
 
     volatile boolean kill = false;
+
+    
+
     public ClientSide() {
         
     }
 
     private String userPrompt(BufferedReader in) {
         try {
-            System.out.print("You: ");
+            // System.out.print("You: ");
             String input = in.readLine();
             return input;
         }
@@ -54,13 +57,17 @@ public class ClientSide implements Runnable {
                 while (!kill) {
                     try {
                         Packet receivedPacket = (Packet) in.readObject();
-                        System.out.println(receivedPacket.message);
+                        if (receivedPacket.type == 0 ) {
+                            System.out.println(receivedPacket.message);
+                        }
+                        else if (receivedPacket.type == 1) {
 
+                        }
                     }
                     catch (Exception e) {
                         e.printStackTrace();
+                        kill = true;
                     }
-                    
                 }
             }).start();
 
@@ -73,7 +80,7 @@ public class ClientSide implements Runnable {
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
             while ((userInput = userPrompt(stdIn)) != null) {
                 out.writeObject(new Packet(0, userInput));
-                out.flush();
+                out.reset();
             }
 
             kill = true;

@@ -30,20 +30,21 @@ public class ServerSide implements Runnable {
 
             /* Server waits for a client to attempt connection. When the client successfully connects,
             the socket from the client is stored and the code proceeds. */
-            int playerNumber = 0;
+            
             while (true) {
+                
                 System.out.println("Waiting for connection...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Established connection to client!");
                 
                 clientList.add(clientSocket);
-                
+
+                int playerNumber = clientList.size() - 1;
                 handler = new ClientHandler(playerNumber);
                 handlerList.add(handler);
 
                 Thread handlerThread = new Thread(handler);
                 handlerThread.start();
-                playerNumber++;
             }
 
         }
