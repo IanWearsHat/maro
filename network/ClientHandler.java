@@ -17,12 +17,18 @@ public class ClientHandler implements Runnable {
         clientID = id;
     }
 
-    //all this does is print a message to the client that the clienthandler is handling.
-    //Could be expanded to fit any message from the server, but for now it's just for what
-    //another player is saying.
-    private void printMessageToClient(ObjectOutputStream outStream, boolean serverMessage, String inputName, String message) {
+    /**
+     * Prints a message to the client that the client handler is handling, whether that be 
+     * from the server or from another client. 
+     * 
+     * @param outStream The client's output stream, so we keep using only one output stream
+     * @param serverMessage True prints a message as it is, false is for when another client is chatting 
+     * @param inputName The name of the client that sent the message if serverMessage is false. Should usually just be name (ex. printMessageToClient(out, false, name, "play val"))
+     * @param message The message that is sent, whether from server or otherwise
+     */
+    private void printMessageToClient(boolean serverMessage, String inputName, String message) {
         try {
-            // ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
+            ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
             if (serverMessage) {
                 outStream.writeObject(new Packet(0, message));
             }
@@ -38,13 +44,14 @@ public class ClientHandler implements Runnable {
 
     /**
      * Broadcasts a message to every client that isn't the client broadcasting.
+     * @param outStream The client's output stream, so we keep using only one output stream
      * @param serverMessage If true, sends a message from the server. if false, the client is saying something that's shared with everyone
      * @param message The message being sent
      */
-    private void broadcast(ObjectOutputStream outStream, boolean serverMessage, String message) {
+    private void broadcast(boolean serverMessage, String message) {
         for (int i = 0; i < ServerSide.handlerList.size(); i++) {
-            if (i == clientID) {
-                ServerSide.handlerList.get(i).printMessageToClient(outStream, serverMessage, name, message);
+            if (i != clientID) {
+                ServerSide.handlerList.get(i).printMessageToClient(serverMessage, name, message);
             }
         }
     }
@@ -61,7 +68,7 @@ public class ClientHandler implements Runnable {
             name = received.message;
             System.out.println("Name: " + name);
             
-            outStream.reset();
+            outStream.reset(); //so the client doesn't throw a StreamCorruptedException
     
             
             String inputLine;
@@ -71,18 +78,13 @@ public class ClientHandler implements Runnable {
                 inputLine = received.message;
 
                 if (inputLine != null ) {
-                    broadcast(outStream, false, inputLine);
+                    broadcast(false, inputLine);
                     System.out.println(name + " says: " + inputLine);
                 }
                 else {
                     running = false;
                 }
             }
-
-            // while ((inputLine = (Packet) in.readObject()) != null) {
-            //     broadcast(false, inputLine); //broadcasts whatever has been inputted to every other client that isn't the broadcaster
-            //     System.out.println(name + " says: " + inputLine);
-            // }
         }
         catch (Exception e) {
             e.printStackTrace();
