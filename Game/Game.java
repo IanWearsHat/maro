@@ -5,40 +5,61 @@ import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.imageio.ImageIO;
 
-public class Game extends JFrame implements Runnable{
- 
+public class Game extends JFrame implements Runnable {
+
     private Canvas canvas = new Canvas();
     private RenderHandler renderer;
+    private BufferedImage testImage;
 
-    
-    public Game(){
+    public Game() {
 
-        //Make our program shutdown when we exit out
+        // Make our program shutdown when we exit out
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //Set's the position and size of the frame.
-        setBounds(0,0, 1000,800);
-        
-        //Puts our frame in the center of the screen.
+        // Set's the position and size of the frame.
+        setBounds(0, 0, 1500, 750);
+
+        // Puts our frame in the center of the screen.
         setLocationRelativeTo(null);
 
-        //Add our graphics componet
+        // Add our graphics componet
         add(canvas);
 
-        //Makes the frame visable to the user.
+        // Makes the frame visable to the user.
         setVisible(true);
 
-        //Creates our object for buffer strategy. We now have the ablity to add 3 buffers to buffer stretegy.
+        // Creates our object for buffer strategy. We now have the ablity to add 3
+        // buffers to buffer stretegy.
         canvas.createBufferStrategy(3);
 
         renderer = new RenderHandler(getWidth(), getHeight());
 
+        testImage = loadImage("Jason's Secret Stuff" +"\\"+ "BestGirl3.png");
+
+
     }
 
-    public void update(){
+    public void update() {
+    }
+
+    private BufferedImage loadImage(String path) {
+        try {
+            BufferedImage loadedImage = ImageIO.read(Game.class.getResource(path));
+            BufferedImage formattedImage = new BufferedImage(loadedImage.getWidth(), loadedImage.getHeight(),BufferedImage.TYPE_INT_RGB);
+            formattedImage.getGraphics().drawImage(loadedImage,0,0,null);
+            return formattedImage;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            System.out.println("hi");
+            e.printStackTrace();
+            return null;
+        }
         
     }
 
@@ -50,6 +71,7 @@ public class Game extends JFrame implements Runnable{
             Graphics graphics = bufferStrategy.getDrawGraphics();
             super.paint(graphics);
 
+            renderer.renderImage(testImage, 0, 0);
             renderer.render(graphics);
 
             graphics.dispose();

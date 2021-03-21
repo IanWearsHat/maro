@@ -27,16 +27,16 @@ public class RenderHandler {
         pixels = ((DataBufferInt) view.getRaster().getDataBuffer()).getData();
         System.out.println(width);
 
-        for (int heightindex = 0; heightindex < height; heightindex++){
+        // for (int heightindex = 0; heightindex < height; heightindex++){
             
-            int randomPixel = (int) (Math.random() * 0xFFFFFF);
+        //     int randomPixel = (int) (Math.random() * 0xFFFFFF);
 
-            for(int widthIndex = 0; widthIndex < width; widthIndex++){
+        //     for(int widthIndex = 0; widthIndex < width; widthIndex++){
 
-                //draws multiple random color lines drawn.
-                pixels[heightindex * width + widthIndex] = randomPixel;
-            }
-        }
+        //         //draws multiple random color lines drawn.
+        //         pixels[heightindex * width + widthIndex] = randomPixel;
+        //     }
+        // }
 
     }
 
@@ -50,4 +50,14 @@ public class RenderHandler {
         graphics.drawImage(view, 0, 0, view.getWidth(), view.getHeight(), null);
     }
     
+    public void renderImage(BufferedImage image, int xPosition, int yPosition){
+        int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        for(int y = 0; y < image.getHeight(); y++){
+            for(int x = 0; x < image.getWidth(); x++){
+                pixels[((x+xPosition) + (y+yPosition) * view.getWidth())] = imagePixels[x + y * image.getWidth()]; 
+            }
+        }
+    
+    }
+
 }
