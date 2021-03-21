@@ -1,3 +1,5 @@
+package Game;
+
 import java.awt.Canvas;
 import javax.swing.JFrame;
 import java.awt.Color;
