@@ -61,9 +61,13 @@ public class ClientSide implements Runnable {
                 }
             }).start();
 
+            /* first thing you need to do is type in your name*/
+            String userInput;
+            userInput = stdIn.readLine();
+            out.println(userInput);
+
             /* Waits for the user to input something in the terminal. 
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
-            String userInput;
             while ((userInput = userPrompt(stdIn)) != null) {
                 out.println(userInput);
             }
