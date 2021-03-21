@@ -22,12 +22,12 @@ public class ClientHandler implements Runnable {
     //another player is saying.
     private void printMessageToClient(boolean serverMessage, String inputName, String message) {
         try {
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream()); 
             if (serverMessage) {
-                out.println(message);
+                out.writeObject(new Packet(0, message));
             }
             else{
-                out.println(inputName + " says: " + message);
+                out.writeObject(new Packet(0, inputName + " says: " + message));
             }
         }
         catch (Exception e) {
@@ -43,7 +43,7 @@ public class ClientHandler implements Runnable {
      */
     private void broadcast(boolean serverMessage, String message) {
         for (int i = 0; i < ServerSide.handlerList.size(); i++) {
-            if (i != clientID) {
+            if (i == clientID) {
                 ServerSide.handlerList.get(i).printMessageToClient(serverMessage, name, message);
             }
         }
@@ -59,12 +59,24 @@ public class ClientHandler implements Runnable {
             out.writeObject(new Packet(0, "Please enter your name: ")); // first thing the handler does is ask for a name, which will identify who has said what later on
             Packet received = (Packet) in.readObject();
             name = received.message;
-            System.out.println(name);
+            System.out.println("Name: " + name);
+    
             
-            clientSocket.close();
+            String inputLine;
+            boolean running = true;
+            while (running) {
+                received = (Packet) in.readObject();
+                inputLine = received.message;
 
+                if (inputLine != null ) {
+                    broadcast(false, inputLine);
+                    System.out.println(name + " says: " + inputLine);
+                }
+                else {
+                    running = false;
+                }
+            }
 
-            // String inputLine;
             // while ((inputLine = (Packet) in.readObject()) != null) {
             //     broadcast(false, inputLine); //broadcasts whatever has been inputted to every other client that isn't the broadcaster
             //     System.out.println(name + " says: " + inputLine);

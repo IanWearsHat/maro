@@ -55,6 +55,7 @@ public class ClientSide implements Runnable {
                     try {
                         Packet receivedPacket = (Packet) in.readObject();
                         System.out.println(receivedPacket.message);
+
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -70,9 +71,10 @@ public class ClientSide implements Runnable {
 
             /* Waits for the user to input something in the terminal. 
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
-            // while ((userInput = userPrompt(stdIn)) != null) {
-            //     out.writeObject(new Packet(0, userInput));
-            // }
+            while ((userInput = userPrompt(stdIn)) != null) {
+                out.writeObject(new Packet(0, userInput));
+                out.flush();
+            }
 
             kill = true;
 
