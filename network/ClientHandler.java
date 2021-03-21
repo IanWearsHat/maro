@@ -18,21 +18,31 @@ public class ClientHandler implements Runnable {
     //all this does is print a message to the client that the clienthandler is handling.
     //Could be expanded to fit any message from the server, but for now it's just for what
     //another player is saying.
-    private void printMessageToClient(String inputName, String message) {
+    private void printMessageToClient(boolean serverMessage, String inputName, String message) {
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(inputName + " says: " + message);
+            if (serverMessage) {
+                out.println(message);
+            }
+            else{
+                out.println(inputName + " says: " + message);
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    //says a message to every client that's not the broadcaster
-    private void broadcast(String message) {
+
+    /**
+     * Broadcasts a message to every client that isn't the client broadcasting.
+     * @param serverMessage If true, sends a message from the server. if false, the client is saying something that's shared with everyone
+     * @param message The message being sent
+     */
+    private void broadcast(boolean serverMessage, String message) {
         for (int i = 0; i < ServerSide.handlerList.size(); i++) {
             if (i != clientID) {
-                ServerSide.handlerList.get(i).printMessageToClient(name, message);
+                ServerSide.handlerList.get(i).printMessageToClient(serverMessage, name, message);
             }
         }
     }
@@ -48,7 +58,7 @@ public class ClientHandler implements Runnable {
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                broadcast(inputLine); //broadcasts whatever has been inputted to every other client that isn't the broadcaster
+                broadcast(false, inputLine); //broadcasts whatever has been inputted to every other client that isn't the broadcaster
                 System.out.println(name + " says: " + inputLine);
             }
         }
@@ -57,7 +67,7 @@ public class ClientHandler implements Runnable {
         }
 
         //tell every client that a certain client has left. This only runs when the try block finishes, meaning the client leaves. 
-        broadcast(name + " has left the game.");
+        broadcast(true, name + " has left the game.");
         System.out.println(name + " has lost connection. Handler " + clientID + " closing."); // server message to indicate that a client has lost connection. 
     }
 
