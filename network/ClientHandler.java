@@ -53,6 +53,7 @@ public class ClientHandler implements Runnable {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true); 
+            
             out.println("Please enter your name: "); // first thing the handler does is ask for a name, which will identify who has said what later on
             name = in.readLine();
 

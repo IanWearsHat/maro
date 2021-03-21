@@ -47,6 +47,9 @@ public class ServerSide implements Runnable {
             }
 
         }
+        catch (SocketException e) {
+            
+        }
         catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
