@@ -2,6 +2,8 @@ package network;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -51,17 +53,22 @@ public class ClientHandler implements Runnable {
         try {
             clientSocket = ServerSide.clientList.get(clientID);
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true); 
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream()); 
+            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
-            out.println("Please enter your name: "); // first thing the handler does is ask for a name, which will identify who has said what later on
-            name = in.readLine();
+            out.writeObject(new Packet(0, "Please enter your name: ")); // first thing the handler does is ask for a name, which will identify who has said what later on
+            Packet received = (Packet) in.readObject();
+            name = received.message;
+            System.out.println(name);
+            
+            clientSocket.close();
 
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                broadcast(false, inputLine); //broadcasts whatever has been inputted to every other client that isn't the broadcaster
-                System.out.println(name + " says: " + inputLine);
-            }
+
+            // String inputLine;
+            // while ((inputLine = (Packet) in.readObject()) != null) {
+            //     broadcast(false, inputLine); //broadcasts whatever has been inputted to every other client that isn't the broadcaster
+            //     System.out.println(name + " says: " + inputLine);
+            // }
         }
         catch (Exception e) {
             e.printStackTrace();

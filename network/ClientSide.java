@@ -29,30 +29,32 @@ public class ClientSide implements Runnable {
             /* Local address is just the address of the client
             remote address is the open ip of the server that the client connects to */
             InetAddress localAddress = InetAddress.getLocalHost();
-            System.out.print("Enter IP: ");
+
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+            System.out.print("Enter IP: ");
             String remoteAddress = stdIn.readLine();
 
             /* Creates a new socket and binds it to the client's address with an open port */
-            Socket echoSocket = new Socket();
-            echoSocket.bind(new InetSocketAddress(localAddress, 0));
+            Socket clientSocket = new Socket();
+            clientSocket.bind(new InetSocketAddress(localAddress, 0));
 
             /* Attempts to connect to the remote address at the port specified.
             Port is the same as the port specified in port forwarding for router. */
             System.out.println("Attempting Connection...");
-            echoSocket.connect(new InetSocketAddress(remoteAddress, 9696), 10 * 1000);
+            clientSocket.connect(new InetSocketAddress(remoteAddress, 9696), 10 * 1000);
             System.out.println("Connected to server!");
 
             /* Creates input and output streams for the socket and creates an input stream from the keyboard so the user can provide input */
-            BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream()); 
+            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
             //this thread has to run so that the client can wait for a message from the server
             //while also waiting for an input from the user.
             new Thread(() -> {
                 while (!kill) {
                     try {
-                        System.out.println(in.readLine());
+                        Packet receivedPacket = (Packet) in.readObject();
+                        System.out.println(receivedPacket.message);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -64,13 +66,13 @@ public class ClientSide implements Runnable {
             /* first thing you need to do is type in your name*/
             String userInput;
             userInput = stdIn.readLine();
-            out.println(userInput);
+            out.writeObject(new Packet(0, userInput));
 
             /* Waits for the user to input something in the terminal. 
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
-            while ((userInput = userPrompt(stdIn)) != null) {
-                out.println(userInput);
-            }
+            // while ((userInput = userPrompt(stdIn)) != null) {
+            //     out.writeObject(new Packet(0, userInput));
+            // }
 
             kill = true;
 

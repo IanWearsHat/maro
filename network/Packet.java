@@ -15,6 +15,8 @@ public class Packet implements Serializable {
     public boolean attackState; //placeholder boolean just to test if multiple data types are sent correctly
 
     public int type; // for the client to determine if the packet sent was a message packet or a update player packet.
+                    // 0: message packet
+                    // 1: update player packet
 
     public Packet(int type, String message) {
         this.type = type;
