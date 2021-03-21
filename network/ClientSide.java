@@ -10,6 +10,16 @@ public class ClientSide implements Runnable {
         
     }
 
+    private String userPrompt(BufferedReader in) {
+        try {
+            System.out.print("You: ");
+            String input = in.readLine();
+            return input;
+        }
+        catch (Exception e) {}
+        return null;
+    }
+
     public void startClient() {
 
         try {
@@ -54,7 +64,7 @@ public class ClientSide implements Runnable {
             /* Waits for the user to input something in the terminal. 
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
             String userInput;
-            while ((userInput = stdIn.readLine()) != null) {
+            while ((userInput = userPrompt(stdIn)) != null) {
                 out.println(userInput);
             }
 
