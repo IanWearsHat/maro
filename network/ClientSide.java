@@ -54,11 +54,11 @@ public class ClientSide implements Runnable {
                 while (!kill) {
                     try {
                         Packet receivedPacket = (Packet) in.readObject();
-                        if (receivedPacket.type == 0 ) {
-                            System.out.println(receivedPacket.message);
+                        if (receivedPacket instanceof MessagePacket) {
+                            System.out.println(((MessagePacket) receivedPacket).message);
                         }
-                        else if (receivedPacket.type == 1) {
-                            // eventually, this condition would call the game class to update the position and states of the client that sent this
+                        else if (receivedPacket instanceof PlayerPacket) {
+                            System.out.println(((PlayerPacket) receivedPacket).x);
                         }
                     }
                     catch (Exception e) {
@@ -71,12 +71,12 @@ public class ClientSide implements Runnable {
             /* first thing you need to do is type in your name*/
             String userInput;
             userInput = stdIn.readLine();
-            out.writeObject(new Packet(0, userInput));
+            out.writeObject(new MessagePacket(userInput));
 
             /* Waits for the user to input something in the terminal. 
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
             while ((userInput = userPrompt(stdIn)) != null) {
-                out.writeObject(new Packet(0, userInput));
+                out.writeObject(new MessagePacket(userInput));
                 out.reset();
             }
 

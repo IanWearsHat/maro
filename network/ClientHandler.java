@@ -27,10 +27,10 @@ public class ClientHandler implements Runnable {
     private void printMessageToClient(ObjectOutputStream outStream, boolean serverMessage, String inputName, String message) {
         try {
             if (serverMessage) {
-                outStream.writeObject(new Packet(0, message));
+                outStream.writeObject(new MessagePacket(message));
             }
             else{
-                outStream.writeObject(new Packet(0, inputName + " says: " + message));
+                outStream.writeObject(new MessagePacket(inputName + " says: " + message));
             }
         }
         catch (Exception e) {
@@ -59,9 +59,9 @@ public class ClientHandler implements Runnable {
             outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
-            outStream.writeObject(new Packet(0, "Please enter your name: ")); // first thing the handler does is ask for a name, which will identify who has said what later on
+            outStream.writeObject(new MessagePacket("Please enter your name: ")); // first thing the handler does is ask for a name, which will identify who has said what later on
             Packet receivedPacket = (Packet) in.readObject();
-            name = receivedPacket.message;
+            name = ((MessagePacket) receivedPacket).message;
             System.out.println("Name: " + name);
             
             outStream.reset(); //so the client doesn't throw a StreamCorruptedException
@@ -71,7 +71,7 @@ public class ClientHandler implements Runnable {
             boolean running = true;
             while (running) {
                 receivedPacket = (Packet) in.readObject();
-                inputLine = receivedPacket.message;
+                inputLine = ((MessagePacket) receivedPacket).message;
 
                 if (inputLine != null ) {
                     broadcast(false, inputLine);
