@@ -5,7 +5,7 @@ import java.net.*;
 
 public class ClientSide implements Runnable {
 
-    volatile boolean kill = false;
+    private volatile boolean kill = false;
 
     public ClientSide() {}
 
@@ -30,6 +30,7 @@ public class ClientSide implements Runnable {
             remote address is the open ip of the server that the client connects to */
             InetAddress localAddress = InetAddress.getLocalHost();
 
+            // creates an input stream from the keyboard so the user can provide input
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("Enter IP: ");
             String remoteAddress = stdIn.readLine();
@@ -44,7 +45,7 @@ public class ClientSide implements Runnable {
             clientSocket.connect(new InetSocketAddress(remoteAddress, 9696), 10 * 1000);
             System.out.println("Connected to server!");
 
-            /* Creates input and output streams for the socket and creates an input stream from the keyboard so the user can provide input */
+            /* Creates input and output streams for the socket */
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream()); 
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
@@ -77,28 +78,27 @@ public class ClientSide implements Runnable {
             When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
             while ((userInput = userPrompt(stdIn)) != null) {
                 out.writeObject(new MessagePacket(userInput));
-                out.reset();
+                // out.reset();
             }
-
-            kill = true;
 
         }
         catch (ConnectException | SocketTimeoutException e) {
             e.printStackTrace();
             System.out.println("No server found. Exiting...");
-            System.exit(1);
+            // System.exit(1);
         }
         catch (SocketException e) {
             System.out.println("Invalid IP");
-            System.exit(1);
+            // System.exit(1);
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.exit(1);
+            // System.exit(1);
         }
         catch (Exception e) {
-            
         }
+        
+        kill = true;
     }
 
     @Override

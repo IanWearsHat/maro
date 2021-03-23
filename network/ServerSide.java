@@ -36,7 +36,7 @@ public class ServerSide implements Runnable {
                 
                 clientList.add(clientSocket);
 
-                int playerNumber = clientList.size();
+                int playerNumber = clientList.size() - 1;
                 handler = new ClientHandler(playerNumber);
                 handlerList.add(handler);
 
