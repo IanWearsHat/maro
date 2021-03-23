@@ -8,8 +8,10 @@ public class ClientHandler implements Runnable {
 
     private int clientID;
     private String username;
+    
     private Socket clientSocket;
     private ObjectOutputStream outStream;
+    private ObjectOutputStream inStream;
     
     public ClientHandler(int id) {
         clientID = id;
@@ -57,10 +59,10 @@ public class ClientHandler implements Runnable {
             clientSocket = ServerSide.clientList.get(clientID);
 
             outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
-            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+            inStream = new ObjectInputStream(clientSocket.getInputStream());
             
             outStream.writeObject(new MessagePacket("Please enter your username: ")); // first thing the handler does is ask for a username, which will identify who has said what later on
-            Packet receivedPacket = (Packet) in.readObject();
+            Packet receivedPacket = (Packet) inStream.readObject();
             username = ((MessagePacket) receivedPacket).message;
             System.out.println("Name: " + username);
             
@@ -70,7 +72,7 @@ public class ClientHandler implements Runnable {
             String inputLine;
             boolean running = true;
             while (running) {
-                receivedPacket = (Packet) in.readObject();
+                receivedPacket = (Packet) inStream.readObject();
                 inputLine = ((MessagePacket) receivedPacket).message;
 
                 if (inputLine != null ) {
