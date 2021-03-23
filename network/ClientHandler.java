@@ -7,7 +7,7 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
 
     private int clientID;
-    private String name;
+    private String username;
     private Socket clientSocket;
     private ObjectOutputStream outStream;
     
@@ -21,15 +21,15 @@ public class ClientHandler implements Runnable {
      * 
      * @param outStream The client's output stream, so we keep using only one output stream
      * @param serverMessage True prints a message as it is, false is for when another client is chatting 
-     * @param inputName The name of the client that sent the message if serverMessage is false. Should usually just be name (ex. printMessageToClient(out, false, name, "play val"))
+     * @param inputName The username of the client that sent the message if serverMessage is false. Should usually just be username (ex. printMessageToClient(out, false, username, "play val"))
      * @param message The message that is sent, whether from server or otherwise
      */
-    private void printMessageToClient(ObjectOutputStream outStream, boolean serverMessage, String inputName, String message) {
+    private void printMessageToClient(boolean serverMessage, String inputName, String message) {
         try {
             if (serverMessage) {
                 outStream.writeObject(new MessagePacket(message));
             }
-            else{
+            else {
                 outStream.writeObject(new MessagePacket(inputName + " says: " + message));
             }
         }
@@ -47,7 +47,7 @@ public class ClientHandler implements Runnable {
     private void broadcast(boolean serverMessage, String message) {
         for (int i = 0; i < ServerSide.handlerList.size(); i++) {
             if (i != clientID) {
-                ServerSide.handlerList.get(i).printMessageToClient(ServerSide.handlerList.get(i).getOutStream(), serverMessage, name, message);
+                ServerSide.handlerList.get(i).printMessageToClient(serverMessage, username, message);
             }
         }
     }
@@ -59,10 +59,10 @@ public class ClientHandler implements Runnable {
             outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
-            outStream.writeObject(new MessagePacket("Please enter your name: ")); // first thing the handler does is ask for a name, which will identify who has said what later on
+            outStream.writeObject(new MessagePacket("Please enter your username: ")); // first thing the handler does is ask for a username, which will identify who has said what later on
             Packet receivedPacket = (Packet) in.readObject();
-            name = ((MessagePacket) receivedPacket).message;
-            System.out.println("Name: " + name);
+            username = ((MessagePacket) receivedPacket).message;
+            System.out.println("Name: " + username);
             
             outStream.reset(); //so the client doesn't throw a StreamCorruptedException
     
@@ -75,7 +75,7 @@ public class ClientHandler implements Runnable {
 
                 if (inputLine != null ) {
                     broadcast(false, inputLine);
-                    System.out.println(name + " says: " + inputLine);
+                    System.out.println(username + " says: " + inputLine);
                 }
                 else {
                     running = false;
@@ -87,12 +87,12 @@ public class ClientHandler implements Runnable {
         }
 
         //tell every client that a certain client has left. This only runs when the try block finishes, meaning the client leaves. 
-        // broadcast(outStream, true, name + " has left the game.");
-        System.out.println(name + " has lost connection. Handler " + clientID + " closing."); // server message to indicate that a client has lost connection. 
+        broadcast(true, username + " has left the game.");
+        System.out.println(username + " has lost connection. Handler " + clientID + " closing."); // server message to indicate that a client has lost connection. 
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public int getClientID() {
