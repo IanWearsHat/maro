@@ -11,7 +11,7 @@ public class ClientHandler implements Runnable {
     
     private Socket clientSocket;
     private ObjectOutputStream outStream;
-    private ObjectOutputStream inStream;
+    private ObjectInputStream inStream;
     
     public ClientHandler(int id) {
         clientID = id;
