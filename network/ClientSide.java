@@ -26,10 +26,6 @@ public class ClientSide implements Runnable {
             //TODO: setup port forwarding so networks can connect instead of only local networks
             //also, thread for networking has to be made so it starts in Game class
 
-            /* Local address is just the address of the client
-            remote address is the open ip of the server that the client connects to */
-            InetAddress localAddress = InetAddress.getLocalHost();
-
             // creates an input stream from the keyboard so the user can provide input
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("Enter IP: ");
@@ -37,6 +33,10 @@ public class ClientSide implements Runnable {
 
             /* Creates a new socket and binds it to the client's address with an open port */
             Socket clientSocket = new Socket();
+
+            /* Local address is just the address of the client
+            remote address is the open ip of the server that the client connects to */
+            InetAddress localAddress = InetAddress.getLocalHost();
             clientSocket.bind(new InetSocketAddress(localAddress, 0));
 
             /* Attempts to connect to the remote address at the port specified.
@@ -60,6 +60,8 @@ public class ClientSide implements Runnable {
                         }
                         else if (receivedPacket instanceof PlayerPacket) {
                             System.out.println(((PlayerPacket) receivedPacket).x);
+                            // this is how the client would update other players' positions on the client's screen
+                            // it would receive other clients' positions from the server and render them accordingly on its screen.
                         }
                     }
                     catch (Exception e) {

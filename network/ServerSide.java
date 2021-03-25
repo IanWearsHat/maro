@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class ServerSide implements Runnable {
 
     private final int PORT = 9696;
+
     public static ArrayList<Socket> clientList;
     public static ArrayList<ClientHandler> handlerList;
     public ClientHandler handler;
@@ -26,8 +27,11 @@ public class ServerSide implements Runnable {
             Port is the same as the port specified in port forwarding for router. */
             ServerSocket serverSocket = new ServerSocket(PORT);
 
-            /* Server waits for a client to attempt connection. When the client successfully connects,
-            the socket from the client is stored and the code proceeds. */
+            /* All this class does is wait for a client to attempt connection. When the client successfully connects,
+            a socket is created on the server's end that connects to the client socket. The server
+            socket (called "clientSocke" here for readability) is stored and the code proceeds. */
+
+            //TODO: this loop needs to be exited somehow, meaning it can't just be while(true)
             
             while (true) {
                 System.out.println("Waiting for connection...");
@@ -60,9 +64,9 @@ public class ServerSide implements Runnable {
     }
 
     public static void main(String[] args) {
-        ServerSide server = new ServerSide();
-        Thread serverThread = new Thread(server);
-        serverThread.start();
+        new Thread(
+            new ServerSide()
+            ).start();
     }
     
 }
