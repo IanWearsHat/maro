@@ -11,13 +11,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.imageio.ImageIO;
 
-public class Game extends JFrame implements Runnable {
+public class OldGame extends JFrame implements Runnable {
 
     private Canvas canvas = new Canvas();
     private RenderHandler renderer;
     private BufferedImage testImage;
 
-    public Game() {
+    public OldGame() {
 
         // Make our program shutdown when we exit out
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +50,7 @@ public class Game extends JFrame implements Runnable {
 
     private BufferedImage loadImage(String path) {
         try {
-            BufferedImage loadedImage = ImageIO.read(Game.class.getResource(path));
+            BufferedImage loadedImage = ImageIO.read(OldGame.class.getResource(path));
             BufferedImage formattedImage = new BufferedImage(loadedImage.getWidth(), loadedImage.getHeight(),BufferedImage.TYPE_INT_RGB);
             formattedImage.getGraphics().drawImage(loadedImage,0,0,null);
             return formattedImage;
