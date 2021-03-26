@@ -5,8 +5,10 @@ import javax.imageio.ImageIO;
 
 import Game.Main.Game;
 import Game.Main.GamePanel;
+import java.awt.AlphaComposite;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 public class Background {
 
@@ -16,6 +18,7 @@ public class Background {
    private double y;
    private double dx;
    private double dy;
+   private float alpha = 1f;
 
    private double moveScale;
 
@@ -45,8 +48,21 @@ public class Background {
         y+=dy;
     }
 
+    public void setComposite(float alpha){
+        this.alpha = alpha;
+    }
+
     public void draw(Graphics2D g){
+        
+        RenderingHints hints = new RenderingHints(RenderingHints.KEY_RENDERING,
+        RenderingHints.VALUE_RENDER_QUALITY);
+        hints.put(RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g.drawImage(image, (int)x, (int) y, null);
+        g.setRenderingHints(hints);
+
         if(x < 0){
             g.drawImage(image, (int)x + GamePanel.width, (int) y, null);
         }

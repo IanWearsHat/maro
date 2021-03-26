@@ -2,7 +2,7 @@ package Game.GameState;
 
 import java.awt.Graphics2D;
 
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.*;
 
 import Game.Resources.*;
 import java.awt.Color;
@@ -83,7 +83,7 @@ public class MenuState extends GameState{
     private void select(){
         if(currentChoice == 0){
            // 
-            gsm.setState(GameStateManger.LEVEL1STATE);
+            gsm.setState(GameStateManger.LEVELMENUSTATE);
         }
         if(currentChoice == 1){
             // 

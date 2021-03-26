@@ -1,4 +1,4 @@
-import Game.OldGame;
+import Game.Resources.*;
 import Game.VideoTest;
 import javafx.application.Application;
 import Game.Main.Game;

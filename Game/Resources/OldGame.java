@@ -1,7 +1,10 @@
-package Game;
+package Game.Resources;
 
 import java.awt.Canvas;
 import javax.swing.JFrame;
+
+import Game.RenderHandler;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
