@@ -39,7 +39,7 @@ public class LevelMenuState extends GameState implements ActionListener{
         this.gsm = gsm;
 
         try{
-            bg = new Background("Jason's Secret Stuff" +"\\"+ "BestGirl3.png", 1);
+            bg = new Background("Jason's Secret Stuff" +"\\"+ "BestGirl7.png", 1);
             //bg.setVector(-1, 0);
 
             titleColor = new Color(225,117, 87);

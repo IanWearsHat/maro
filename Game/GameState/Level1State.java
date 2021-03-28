@@ -4,19 +4,25 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import Game.Main.GamePanel;
+import Game.Resources.TileMap;
 
 public class Level1State extends GameState{
 
     private GameStateManger gsm;
+    private TileMap tileMap;
 
     public Level1State(GameStateManger gsm){
         this.gsm = gsm;
+        init();
     }
 
     @Override
     public void init() {
         // TODO Auto-generated method stub
-        
+        tileMap = new TileMap(75);
+        tileMap.loadTiles("Resources" +"\\"+ "TileSet" + "\\" + "grasstileset4.gif");
+        tileMap.loadMap("Resources" +"\\"+ "Map" + "\\" + "level1-1.map");
+        tileMap.setPosition(0, 0);
     }
 
     @Override
@@ -28,8 +34,15 @@ public class Level1State extends GameState{
     @Override
     public void draw(Graphics2D g) {
         // TODO Auto-generated method stub
-        g.setColor(Color.WHITE);
+
+        //clear screen
+        g.setColor(Color.BLUE);
         g.fillRect(0, 0, GamePanel.width, GamePanel.height);
+
+        //draw tile map
+        tileMap.draw(g);
+
+
     }
 
     @Override

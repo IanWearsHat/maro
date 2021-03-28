@@ -27,6 +27,9 @@ public class Background {
             image = ImageIO.read(
                 Background.class.getResource(s)
             );
+            moveScale = ms;
+            System.out.println(image.getWidth());
+            System.out.println(image.getHeight());
         }
         catch(Exception e){
            e.printStackTrace(); 

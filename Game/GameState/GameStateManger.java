@@ -2,6 +2,8 @@ package Game.GameState;
 
 import java.util.ArrayList;
 
+import Game.Main.GamePanel;
+
 public class GameStateManger {
     
     private ArrayList<GameState> gameStates;
