@@ -66,9 +66,13 @@ public class ClientHandler implements Runnable {
             username = ((MessagePacket) receivedPacket).message;
             System.out.println("Name: " + username);
             
-            outStream.reset(); //so the client doesn't throw a StreamCorruptedException
-    
-            
+            outStream.reset(); 
+            /* so the client doesn't throw a StreamCorruptedException.
+            https://stackoverflow.com/questions/2393179/streamcorruptedexception-invalid-type-code-ac
+            This didn't have the same problem as me, but someone threw the idea that the stream should run .reset() to forget everything in the stream, and that worked.
+            Their explanation was that the outStream was being created even though the server socket's (called clientSocket here for convenience) 
+            output stream was already used, but these previous lines are the first instance of an outstream being used, so that doesn't work.  */
+
             String inputLine;
             boolean running = true;
             while (running) {
@@ -90,7 +94,7 @@ public class ClientHandler implements Runnable {
 
         //tell every client that a certain client has left. This only runs when the try block finishes, meaning the client leaves. 
         broadcast(true, username + " has left the game.");
-        System.out.println(username + " has lost connection. Handler " + clientID + " closing."); // server message to indicate that a client has lost connection. 
+        System.out.println(username + " has lost connection. Handler " + clientID + " closing."); // server message to server terminal to indicate that a client has lost connection. 
     }
 
     public String getName() {
