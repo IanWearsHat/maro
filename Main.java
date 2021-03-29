@@ -51,17 +51,16 @@ public class Main {
         });
         bar.add(fileMenu);
 
-        // setting up placeholder buttons, b1 represents options for tile selection, b2 represents the actual screen where you edit tiles
-        JButton b1 = new JButton("b1");
-        //                  new Dimension(length, height)
-        b1.setPreferredSize(new Dimension(200, 100));
-        JButton b2 = new JButton("b2");
-
-        // adding the toolbar and placeholder buttons to the panel
+        // adding the toolbar to the panel
         p.add(bar, BorderLayout.PAGE_START);
 
-        p.add(b1, BorderLayout.LINE_START);
-        p.add(b2, BorderLayout.CENTER);
+        OptionsBar optionsBar = new OptionsBar(new GridLayout(0, 2));
+        //                          new Dimension(length, height)
+        optionsBar.setPreferredSize(new Dimension(200, 100));
+        p.add(optionsBar, BorderLayout.LINE_START);
+
+        TileEditor editor = new TileEditor();
+        p.add(editor, BorderLayout.CENTER);
 
         //adding the panel to the window
         w.add(p);
