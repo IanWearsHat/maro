@@ -10,13 +10,13 @@ public class GridBox {
     private int x;
     private int y;
     private int size;
-    private int boxNumber;
+    private int boxID;
 
-    public GridBox(int x, int y, int size, int boxNumber) {
+    public GridBox(int x, int y, int size, int boxID) {
         this.x = x;
         this.y = y;
         this.size = size;
-        this.boxNumber = boxNumber;
+        this.boxID = boxID;
     }
 
     public boolean checkMouseOver() {

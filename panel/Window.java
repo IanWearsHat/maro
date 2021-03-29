@@ -26,7 +26,6 @@ public class Window extends JFrame {
         setFocusable(true);
         setResizable(false);
         requestFocus();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void init() {

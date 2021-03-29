@@ -64,12 +64,37 @@ public class Main {
         optionsBar.setPreferredSize(new Dimension(180, 100));
         p.add(optionsBar, BorderLayout.LINE_START);
 
+
         TileEditor editor = new TileEditor();
         p.add(editor, BorderLayout.CENTER);
 
+        
+
         //adding the panel to the window
         w.add(p);
+        w.setFocusable(true);
         w.pack();
         w.setVisible(true);
+
+        w.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) { System.exit(0); }
+            public void windowDeiconified(WindowEvent e) { editor.start(); }
+            public void windowIconified(WindowEvent e) { editor.stop(); }
+        });
+
+        w.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {}
+            public void keyPressed(KeyEvent e) { 
+                if (e.getKeyChar() == 'a') {
+                    editor.drawer.addColumn(); 
+                }
+                else if (e.getKeyChar() == 'l') {
+                    editor.drawer.removeColumn();
+                }
+            }
+        });
+
+        new Thread(editor).start();
     }
 }
