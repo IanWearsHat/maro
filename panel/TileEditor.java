@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 public class TileEditor extends JPanel implements Runnable {
 
     private final int FRAME_DELAY = 50; // 50 ms = 20 FPS
+    public static final int WIDTH = 1420;
+    public static final int HEIGHT = 900;
     private boolean animate = true;
 
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);

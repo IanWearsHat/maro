@@ -10,9 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Window extends JFrame {
-    public static final int width = 1600;
-    public static final int height = 900;
-    public static final int scale = 2;
+    public static final int WIDTH = 1600;
+    public static final int HEIGHT = 900;
+    public static final int SCALE = 2;
 
     private int fps = 60;
     private long targetTime = 1000/fps;
@@ -22,7 +22,7 @@ public class Window extends JFrame {
 
     public Window() {
         super();
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setFocusable(true);
         setResizable(false);
         requestFocus();
