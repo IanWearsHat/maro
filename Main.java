@@ -18,12 +18,12 @@ public class Main {
         bar.setFloatable(false);
 
         JButton fileB = new JButton("File");  
-        bar.add(fileB);  
+        bar.add(fileB);
         JButton editB = new JButton("Edit");
         bar.add(editB);  
         bar.addSeparator();
 
-
+        // creation of the file menu as well as the options for it
         JPopupMenu fileMenu = new JPopupMenu();
 
         JMenuItem importOption = new JMenuItem("Import map file");
@@ -32,15 +32,15 @@ public class Main {
                 System.out.println("importing");
             }
         });
-        fileMenu.add(importOption);
-
-
+        
         JMenuItem exportOption = new JMenuItem("Export map file");
         exportOption.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 System.out.println("exporting");
             }
         });
+
+        fileMenu.add(importOption);
         fileMenu.add(exportOption);
 
         //makes it so the file button drops down the menu for file
