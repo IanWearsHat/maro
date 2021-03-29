@@ -1,3 +1,5 @@
+package panel;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
@@ -25,9 +27,11 @@ public class TileEditor extends JPanel implements Runnable {
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
     
     private static TileDrawer drawer;
+    private int[][] tileMap;
 
     public TileEditor() {
         drawer = new TileDrawer();
+
     }
 
     public void paintComponent(Graphics g) {

@@ -7,6 +7,11 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
+import panel.OptionsBar;
+import panel.TileEditor;
+import panel.TileDrawer;
+import panel.Window;
+
 public class Main {
     public static void main(String[] args) {
         System.out.println("maromaromaromaro");
@@ -56,7 +61,7 @@ public class Main {
 
         OptionsBar optionsBar = new OptionsBar(new GridLayout(0, 2));
         //                          new Dimension(length, height)
-        optionsBar.setPreferredSize(new Dimension(200, 100));
+        optionsBar.setPreferredSize(new Dimension(180, 100));
         p.add(optionsBar, BorderLayout.LINE_START);
 
         TileEditor editor = new TileEditor();
