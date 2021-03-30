@@ -24,14 +24,35 @@ public class TileEditor extends JPanel implements Runnable {
     private final int FRAME_DELAY = 50; // 50 ms = 20 FPS
 
     private boolean animate = true;
+    private int mouseX;
+    private int mouseY;
 
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
     
     public TileDrawer drawer;
     private int[][] tileMap;
+    private int selectedTile = 21;
 
     public TileEditor() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+                
+                drawer.updateTile(selectedTile, mouseX, mouseY);
+                System.out.println("click");
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                System.out.println("release");
+            }
+        });
+
         drawer = new TileDrawer();
+        drawer.loadTiles();
+        drawer.initializeGrid();
     }
 
     public void paintComponent(Graphics g) {
@@ -41,6 +62,7 @@ public class TileEditor extends JPanel implements Runnable {
         g2.setFont(basic);
 
         drawer.draw(g2);
+
     }
 
     /** Enables periodic repaint calls. */

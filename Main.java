@@ -70,6 +70,8 @@ public class Main {
 
         
 
+        
+
         //adding the panel to the window
         w.add(p);
         w.setFocusable(true);

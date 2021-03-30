@@ -22,8 +22,15 @@ public class GridBox {
         this.boxID = boxID;
     }
 
-    public boolean checkMouseOver() {
+    public boolean mouseOver(int mouseX, int mouseY) {
+        if (mouseX <= (x + size) && mouseX >= x && mouseY <= (y + size) && mouseY >= y) {
+            return true;
+        }
         return false;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 
     public void draw(Graphics surface) {

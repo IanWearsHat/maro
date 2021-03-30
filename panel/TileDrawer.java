@@ -19,12 +19,11 @@ public class TileDrawer {
     private int colCount;
     private int rowCount;
     private int boxID = 0;
-    private final int SPACEBETWEENBOXES = 2;
-    private final int TILESIZE = 75;
+    private final int SPACEBETWEENBOXES = 0;
+    private int tileSize = 75;
 
-    // private int TILESIZE = 75;
     private BufferedImage[][] tiles;
-    private int numTilesAcross = 21;
+    private int numTilesAcross;
 
     private int x = SPACEBETWEENBOXES;
     private int y = SPACEBETWEENBOXES;
@@ -42,43 +41,27 @@ public class TileDrawer {
 
         colCount = 10;
         rowCount = 10;
-
-        loadTiles();
-        initializeGrid();
-    }
-
-    private void initializeGrid() {
-        for (int i = 0; i < colCount; i++) {
-            for (int j = 0; j < rowCount; j++) {
-                boxList.add(new GridBox(tiles[1][2], x, y, TILESIZE, boxID));
-                boxID++;
-                y += TILESIZE + SPACEBETWEENBOXES;
-            }
-            y = SPACEBETWEENBOXES;
-            x += TILESIZE + SPACEBETWEENBOXES;
-        }
     }
 
     public void loadTiles() {
         try {
             tileSheet = ImageIO.read(TileDrawer.class.getResource(tileSheetPath));
-            System.out.println(tileSheet.getWidth());
-            numTilesAcross = tileSheet.getWidth() / TILESIZE;
+            numTilesAcross = tileSheet.getWidth() / tileSize;
             tiles = new BufferedImage[2][numTilesAcross];
 
             BufferedImage subimage;
             for(int col = 0; col < numTilesAcross; col++){
                 subimage = tileSheet.getSubimage(
-                    col * TILESIZE, 
+                    col * tileSize, 
                     0, 
-                    TILESIZE, 
-                    TILESIZE);
+                    tileSize, 
+                    tileSize);
                     tiles[0][col] = subimage;
                     subimage = tileSheet.getSubimage(
-                        col*TILESIZE, 
-                        TILESIZE, 
-                        TILESIZE, 
-                        TILESIZE);
+                        col*tileSize, 
+                        tileSize, 
+                        tileSize, 
+                        tileSize);
                     tiles[1][col] = subimage;
             }
 
@@ -88,14 +71,26 @@ public class TileDrawer {
         }
     }
 
+    public void initializeGrid() {
+        for (int i = 0; i < colCount; i++) {
+            for (int j = 0; j < rowCount; j++) {
+                boxList.add(new GridBox(tiles[0][12], x, y, tileSize, boxID));
+                boxID++;
+                y += tileSize + SPACEBETWEENBOXES;
+            }
+            y = SPACEBETWEENBOXES;
+            x += tileSize + SPACEBETWEENBOXES;
+        }
+    }
+
     public void addColumn() {
         for (int i = 0; i < rowCount; i++) {
-            boxList.add(new GridBox(tiles[1][1], x, y, TILESIZE, boxID));
+            boxList.add(new GridBox(tiles[1][1], x, y, tileSize, boxID));
             boxID++;
-            y += TILESIZE + SPACEBETWEENBOXES;
+            y += tileSize + SPACEBETWEENBOXES;
         }
         y = SPACEBETWEENBOXES;
-        x += TILESIZE + SPACEBETWEENBOXES;
+        x += tileSize + SPACEBETWEENBOXES;
 
         colCount++;
     }
@@ -106,9 +101,22 @@ public class TileDrawer {
             boxList.remove(i);
             boxID--;
         }
-        x -= TILESIZE + SPACEBETWEENBOXES;
+        x -= tileSize + SPACEBETWEENBOXES;
 
         colCount--;
+    }
+
+    public void updateTile(int selectedTile, int mouseX, int mouseY) {
+        for (int i = 0; i < boxList.size(); i++) {
+            if (boxList.get(i).mouseOver(mouseX, mouseY)) {
+                int selectedTileIndex = selectedTile;
+                int r = selectedTileIndex/numTilesAcross;
+                int c = selectedTileIndex % numTilesAcross;
+
+                boxList.get(i).setImage(tiles[r][c]);
+                break;
+            }
+        }
     }
 
     public void draw(Graphics surface) {
