@@ -81,9 +81,9 @@ public class TileEditor extends JPanel implements Runnable {
         drawer.initializeGrid();
     }
 
-    public void exportFile() {
+    public void exportFile(String fileName) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("map.map"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
             ArrayList<GridBox> boxList = drawer.getBoxList();
             int boxI = 0; 
             for (int i = 0; i < rowCount; i++) {

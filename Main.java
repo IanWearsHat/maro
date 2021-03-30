@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import javafx.stage.FileChooser;
 
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
@@ -36,6 +38,8 @@ public class Main {
         bar.add(editB);  
         bar.addSeparator();
 
+        
+
         // creation of the file menu as well as the options for it
         JPopupMenu fileMenu = new JPopupMenu();
 
@@ -49,8 +53,25 @@ public class Main {
         JMenuItem exportOption = new JMenuItem("Export map file");
         exportOption.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                editor.exportFile();
+                try {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Open Resource File");
+                    fileChooser.getExtensionFilters().addAll(
+                            new ExtensionFilter("Text Files", "*.txt"),
+                            new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                            new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+                            new ExtensionFilter("All Files", "*.*"));
+                    File selectedFile = fileChooser.showOpenDialog(mainStage);
+                    if (selectedFile != null) {
+                       mainStage.display(selectedFile);
+                    }
+                }
+                catch (Exception e) {
+        
+                }
+                editor.exportFile("map");
                 System.out.println("exporting");
+
             }
         });
 
