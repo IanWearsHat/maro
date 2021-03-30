@@ -36,7 +36,6 @@ public class TileEditor extends JPanel implements Runnable {
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
     
     public TileDrawer drawer;
-    private int[][] tileMap;
     private int colCount = 10;
     private int rowCount = 10;
     private int selectedTile = 21;
@@ -74,33 +73,12 @@ public class TileEditor extends JPanel implements Runnable {
                 else if (e.getKeyChar() == 'l') {
                     drawer.removeColumn();
                 }
-                else if (e.getKeyChar() == 'e') {
-                    exportFile();
-                }
             }
         });
 
         drawer = new TileDrawer(colCount, rowCount);
         drawer.loadTiles();
         drawer.initializeGrid();
-    }
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setFont(basic);
-
-        drawer.draw(g2);
-        requestFocus();
-    }
-
-    public void setSelectedTile(int tileIndex) {
-        selectedTile = tileIndex;
-    }
-
-    public BufferedImage[][] getTiles() {
-        return drawer.getTiles();
     }
 
     public void exportFile() {
@@ -110,8 +88,9 @@ public class TileEditor extends JPanel implements Runnable {
             int boxI = 0; 
             for (int i = 0; i < rowCount; i++) {
                 for (int j = 0; j < colCount; j++) {
-                    writer.write(String.valueOf(boxList.get(boxI).getTileIndex()));
-                    if (j + 1 < colCount) { writer.write(" "); }
+                    String toWrite = String.valueOf(boxList.get(boxI).getTileIndex());
+                    if (j + 1 < colCount) {toWrite += " "; }
+                    writer.write(toWrite);
                     boxI += 10;
                 }
 
@@ -124,6 +103,24 @@ public class TileEditor extends JPanel implements Runnable {
         catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setSelectedTile(int tileIndex) {
+        selectedTile = tileIndex;
+    }
+
+    public BufferedImage[][] getTiles() {
+        return drawer.getTiles();
+    }
+    
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setFont(basic);
+
+        drawer.draw(g2);
+        requestFocus();
     }
 
     /** Enables periodic repaint calls. */

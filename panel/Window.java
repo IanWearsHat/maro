@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Window extends JFrame {
+    // Dimension size = Toolkit. getDefaultToolkit(). getScreenSize();
+    // to get dimensions of the user's screen
     public static final int WIDTH = 1600;
     public static final int HEIGHT = 900;
     public static final int SCALE = 2;

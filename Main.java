@@ -18,6 +18,14 @@ public class Main {
         Window w = new Window();
         JPanel p = new JPanel(new BorderLayout());
 
+        TileEditor editor = new TileEditor();
+        p.add(editor, BorderLayout.CENTER);
+
+        OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
+        //                          new Dimension(length, height)
+        optionsBar.setPreferredSize(new Dimension(180, 100));
+        p.add(optionsBar, BorderLayout.LINE_START);
+
         //setting up toolbar
         JToolBar bar = new JToolBar();
         bar.setFloatable(false);
@@ -41,6 +49,7 @@ public class Main {
         JMenuItem exportOption = new JMenuItem("Export map file");
         exportOption.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
+                editor.exportFile();
                 System.out.println("exporting");
             }
         });
@@ -60,13 +69,7 @@ public class Main {
         p.add(bar, BorderLayout.PAGE_START);
 
 
-        TileEditor editor = new TileEditor();
-        p.add(editor, BorderLayout.CENTER);
 
-        OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
-        //                          new Dimension(length, height)
-        optionsBar.setPreferredSize(new Dimension(180, 100));
-        p.add(optionsBar, BorderLayout.LINE_START);
 
         
         //adding the panel to the window

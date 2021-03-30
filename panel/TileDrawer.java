@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class TileDrawer {
     // "not moving" tile map that basically is what will be exported
-    private ArrayList<ArrayList<Integer>> tileMap;
     private ArrayList<GridBox> boxList;
 
     private int colCount;
@@ -36,7 +35,6 @@ public class TileDrawer {
     private int numTilesAcross;
     
     public TileDrawer(int colCount, int rowCount) {
-        tileMap = new ArrayList<ArrayList<Integer>>();
         boxList = new ArrayList<GridBox>();
 
         this.colCount = colCount;
