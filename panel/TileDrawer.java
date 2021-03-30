@@ -22,9 +22,6 @@ public class TileDrawer {
     private final int SPACEBETWEENBOXES = 0;
     private int tileSize = 75;
 
-    private BufferedImage[][] tiles;
-    private int numTilesAcross;
-
     private int x = SPACEBETWEENBOXES;
     private int y = SPACEBETWEENBOXES;
 
@@ -34,6 +31,9 @@ public class TileDrawer {
     private BufferedImage tileSheet;
 
     String tileSheetPath = "resources" + "\\" + "resized.gif";
+
+    private BufferedImage[][] tiles;
+    private int numTilesAcross;
     
     public TileDrawer() {
         tileMap = new ArrayList<ArrayList<Integer>>();
@@ -117,6 +117,10 @@ public class TileDrawer {
                 break;
             }
         }
+    }
+
+    public BufferedImage[][] getTiles() {
+        return tiles;
     }
 
     public void draw(Graphics surface) {

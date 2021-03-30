@@ -2,39 +2,53 @@ package panel;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+
+import java.util.ArrayList;
 
 // this should handle whatever is on the left side of the screen, or the options bar, or where b1 currently is in Main.java
 // maybe it extends Jcomponent or sth
 @SuppressWarnings("serial")
 public class OptionsBar extends JPanel {
-    public OptionsBar() {
+    private TileEditor editor;
+    private BufferedImage[][] tiles;
 
+    private ArrayList<JButton> buttonList;
+
+    public OptionsBar(TileEditor editor, BufferedImage[][] tiles, GridLayout layout) {
+        super(layout);
+        this.editor = editor;
+        this.tiles = tiles;
+
+        buttonList = new ArrayList<JButton>();
+
+        makeOptions();
+        setFocusable(false);
     }
 
-    public OptionsBar(GridLayout layout) {
-        super(layout);
-        add(new JButton("1"));
-        add(new JButton("2"));
-        add(new JButton("3"));
-        add(new JButton("4"));
-        add(new JButton("5"));
-        add(new JButton("6"));
-        add(new JButton("7"));
-        add(new JButton("8"));
-        add(new JButton("9"));
-        add(new JButton("10"));
-        add(new JButton("11"));
-        add(new JButton("12"));
-        add(new JButton("13"));
-        add(new JButton("14"));
-        add(new JButton("15"));
-        add(new JButton("16"));
-        add(new JButton("17"));
-        add(new JButton("18"));
-        add(new JButton("19"));
-        add(new JButton("20"));
-        add(new JButton("21"));
+    private JButton createButton(String name, int tileIndex) {
+        JButton button = new JButton(name);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                editor.setSelectedTile(tileIndex);
+            }
+        });
+
+        int r = tileIndex / tiles[0].length;
+        int c = tileIndex % tiles[0].length;
+        button.setIcon(new ImageIcon(tiles[r][c]));
+        return button;
+    }
+
+    private void makeOptions() {
+        for (int i = 0; i < 26; i++) {
+            add(createButton(String.valueOf(i), i));
+        }
+
     }
 
 

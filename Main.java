@@ -59,16 +59,17 @@ public class Main {
         // adding the toolbar to the panel
         p.add(bar, BorderLayout.PAGE_START);
 
-        OptionsBar optionsBar = new OptionsBar(new GridLayout(0, 2));
+
+        TileEditor editor = new TileEditor();
+        p.add(editor, BorderLayout.CENTER);
+
+        OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
         //                          new Dimension(length, height)
         optionsBar.setPreferredSize(new Dimension(180, 100));
         p.add(optionsBar, BorderLayout.LINE_START);
 
 
-        TileEditor editor = new TileEditor();
-        p.add(editor, BorderLayout.CENTER);
 
-        
 
         
 
@@ -82,19 +83,6 @@ public class Main {
             public void windowClosing(WindowEvent e) { System.exit(0); }
             public void windowDeiconified(WindowEvent e) { editor.start(); }
             public void windowIconified(WindowEvent e) { editor.stop(); }
-        });
-
-        w.addKeyListener(new KeyListener() {
-            public void keyTyped(KeyEvent e) {}
-            public void keyReleased(KeyEvent e) {}
-            public void keyPressed(KeyEvent e) { 
-                if (e.getKeyChar() == 'a') {
-                    editor.drawer.addColumn(); 
-                }
-                else if (e.getKeyChar() == 'l') {
-                    editor.drawer.removeColumn();
-                }
-            }
         });
 
         new Thread(editor).start();

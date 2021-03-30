@@ -12,9 +12,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import java.awt.image.BufferedImage;
 
 // this should handle whatever is in the center of the screen, or the tileEditor, or where b2 currently is in Main.java
 
@@ -40,13 +43,32 @@ public class TileEditor extends JPanel implements Runnable {
                 mouseX = e.getX();
                 mouseY = e.getY();
                 
-                drawer.updateTile(selectedTile, mouseX, mouseY);
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    drawer.updateTile(selectedTile, mouseX, mouseY);
+                }
+                else if (e.getButton() == MouseEvent.BUTTON3) {
+                    drawer.updateTile(0, mouseX, mouseY);
+                }
+                
                 System.out.println("click");
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 System.out.println("release");
+            }
+        });
+
+        addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {}
+            public void keyPressed(KeyEvent e) { 
+                if (e.getKeyChar() == 'a') {
+                    drawer.addColumn(); 
+                }
+                else if (e.getKeyChar() == 'l') {
+                    drawer.removeColumn();
+                }
             }
         });
 
@@ -62,7 +84,15 @@ public class TileEditor extends JPanel implements Runnable {
         g2.setFont(basic);
 
         drawer.draw(g2);
+        requestFocus();
+    }
 
+    public void setSelectedTile(int tileIndex) {
+        selectedTile = tileIndex;
+    }
+
+    public BufferedImage[][] getTiles() {
+        return drawer.getTiles();
     }
 
     /** Enables periodic repaint calls. */
