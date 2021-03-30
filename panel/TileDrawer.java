@@ -74,7 +74,7 @@ public class TileDrawer {
     public void initializeGrid() {
         for (int i = 0; i < colCount; i++) {
             for (int j = 0; j < rowCount; j++) {
-                boxList.add(new GridBox(tiles[0][12], x, y, tileSize, boxID));
+                boxList.add(new GridBox(tiles[0][12], 11, x, y, tileSize, boxID));
                 boxID++;
                 y += tileSize + SPACEBETWEENBOXES;
             }
@@ -85,7 +85,7 @@ public class TileDrawer {
 
     public void addColumn() {
         for (int i = 0; i < rowCount; i++) {
-            boxList.add(new GridBox(tiles[1][1], x, y, tileSize, boxID));
+            boxList.add(new GridBox(tiles[1][1], 22, x, y, tileSize, boxID));
             boxID++;
             y += tileSize + SPACEBETWEENBOXES;
         }
@@ -109,11 +109,10 @@ public class TileDrawer {
     public void updateTile(int selectedTile, int mouseX, int mouseY) {
         for (int i = 0; i < boxList.size(); i++) {
             if (boxList.get(i).mouseOver(mouseX, mouseY)) {
-                int selectedTileIndex = selectedTile;
-                int r = selectedTileIndex/numTilesAcross;
-                int c = selectedTileIndex % numTilesAcross;
+                int r = selectedTile /numTilesAcross;
+                int c = selectedTile % numTilesAcross;
 
-                boxList.get(i).setImage(tiles[r][c]);
+                boxList.get(i).setImage(tiles[r][c], selectedTile);
                 break;
             }
         }

@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.image.BufferedImage;
+import java.io.*;
 
 // this should handle whatever is in the center of the screen, or the tileEditor, or where b2 currently is in Main.java
 
@@ -42,7 +43,7 @@ public class TileEditor extends JPanel implements Runnable {
             public void mousePressed(MouseEvent e) {
                 mouseX = e.getX();
                 mouseY = e.getY();
-                
+
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     drawer.updateTile(selectedTile, mouseX, mouseY);
                 }
@@ -93,6 +94,18 @@ public class TileEditor extends JPanel implements Runnable {
 
     public BufferedImage[][] getTiles() {
         return drawer.getTiles();
+    }
+
+    public void exportFile() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("map.txt"));
+            writer.write("1 0\n1 0");
+
+            writer.close();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /** Enables periodic repaint calls. */

@@ -68,11 +68,7 @@ public class Main {
         optionsBar.setPreferredSize(new Dimension(180, 100));
         p.add(optionsBar, BorderLayout.LINE_START);
 
-
-
-
-        
-
+        editor.exportFile();
         //adding the panel to the window
         w.add(p);
         w.setFocusable(true);

@@ -9,13 +9,15 @@ import java.awt.image.BufferedImage;
 
 public class GridBox {
     private BufferedImage image;
+    private int tileIndex;
     private int x;
     private int y;
     private int size;
     private int boxID;
 
-    public GridBox(BufferedImage image, int x, int y, int size, int boxID) {
+    public GridBox(BufferedImage image, int tileIndex, int x, int y, int size, int boxID) {
         this.image = image;
+        this.tileIndex = tileIndex;
         this.x = x;
         this.y = y;
         this.size = size;
@@ -29,8 +31,9 @@ public class GridBox {
         return false;
     }
 
-    public void setImage(BufferedImage image) {
+    public void setImage(BufferedImage image, int tileIndex) {
         this.image = image;
+        this.tileIndex = tileIndex;
     }
 
     public void draw(Graphics surface) {
