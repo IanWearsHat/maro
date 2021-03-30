@@ -36,6 +36,10 @@ public class GridBox {
         this.tileIndex = tileIndex;
     }
 
+    public int getTileIndex() {
+        return tileIndex;
+    }
+
     public void draw(Graphics surface) {
         surface.drawImage(image, x, y, null);
         // surface.setColor(Color.RED);

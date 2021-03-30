@@ -35,12 +35,12 @@ public class TileDrawer {
     private BufferedImage[][] tiles;
     private int numTilesAcross;
     
-    public TileDrawer() {
+    public TileDrawer(int colCount, int rowCount) {
         tileMap = new ArrayList<ArrayList<Integer>>();
         boxList = new ArrayList<GridBox>();
 
-        colCount = 10;
-        rowCount = 10;
+        this.colCount = colCount;
+        this.rowCount = rowCount;
     }
 
     public void loadTiles() {
@@ -120,6 +120,10 @@ public class TileDrawer {
 
     public BufferedImage[][] getTiles() {
         return tiles;
+    }
+
+    public ArrayList<GridBox> getBoxList() {
+        return boxList;
     }
 
     public void draw(Graphics surface) {

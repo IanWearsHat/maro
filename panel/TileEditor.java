@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+import java.util.ArrayList;
+
 // this should handle whatever is in the center of the screen, or the tileEditor, or where b2 currently is in Main.java
 
 @SuppressWarnings("serial")
@@ -35,6 +37,8 @@ public class TileEditor extends JPanel implements Runnable {
     
     public TileDrawer drawer;
     private int[][] tileMap;
+    private int colCount = 10;
+    private int rowCount = 10;
     private int selectedTile = 21;
 
     public TileEditor() {
@@ -70,10 +74,13 @@ public class TileEditor extends JPanel implements Runnable {
                 else if (e.getKeyChar() == 'l') {
                     drawer.removeColumn();
                 }
+                else if (e.getKeyChar() == 'e') {
+                    exportFile();
+                }
             }
         });
 
-        drawer = new TileDrawer();
+        drawer = new TileDrawer(colCount, rowCount);
         drawer.loadTiles();
         drawer.initializeGrid();
     }
@@ -98,8 +105,19 @@ public class TileEditor extends JPanel implements Runnable {
 
     public void exportFile() {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("map.txt"));
-            writer.write("1 0\n1 0");
+            BufferedWriter writer = new BufferedWriter(new FileWriter("map.map"));
+            ArrayList<GridBox> boxList = drawer.getBoxList();
+            int boxI = 0; 
+            for (int i = 0; i < rowCount; i++) {
+                for (int j = 0; j < colCount; j++) {
+                    writer.write(String.valueOf(boxList.get(boxI).getTileIndex()));
+                    if (j + 1 < colCount) { writer.write(" "); }
+                    boxI += 10;
+                }
+
+                if (i + 1 < rowCount) { writer.write("\n"); }
+                boxI = i;
+            }
 
             writer.close();
         }
