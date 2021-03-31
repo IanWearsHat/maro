@@ -1,6 +1,9 @@
 package panel;
 
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.Action;
+import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ import java.nio.file.Paths;
 @SuppressWarnings("serial")
 public class TileEditor extends JPanel implements Runnable {
 
-    private final int FRAME_DELAY = 50; // 50 ms = 20 FPS
+    private final int FRAME_DELAY = 1000/60; //60 fps
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
 
     private boolean animate = true;
@@ -75,10 +78,38 @@ public class TileEditor extends JPanel implements Runnable {
 
         this.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {}
-            public void keyReleased(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {
+                switch(e.getKeyChar()) {
+                    case 'w':
+                        drawer.moveUp = false;
+                        break;
+                    case 's':
+                        drawer.moveDown = false;
+                        break;
+                    case 'a':
+                        drawer.moveLeft = false;
+                        break;
+                    case 'd':
+                        drawer.moveRight = false;
+                        break;
+                }
+            }
+
             public void keyPressed(KeyEvent e) { 
                 switch(e.getKeyChar()) {
+                    case 'w':
+                        drawer.moveUp = true;
+                        break;
+                    case 's':
+                        drawer.moveDown = true;
+                        break;
                     case 'a':
+                        drawer.moveLeft = true;
+                        break;
+                    case 'd':
+                        drawer.moveRight = true;
+                        break;
+                    case 'k':
                         drawer.addColumn();
                         break;
                     case 'l':

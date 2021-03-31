@@ -27,9 +27,14 @@ public class GridBox {
         return false;
     }
 
+    public void move(int xOffset, int yOffset) {
+        x += xOffset;
+        y += yOffset;
+    }
+
     public void setImage(BufferedImage image, int tileIndex) {
         this.image = image;
-        this.tileIndex = tileIndex;
+        this.tileIndex = (tileIndex == 26) ? 0 : tileIndex;
     }
 
     public int getTileIndex() {

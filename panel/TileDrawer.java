@@ -14,12 +14,15 @@ public class TileDrawer {
     private int boxID = 0;
     private final int SPACEBETWEENBOXES = 0;
     private int tileSize = 75;
+    
+    public boolean moveUp = false;
+    public boolean moveDown = false;
+    public boolean moveLeft = false;
+    public boolean moveRight = false;
+    private int moveSpeed = 15;
 
-    private int x = SPACEBETWEENBOXES;
-    private int y = SPACEBETWEENBOXES;
-
-    private int xOffset;
-    private int yOffset;
+    private int drawX = SPACEBETWEENBOXES;
+    private int drawY = SPACEBETWEENBOXES;
 
     private BufferedImage tileSheet;
 
@@ -64,36 +67,38 @@ public class TileDrawer {
     public void initializeGrid() {
         for (int i = 0; i < colCount; i++) {
             for (int j = 0; j < rowCount; j++) {
-                boxList.add(new GridBox(tiles[1][5], 26, x, y, tileSize, boxID));
+                boxList.add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize, boxID));
                 boxID++;
-                y += tileSize + SPACEBETWEENBOXES;
+                drawY += tileSize + SPACEBETWEENBOXES;
             }
-            y = SPACEBETWEENBOXES;
-            x += tileSize + SPACEBETWEENBOXES;
+            drawY = SPACEBETWEENBOXES;
+            drawX += tileSize + SPACEBETWEENBOXES;
         }
     }
 
     public void addColumn() {
         for (int i = 0; i < rowCount; i++) {
-            boxList.add(new GridBox(tiles[1][5], 26, x, y, tileSize, boxID));
+            boxList.add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize, boxID));
             boxID++;
-            y += tileSize + SPACEBETWEENBOXES;
+            drawY += tileSize + SPACEBETWEENBOXES;
         }
-        y = SPACEBETWEENBOXES;
-        x += tileSize + SPACEBETWEENBOXES;
+        drawY -= rowCount * tileSize;
+        drawX += tileSize + SPACEBETWEENBOXES;
 
         colCount++;
     }
 
     public void removeColumn() {
         int initialSize = boxList.size();
-        for (int i = (boxList.size() - 1); i > (initialSize - 1) - rowCount; i--) {
-            boxList.remove(i);
-            boxID--;
-        }
-        x -= tileSize + SPACEBETWEENBOXES;
+        if (initialSize != rowCount) {
+            for (int i = (boxList.size() - 1); i > (initialSize - 1) - rowCount; i--) {
+                boxList.remove(i);
+                boxID--;
+            }
+            drawX -= tileSize + SPACEBETWEENBOXES;
 
-        colCount--;
+            colCount--;
+        }
     }
 
     public void updateTile(int selectedTile, int mouseX, int mouseY) {
@@ -105,6 +110,12 @@ public class TileDrawer {
                 boxList.get(i).setImage(tiles[r][c], selectedTile);
                 break;
             }
+        }
+    }
+    
+    private void moveTiles(int xOffset, int yOffset) {
+        for (int i = 0; i < boxList.size(); i++) {
+            boxList.get(i).move(xOffset, yOffset);
         }
     }
 
@@ -125,6 +136,26 @@ public class TileDrawer {
     }
 
     public void draw(Graphics surface) {
+        if (moveUp) { 
+            moveTiles(0, 1 * moveSpeed);
+            drawY += 1 * moveSpeed;
+        }
+    
+        if (moveDown) {
+            moveTiles(0, -1 * moveSpeed);
+            drawY += -1 * moveSpeed;
+        }
+    
+        if (moveLeft) {
+            moveTiles(1 * moveSpeed, 0);
+            drawX += 1 * moveSpeed;
+        }
+
+        if (moveRight) {
+            moveTiles(-1 * moveSpeed, 0);
+            drawX += -1 * moveSpeed;
+        }
+
         for (int i = 0; i < boxList.size(); i++) {
             boxList.get(i).draw(surface);
         }
