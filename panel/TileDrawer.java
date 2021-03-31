@@ -64,7 +64,7 @@ public class TileDrawer {
     public void initializeGrid() {
         for (int i = 0; i < colCount; i++) {
             for (int j = 0; j < rowCount; j++) {
-                boxList.add(new GridBox(tiles[0][12], 11, x, y, tileSize, boxID));
+                boxList.add(new GridBox(tiles[1][5], 26, x, y, tileSize, boxID));
                 boxID++;
                 y += tileSize + SPACEBETWEENBOXES;
             }
@@ -75,7 +75,7 @@ public class TileDrawer {
 
     public void addColumn() {
         for (int i = 0; i < rowCount; i++) {
-            boxList.add(new GridBox(tiles[1][1], 22, x, y, tileSize, boxID));
+            boxList.add(new GridBox(tiles[1][5], 26, x, y, tileSize, boxID));
             boxID++;
             y += tileSize + SPACEBETWEENBOXES;
         }

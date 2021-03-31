@@ -44,7 +44,17 @@ public class OptionsBar extends JPanel {
     }
 
     private void makeOptions() {
-        for (int i = 0; i < 26; i++) {
+        JButton button = new JButton();
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                editor.setSelectedTile(26);
+            }
+        });
+
+        button.setIcon(new ImageIcon(tiles[0][0]));
+        add(button);
+
+        for (int i = 1; i <= 25; i++) {
             add(createButton(i));
         }
 

@@ -13,7 +13,7 @@ public class GridBox {
 
     public GridBox(BufferedImage image, int tileIndex, int x, int y, int size, int boxID) {
         this.image = image;
-        this.tileIndex = tileIndex;
+        this.tileIndex = (tileIndex == 26) ? 0 : tileIndex;
         this.x = x;
         this.y = y;
         this.size = size;
