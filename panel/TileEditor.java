@@ -39,8 +39,7 @@ public class TileEditor extends JPanel implements Runnable {
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
     
     public TileDrawer drawer;
-    private int colCount = 10;
-    private int rowCount = 10;
+
     private int selectedTile = 21;
 
     public TileEditor() {
@@ -80,7 +79,7 @@ public class TileEditor extends JPanel implements Runnable {
             }
         });
 
-        drawer = new TileDrawer(colCount, rowCount);
+        drawer = new TileDrawer();
         drawer.loadTiles();
         drawer.initializeGrid();
     }
@@ -90,17 +89,16 @@ public class TileEditor extends JPanel implements Runnable {
             
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
             ArrayList<GridBox> boxList = drawer.getBoxList();
-            int boxI = 0; 
-            for (int i = 0; i < rowCount; i++) {
-                for (int j = 0; j < colCount; j++) {
-                    String toWrite = String.valueOf(boxList.get(boxI).getTileIndex());
-                    if (j + 1 < colCount) {toWrite += " "; }
-                    writer.write(toWrite);
-                    boxI += 10;
-                }
-
-                if (i + 1 < rowCount) { writer.write("\n"); }
+            int boxI;
+            for (int i = 0, rowCount = drawer.getRowCount(); i < rowCount; i++) {
                 boxI = i;
+                for (int j = 0, colCount = drawer.getColCount(); j < colCount; j++) {
+                    String toWrite = String.valueOf(boxList.get(boxI).getTileIndex());
+                    if (j + 1 < colCount) { toWrite += " "; }
+                    writer.write(toWrite);
+                    boxI += rowCount;
+                }
+                if (i + 1 < rowCount) { writer.write("\n"); }
             }
             writer.close();
 

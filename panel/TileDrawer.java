@@ -15,8 +15,8 @@ public class TileDrawer {
     // "not moving" tile map that basically is what will be exported
     private ArrayList<GridBox> boxList;
 
-    private int colCount;
-    private int rowCount;
+    private int colCount = 10;
+    private int rowCount = 10;
     private int boxID = 0;
     private final int SPACEBETWEENBOXES = 0;
     private int tileSize = 75;
@@ -33,12 +33,10 @@ public class TileDrawer {
 
     private BufferedImage[][] tiles;
     private int numTilesAcross;
-    
-    public TileDrawer(int colCount, int rowCount) {
-        boxList = new ArrayList<GridBox>();
 
-        this.colCount = colCount;
-        this.rowCount = rowCount;
+
+    public TileDrawer() {
+        boxList = new ArrayList<GridBox>();
     }
 
     public void loadTiles() {
@@ -107,13 +105,22 @@ public class TileDrawer {
     public void updateTile(int selectedTile, int mouseX, int mouseY) {
         for (int i = 0; i < boxList.size(); i++) {
             if (boxList.get(i).mouseOver(mouseX, mouseY)) {
-                int r = selectedTile /numTilesAcross;
+                int r = selectedTile / numTilesAcross;
                 int c = selectedTile % numTilesAcross;
+                System.out.println(selectedTile);
 
                 boxList.get(i).setImage(tiles[r][c], selectedTile);
                 break;
             }
         }
+    }
+
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    public int getColCount() {
+        return colCount;
     }
 
     public BufferedImage[][] getTiles() {
