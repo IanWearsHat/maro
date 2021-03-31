@@ -32,7 +32,7 @@ public class MenuState extends GameState{
 
         try{
             bg = new Background("Jason's Secret Stuff" +"\\"+ "BestGirl7.png", 1);
-            //bg.setVector(-1, 0);
+            bg.setVector(-1, 0);
 
             titleColor = new Color(225,117, 87);
             titleFont = new Font("Times New Roman",Font.PLAIN, 60);

@@ -28,8 +28,6 @@ public class Background {
                 Background.class.getResource(s)
             );
             moveScale = ms;
-            System.out.println(image.getWidth());
-            System.out.println(image.getHeight());
         }
         catch(Exception e){
            e.printStackTrace(); 
@@ -61,10 +59,16 @@ public class Background {
 
         if(x < 0){
             g.drawImage(image, (int)x + GamePanel.width, (int) y, null);
+            System.out.println(x);
         }
 
-        if(x>0){
+        if(x == -GamePanel.width){
+            x = 0;
+        }
+
+        if(x > 0){
             g.drawImage(image, (int)x - GamePanel.width, (int) y, null);
+            System.out.println(x);
         }
     }
 
