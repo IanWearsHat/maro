@@ -1,7 +1,10 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -10,10 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import panel.OptionsBar;
 import panel.TileEditor;
-import panel.TileDrawer;
 import panel.Window;
 
 public class Main {

@@ -1,29 +1,22 @@
 package panel;
 
-import java.awt.Color;
+import javax.swing.JPanel;
+import java.util.ArrayList;
 import java.awt.Font;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D; 
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import java.util.ArrayList;
 
 // this should handle whatever is in the center of the screen, or the tileEditor, or where b2 currently is in Main.java
 
@@ -31,15 +24,13 @@ import java.util.ArrayList;
 public class TileEditor extends JPanel implements Runnable {
 
     private final int FRAME_DELAY = 50; // 50 ms = 20 FPS
+    private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
 
     private boolean animate = true;
     private int mouseX;
     private int mouseY;
-
-    private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
     
     public TileDrawer drawer;
-
     private int selectedTile = 21;
 
     public TileEditor() {
@@ -56,25 +47,23 @@ public class TileEditor extends JPanel implements Runnable {
                 else if (e.getButton() == MouseEvent.BUTTON3) {
                     drawer.updateTile(0, mouseX, mouseY);
                 }
-                
-                System.out.println("click");
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
-                System.out.println("release");
-            }
+            public void mouseReleased(MouseEvent e) {}
         });
 
         addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {}
             public void keyReleased(KeyEvent e) {}
             public void keyPressed(KeyEvent e) { 
-                if (e.getKeyChar() == 'a') {
-                    drawer.addColumn(); 
-                }
-                else if (e.getKeyChar() == 'l') {
-                    drawer.removeColumn();
+                switch(e.getKeyChar()) {
+                    case 'a':
+                        drawer.addColumn();
+                        break;
+                    case 'l':
+                        drawer.removeColumn();
+                        break;
                 }
             }
         });
@@ -126,13 +115,14 @@ public class TileEditor extends JPanel implements Runnable {
         g2.setFont(basic);
 
         drawer.draw(g2);
-        requestFocus();
+        requestFocusInWindow();
     }
 
     /** Enables periodic repaint calls. */
     public synchronized void start() {
         animate = true;
     }
+
     /** Pauses animation. */
     public synchronized void stop() {
         animate = false;

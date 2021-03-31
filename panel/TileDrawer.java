@@ -1,15 +1,9 @@
 package panel;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import java.awt.*;
-import java.awt.image.*;
-import javax.imageio.ImageIO;
-
 import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class TileDrawer {
     // "not moving" tile map that basically is what will be exported
@@ -107,7 +101,6 @@ public class TileDrawer {
             if (boxList.get(i).mouseOver(mouseX, mouseY)) {
                 int r = selectedTile / numTilesAcross;
                 int c = selectedTile % numTilesAcross;
-                System.out.println(selectedTile);
 
                 boxList.get(i).setImage(tiles[r][c], selectedTile);
                 break;
