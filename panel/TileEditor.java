@@ -1,12 +1,15 @@
 package panel;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import java.util.ArrayList;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D; 
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -35,16 +38,33 @@ public class TileEditor extends JPanel implements Runnable {
 
     public TileEditor() {
         /*  */
-        addMouseListener(new MouseAdapter() {
+
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    drawer.updateTile(selectedTile, mouseX, mouseY);
+                }
+                else if (SwingUtilities.isRightMouseButton(e)) {
+                    drawer.updateTile(0, mouseX, mouseY);
+                }
+
+            }
+        });
+
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 mouseX = e.getX();
                 mouseY = e.getY();
 
-                if (e.getButton() == MouseEvent.BUTTON1) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
                     drawer.updateTile(selectedTile, mouseX, mouseY);
                 }
-                else if (e.getButton() == MouseEvent.BUTTON3) {
+                else if (SwingUtilities.isRightMouseButton(e)) {
                     drawer.updateTile(0, mouseX, mouseY);
                 }
             }
@@ -53,7 +73,7 @@ public class TileEditor extends JPanel implements Runnable {
             public void mouseReleased(MouseEvent e) {}
         });
 
-        addKeyListener(new KeyListener() {
+        this.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {}
             public void keyReleased(KeyEvent e) {}
             public void keyPressed(KeyEvent e) { 
