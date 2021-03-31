@@ -52,7 +52,7 @@ public class TileEditor extends JPanel implements Runnable {
                     drawer.updateTile(selectedTile, mouseX, mouseY);
                 }
                 else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(0, mouseX, mouseY);
+                    drawer.updateTile(26, mouseX, mouseY);
                 }
             }
 
@@ -73,7 +73,7 @@ public class TileEditor extends JPanel implements Runnable {
                     drawer.updateTile(selectedTile, mouseX, mouseY);
                 }
                 else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(0, mouseX, mouseY);
+                    drawer.updateTile(26, mouseX, mouseY);
                 }
             }
         });
@@ -115,10 +115,10 @@ public class TileEditor extends JPanel implements Runnable {
                         drawer.moveRight = true;
                         break;
                     case 'k':
-                        drawer.addColumn();
+                        drawer.addRightColumn();
                         break;
                     case 'l':
-                        drawer.removeColumn();
+                        drawer.removeRightColumn();
                         break;
                 }
             }
@@ -137,37 +137,37 @@ public class TileEditor extends JPanel implements Runnable {
      * @param fileName The name of the file.
      */
     public void exportFile(String filePath, String fileName) {
-        try {
-            /*  Creates a .map file with the fileName and writes the column count and row count, each on its own line. */
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
-            String toWrite = String.valueOf(drawer.getColCount()) + "\n" + String.valueOf(drawer.getRowCount()) + "\n";
-            writer.write(toWrite);
+        // try {
+        //     /*  Creates a .map file with the fileName and writes the column count and row count, each on its own line. */
+        //     BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
+        //     String toWrite = String.valueOf(drawer.getColCount()) + "\n" + String.valueOf(drawer.getRowCount()) + "\n";
+        //     writer.write(toWrite);
             
-            /*  This writes every single grid box's tile ID to the .map file. It goes row by row until it hits the last box. 
-                It adds a space after every tile ID except at the end of a row. When it hits the end of a row, it adds a new line. */
-            ArrayList<GridBox> boxList = drawer.getBoxList();
-            int boxI;
-            for (int i = 0, rowCount = drawer.getRowCount(); i < rowCount; i++) {
-                boxI = i;
-                for (int j = 0, colCount = drawer.getColCount(); j < colCount; j++) {
-                    toWrite = String.valueOf(boxList.get(boxI).getTileIndex());
-                    if (j + 1 < colCount) { toWrite += " "; }
-                    writer.write(toWrite);
-                    boxI += rowCount;
-                }
-                if (i + 1 < rowCount) { writer.write("\n"); }
-            }
-            writer.close();
+        //     /*  This writes every single grid box's tile ID to the .map file. It goes row by row until it hits the last box. 
+        //         It adds a space after every tile ID except at the end of a row. When it hits the end of a row, it adds a new line. */
+        //     ArrayList<GridBox> boxList = drawer.getBoxList();
+        //     int boxI;
+        //     for (int i = 0, rowCount = drawer.getRowCount(); i < rowCount; i++) {
+        //         boxI = i;
+        //         for (int j = 0, colCount = drawer.getColCount(); j < colCount; j++) {
+        //             toWrite = String.valueOf(boxList.get(boxI).getTileIndex());
+        //             if (j + 1 < colCount) { toWrite += " "; }
+        //             writer.write(toWrite);
+        //             boxI += rowCount;
+        //         }
+        //         if (i + 1 < rowCount) { writer.write("\n"); }
+        //     }
+        //     writer.close();
 
-            /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
-                This then moves the file from this directory to the intended specified directory. */
-            Path p = Paths.get(filePath + File.separator + fileName + ".map");
-            Path filePathDest = Paths.get(fileName + ".map");
-            Files.move(filePathDest, p);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+        //     /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
+        //         This then moves the file from this directory to the intended specified directory. */
+        //     Path p = Paths.get(filePath + File.separator + fileName + ".map");
+        //     Path filePathDest = Paths.get(fileName + ".map");
+        //     Files.move(filePathDest, p);
+        // }
+        // catch(Exception e) {
+        //     e.printStackTrace();
+        // }
     }
 
     /*  Called by repaint() in the run method, meaning it's called every frame. */

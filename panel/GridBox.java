@@ -13,15 +13,13 @@ public class GridBox {
     private int x;
     private int y;
     private int size;
-    private int boxID;
 
-    public GridBox(BufferedImage image, int tileIndex, int x, int y, int size, int boxID) {
+    public GridBox(BufferedImage image, int tileIndex, int x, int y, int size) {
         this.image = image;
         this.tileIndex = (tileIndex == 26) ? 0 : tileIndex;
         this.x = x;
         this.y = y;
         this.size = size;
-        this.boxID = boxID;
     }
 
     public void draw(Graphics surface) {
@@ -59,5 +57,12 @@ public class GridBox {
 
     public int getTileIndex() {
         return tileIndex;
+    }
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
     }
 }

@@ -7,11 +7,11 @@ import javax.imageio.ImageIO;
 
 public class TileDrawer {
     // "not moving" tile map that basically is what will be exported
-    private ArrayList<GridBox> boxList;
+    // private ArrayList<GridBox> boxList;
+    private ArrayList<ArrayList<GridBox>> boxList;
 
     private int colCount = 10;
-    private int rowCount = 10;
-    private int boxID = 0;
+    private int rowCount = 5;
     private final int SPACEBETWEENBOXES = 0;
     private int tileSize = 75;
     
@@ -33,7 +33,7 @@ public class TileDrawer {
 
 
     public TileDrawer() {
-        boxList = new ArrayList<GridBox>();
+        boxList = new ArrayList<ArrayList<GridBox>>();
     }
 
     public void loadTiles() {
@@ -65,21 +65,28 @@ public class TileDrawer {
     }
 
     public void initializeGrid() {
-        for (int i = 0; i < colCount; i++) {
-            for (int j = 0; j < rowCount; j++) {
-                boxList.add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize, boxID));
-                boxID++;
-                drawY += tileSize + SPACEBETWEENBOXES;
+        for (int row = 0; row < rowCount; row++) {
+            boxList.add(new ArrayList<GridBox>());
+            for (int col = 0; col < colCount; col++) {
+                boxList.get(row).add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
+                drawX += tileSize + SPACEBETWEENBOXES;
             }
-            drawY = SPACEBETWEENBOXES;
-            drawX += tileSize + SPACEBETWEENBOXES;
+            drawX = SPACEBETWEENBOXES;
+            drawY += tileSize + SPACEBETWEENBOXES;
         }
     }
 
-    public void addColumn() {
-        for (int i = 0; i < rowCount; i++) {
-            boxList.add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize, boxID));
-            boxID++;
+    public void addRightColumn() {
+        // gets the x coordinate of the last box of the first row
+        int lastX = tileSize + boxList.get(0).get(boxList.get(0).size() - 1).getX();
+        drawX = lastX;
+
+        // gets the y coordinate of the last box of the first row
+        int lastY = boxList.get(0).get(boxList.get(0).size() - 1).getY();
+        drawY = lastY;
+
+        for (int row = 0; row < rowCount; row++) {
+            boxList.get(row).add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
             drawY += tileSize + SPACEBETWEENBOXES;
         }
         drawY -= rowCount * tileSize;
@@ -88,12 +95,14 @@ public class TileDrawer {
         colCount++;
     }
 
-    public void removeColumn() {
-        int initialSize = boxList.size();
-        if (initialSize != rowCount) {
-            for (int i = (boxList.size() - 1); i > (initialSize - 1) - rowCount; i--) {
-                boxList.remove(i);
-                boxID--;
+    public void removeRightColumn() {
+        int initialSize = boxList.get(0).size();
+
+        // so you don't remove a column when there's only one column left
+        if (initialSize != 1) {
+            for (int row = (boxList.size() - 1); row > -1; row--) { //runs from end of list to beginning (rowcount to 0)
+                int lastCol = (boxList.get(0).size() - 1);
+                boxList.get(row).remove(lastCol);
             }
             drawX -= tileSize + SPACEBETWEENBOXES;
 
@@ -102,20 +111,24 @@ public class TileDrawer {
     }
 
     public void updateTile(int selectedTile, int mouseX, int mouseY) {
-        for (int i = 0; i < boxList.size(); i++) {
-            if (boxList.get(i).mouseOver(mouseX, mouseY)) {
-                int r = selectedTile / numTilesAcross;
-                int c = selectedTile % numTilesAcross;
+        for (int row = 0; row < boxList.size(); row++) {
+            for (int col = 0; col < boxList.get(row).size(); col++) {
+                if (boxList.get(row).get(col).mouseOver(mouseX, mouseY)) {
+                    int r = selectedTile / numTilesAcross;
+                    int c = selectedTile % numTilesAcross;
 
-                boxList.get(i).setImage(tiles[r][c], selectedTile);
-                break;
+                    boxList.get(row).get(col).setImage(tiles[r][c], selectedTile);
+                    break;
+                }
             }
         }
     }
     
     private void moveTiles(int xOffset, int yOffset) {
-        for (int i = 0; i < boxList.size(); i++) {
-            boxList.get(i).move(xOffset, yOffset);
+        for (int row = 0; row < boxList.size(); row++) {
+            for (int col = 0; col < boxList.get(row).size(); col++) {
+                boxList.get(row).get(col).move(xOffset, yOffset);
+            }
         }
     }
 
@@ -131,9 +144,9 @@ public class TileDrawer {
         return tiles;
     }
 
-    public ArrayList<GridBox> getBoxList() {
-        return boxList;
-    }
+    // public ArrayList<GridBox> getBoxList() {
+    //     return boxList;
+    // }
 
     public void draw(Graphics surface) {
         if (moveUp) { 
@@ -157,7 +170,9 @@ public class TileDrawer {
         }
 
         for (int i = 0; i < boxList.size(); i++) {
-            boxList.get(i).draw(surface);
+            for (int j = 0; j < boxList.get(i).size(); j++) {
+                boxList.get(i).get(j).draw(surface);
+            }
         }
     }
 
