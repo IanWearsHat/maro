@@ -44,6 +44,7 @@ public class TileEditor extends JPanel implements Runnable {
     private int selectedTile = 21;
 
     public TileEditor() {
+        /*  */
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

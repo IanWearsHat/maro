@@ -5,6 +5,7 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
@@ -33,10 +34,10 @@ public class Main {
         JToolBar bar = new JToolBar();
         bar.setFloatable(false);
 
-        JButton fileB = new JButton("File");  
-        bar.add(fileB);
-        JButton editB = new JButton("Edit");
-        bar.add(editB);  
+        JButton fileButton = new JButton("File");  
+        bar.add(fileButton);
+        JButton editButton = new JButton("Edit");
+        bar.add(editButton);  
         bar.addSeparator();
 
         
@@ -45,14 +46,14 @@ public class Main {
         JPopupMenu fileMenu = new JPopupMenu();
 
         JMenuItem importOption = new JMenuItem("Import map file");
-        importOption.addActionListener( new ActionListener() {
+        importOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 System.out.println("importing");
             }
         });
         
         JMenuItem exportOption = new JMenuItem("Export map file");
-        exportOption.addActionListener( new ActionListener() {
+        exportOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     JFileChooser chooser = new JFileChooser();
@@ -64,13 +65,13 @@ public class Main {
                         String filePath = chooser.getCurrentDirectory().getPath();
                         String fileName = chooser.getSelectedFile().getName();
                         editor.exportFile(filePath, fileName);
+                        
+                        JOptionPane.showMessageDialog(w, "File " + fileName + " sucessfully exported to " + filePath + " !");
                     }
                 }
                 catch (Exception e) {
         
                 }
-                
-                System.out.println("exporting");
 
             }
         });
@@ -79,9 +80,9 @@ public class Main {
         fileMenu.add(exportOption);
 
         //makes it so the file button drops down the menu for file
-        fileB.addActionListener( new ActionListener() {
+        fileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                fileMenu.show(fileB, 0, fileB.getHeight());
+                fileMenu.show(fileButton, 0, fileButton.getHeight());
             }
         });
         bar.add(fileMenu);

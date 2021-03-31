@@ -30,8 +30,8 @@ public class OptionsBar extends JPanel {
         setFocusable(false);
     }
 
-    private JButton createButton(String name, int tileIndex) {
-        JButton button = new JButton(name);
+    private JButton createButton(int tileIndex) {
+        JButton button = new JButton();
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 editor.setSelectedTile(tileIndex);
@@ -46,7 +46,7 @@ public class OptionsBar extends JPanel {
 
     private void makeOptions() {
         for (int i = 0; i < 26; i++) {
-            add(createButton(String.valueOf(i), i));
+            add(createButton(i));
         }
 
     }
