@@ -1,12 +1,8 @@
 package panel;
 
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.Action;
-import javax.swing.AbstractAction;
-import javax.swing.SwingUtilities;
-
 import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D; 
@@ -24,40 +20,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-// this should handle whatever is in the center of the screen, or the tileEditor, or where b2 currently is in Main.java
-
+/**
+ * The JPanel that holds everything about the tiles themselves. This means the tile drawing and user inputs are handled here.
+ * This implements Runnable because it has Graphics. This means the framerate for the drawing is handled here.
+ */
 @SuppressWarnings("serial")
 public class TileEditor extends JPanel implements Runnable {
 
-    private final int FRAME_DELAY = 1000/60; //60 fps
+    private final long FRAME_DELAY = 1000/60; //60 fps
+    private boolean animate = true;
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
 
-    private boolean animate = true;
     private int mouseX;
     private int mouseY;
     
-    public TileDrawer drawer;
+    private TileDrawer drawer;
     private int selectedTile = 21;
 
     public TileEditor() {
-        /*  */
 
-        this.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                mouseX = e.getX();
-                mouseY = e.getY();
-
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    drawer.updateTile(selectedTile, mouseX, mouseY);
-                }
-                else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(0, mouseX, mouseY);
-                }
-
-            }
-        });
-
+        /*  This allows the user to paint the tile that their mouse is hovering over. 
+            If the user left clicks, the selected tile (chosen by the options bar on the left) will be painted.
+            If the user right clicks, air will be painted. */
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -76,6 +60,27 @@ public class TileEditor extends JPanel implements Runnable {
             public void mouseReleased(MouseEvent e) {}
         });
 
+        /*  This allows the user to drag their mouse across multiple tiles and paint them all. 
+            If the user left click drags, the selected tile (chosen by the options bar on the left) will be painted.
+            If the user right click drags, air will be painted. */
+           this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    drawer.updateTile(selectedTile, mouseX, mouseY);
+                }
+                else if (SwingUtilities.isRightMouseButton(e)) {
+                    drawer.updateTile(0, mouseX, mouseY);
+                }
+            }
+        });
+
+        /*  This allows the user to use wasd to move around the environment.
+            This way of setting the booleans in TileDrawer was chosen so that movement is smooth.
+            If keyReleased directly moves the x and y positions of the grid, the movement wouldn't be smooth. */
         this.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {}
             public void keyReleased(KeyEvent e) {
@@ -124,13 +129,22 @@ public class TileEditor extends JPanel implements Runnable {
         drawer.initializeGrid();
     }
 
+    /**
+     * This method exports a .map file with a specified name to a specified directory.
+     * This is called by the Export button in the dropdown menu for the File Button in the JToolBar at the top.
+     * 
+     * @param filePath The directory to export to.
+     * @param fileName The name of the file.
+     */
     public void exportFile(String filePath, String fileName) {
         try {
-            
+            /*  Creates a .map file with the fileName and writes the column count and row count, each on its own line. */
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
             String toWrite = String.valueOf(drawer.getColCount()) + "\n" + String.valueOf(drawer.getRowCount()) + "\n";
             writer.write(toWrite);
             
+            /*  This writes every single grid box's tile ID to the .map file. It goes row by row until it hits the last box. 
+                It adds a space after every tile ID except at the end of a row. When it hits the end of a row, it adds a new line. */
             ArrayList<GridBox> boxList = drawer.getBoxList();
             int boxI;
             for (int i = 0, rowCount = drawer.getRowCount(); i < rowCount; i++) {
@@ -145,6 +159,8 @@ public class TileEditor extends JPanel implements Runnable {
             }
             writer.close();
 
+            /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
+                This then moves the file from this directory to the intended specified directory. */
             Path p = Paths.get(filePath + File.separator + fileName + ".map");
             Path filePathDest = Paths.get(fileName + ".map");
             Files.move(filePathDest, p);
@@ -154,14 +170,7 @@ public class TileEditor extends JPanel implements Runnable {
         }
     }
 
-    public void setSelectedTile(int tileIndex) {
-        selectedTile = tileIndex;
-    }
-
-    public BufferedImage[][] getTiles() {
-        return drawer.getTiles();
-    }
-    
+    /*  Called by repaint() in the run method, meaning it's called every frame. */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -169,7 +178,6 @@ public class TileEditor extends JPanel implements Runnable {
         g2.setFont(basic);
 
         drawer.draw(g2);
-        requestFocusInWindow();
     }
 
     /** Enables periodic repaint calls. */
@@ -190,13 +198,26 @@ public class TileEditor extends JPanel implements Runnable {
     public void run() {
         while (true) {
             if (animationEnabled()) {
+                /* Needed for the button inputs to work. 
+                All button inputs work only on the "focused" component. 
+                If you click on the options button, "focus" is now on the options button, not the TileEditor,
+                so the buttons don't work for TileEditor.
+                */
+                requestFocusInWindow(); 
                 repaint();
             }
             try {
                 Thread.sleep(FRAME_DELAY);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         }
+    }
+
+    public void setSelectedTile(int tileIndex) {
+        selectedTile = tileIndex;
+    }
+
+    public BufferedImage[][] getTiles() {
+        return drawer.getTiles();
     }
 }

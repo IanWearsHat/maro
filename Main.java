@@ -101,12 +101,18 @@ public class Main {
         w.pack();
         w.setVisible(true);
 
+        Thread editorThread = new Thread(editor);
+        editorThread.start();
+
         w.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) { System.exit(0); }
+            public void windowClosing(WindowEvent e) { 
+                editorThread.interrupt();
+                System.exit(0); 
+            }
             public void windowDeiconified(WindowEvent e) { editor.start(); }
             public void windowIconified(WindowEvent e) { editor.stop(); }
         });
 
-        new Thread(editor).start();
+        
     }
 }
