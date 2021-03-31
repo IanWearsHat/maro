@@ -128,12 +128,15 @@ public class TileEditor extends JPanel implements Runnable {
         try {
             
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
+            String toWrite = String.valueOf(drawer.getColCount()) + "\n" + String.valueOf(drawer.getRowCount()) + "\n";
+            writer.write(toWrite);
+            
             ArrayList<GridBox> boxList = drawer.getBoxList();
             int boxI;
             for (int i = 0, rowCount = drawer.getRowCount(); i < rowCount; i++) {
                 boxI = i;
                 for (int j = 0, colCount = drawer.getColCount(); j < colCount; j++) {
-                    String toWrite = String.valueOf(boxList.get(boxI).getTileIndex());
+                    toWrite = String.valueOf(boxList.get(boxI).getTileIndex());
                     if (j + 1 < colCount) { toWrite += " "; }
                     writer.write(toWrite);
                     boxI += rowCount;
