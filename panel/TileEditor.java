@@ -19,6 +19,9 @@ import javax.swing.JPanel;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.ArrayList;
 
@@ -81,8 +84,9 @@ public class TileEditor extends JPanel implements Runnable {
         drawer.initializeGrid();
     }
 
-    public void exportFile(String fileName) {
+    public void exportFile(String filePath, String fileName) {
         try {
+            
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
             ArrayList<GridBox> boxList = drawer.getBoxList();
             int boxI = 0; 
@@ -97,8 +101,11 @@ public class TileEditor extends JPanel implements Runnable {
                 if (i + 1 < rowCount) { writer.write("\n"); }
                 boxI = i;
             }
-
             writer.close();
+
+            Path p = Paths.get(filePath + File.separator + fileName + ".map");
+            Path filePathDest = Paths.get(fileName + ".map");
+            Files.move(filePathDest, p);
         }
         catch(Exception e) {
             e.printStackTrace();

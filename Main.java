@@ -1,13 +1,14 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import javafx.stage.FileChooser;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import panel.OptionsBar;
 import panel.TileEditor;
@@ -54,22 +55,21 @@ public class Main {
         exportOption.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 try {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Open Resource File");
-                    fileChooser.getExtensionFilters().addAll(
-                            new ExtensionFilter("Text Files", "*.txt"),
-                            new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-                            new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-                            new ExtensionFilter("All Files", "*.*"));
-                    File selectedFile = fileChooser.showOpenDialog(mainStage);
-                    if (selectedFile != null) {
-                       mainStage.display(selectedFile);
+                    JFileChooser chooser = new JFileChooser();
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
+                    chooser.setFileFilter(filter);
+
+                    int returnVal = chooser.showSaveDialog(w);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        String filePath = chooser.getCurrentDirectory().getPath();
+                        String fileName = chooser.getSelectedFile().getName();
+                        editor.exportFile(filePath, fileName);
                     }
                 }
                 catch (Exception e) {
         
                 }
-                editor.exportFile("map");
+                
                 System.out.println("exporting");
 
             }
