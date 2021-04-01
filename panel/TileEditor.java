@@ -1,6 +1,8 @@
 package panel;
 
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import java.awt.Font;
@@ -38,6 +40,7 @@ public class TileEditor extends JPanel implements Runnable {
     
     private TileDrawer drawer;
     private int selectedTile = 21;
+    private int saveNumber = 0;
 
     public TileEditor() {
 
@@ -59,7 +62,9 @@ public class TileEditor extends JPanel implements Runnable {
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+                createFile(String.valueOf(saveNumber) + ".map"); // for the control z feature.
+            }
         });
 
         /*  This allows the user to drag their mouse across multiple tiles and paint them all. 
@@ -148,6 +153,7 @@ public class TileEditor extends JPanel implements Runnable {
         drawer.loadTiles();
         drawer.initializeGrid();
     }
+
     public void importFile(Path path) {
         try {
             BufferedReader br = Files.newBufferedReader(path);
@@ -174,14 +180,40 @@ public class TileEditor extends JPanel implements Runnable {
 
     /**
      * This method exports a .map file with a specified name to a specified directory.
+     * <p>
      * This is called by the Export button in the dropdown menu for the File Button in the JToolBar at the top.
+     * <p>
+     * If the file already exists in the directory, the user will be asked if they want to overwrite it or not.
+     * <p>
+     * If they overwrite it, the file getes deleted and the new file gets created. Else, it'll just stop running.
      * 
      * @param filePath The directory to export to.
      * @param fileName The name of the file.
      */
     public void exportFile(String filePath, String fileName) {
         try {
-            /*  Creates a .map file with the fileName and writes the column count and row count, each on its own line. */
+            Path inputPath = Paths.get(filePath + File.separator + fileName + ".map");
+            if (Files.exists(inputPath)) {
+                int option = JOptionPane.showConfirmDialog(
+                    this, "File already exists. Would you like to overwrite it?", "Overwrite", JOptionPane.YES_NO_OPTION);
+
+                if (option == JOptionPane.YES_OPTION) { Files.delete(inputPath); }
+                else { throw new Exception("stop"); }
+            }
+            createFile(fileName);
+
+            /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
+                This then moves the file from this directory to the intended specified directory. */
+            
+            Path filePathDest = Paths.get(fileName + ".map");
+            Files.move(filePathDest, inputPath);
+            JOptionPane.showMessageDialog(this, "File " + fileName + " sucessfully exported to " + filePath + " !");
+        }
+        catch(Exception e) {}
+    }
+
+    private void createFile(String fileName) {
+        try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
             String toWrite = String.valueOf(drawer.getColCount()) + "\n" + String.valueOf(drawer.getRowCount()) + "\n";
             writer.write(toWrite);
@@ -198,15 +230,9 @@ public class TileEditor extends JPanel implements Runnable {
                 if (row + 1 < rowCount) { writer.write("\n"); }
             }
             writer.close();
-
-            /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
-                This then moves the file from this directory to the intended specified directory. */
-            Path p = Paths.get(filePath + File.separator + fileName + ".map");
-            Path filePathDest = Paths.get(fileName + ".map");
-            Files.move(filePathDest, p);
         }
-        catch(Exception e) {
-            e.printStackTrace();
+        catch (Exception e) {
+
         }
     }
 

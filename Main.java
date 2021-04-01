@@ -83,8 +83,6 @@ public class Main {
                         String filePath = chooser.getCurrentDirectory().getPath();
                         String fileName = chooser.getSelectedFile().getName();
                         editor.exportFile(filePath, fileName);
-                        
-                        JOptionPane.showMessageDialog(w, "File " + fileName + " sucessfully exported to " + filePath + " !");
                     }
                 }
                 catch (Exception e) {
