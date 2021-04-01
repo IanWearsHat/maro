@@ -16,14 +16,10 @@ public class OptionsBar extends JPanel {
     private TileEditor editor;
     private BufferedImage[][] tiles;
 
-    private ArrayList<JButton> buttonList;
-
     public OptionsBar(TileEditor editor, BufferedImage[][] tiles, GridLayout layout) {
         super(layout);
         this.editor = editor;
         this.tiles = tiles;
-
-        buttonList = new ArrayList<JButton>();
 
         makeOptions();
         setFocusable(false);

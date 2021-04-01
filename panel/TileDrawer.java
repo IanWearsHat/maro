@@ -7,8 +7,11 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 public class TileDrawer {
+    // TODO: colCount, rowCount, and tileSize need to be inputted from the user
+    // We need to be able to scale the entire thing too
+    // There also needs to be a way to add a row above and below and remove a row above and below
+
     // "not moving" tile map that basically is what will be exported
-    // private ArrayList<GridBox> boxList;
     private ArrayList<ArrayList<GridBox>> boxList;
 
     private int colCount = 3;
@@ -28,7 +31,6 @@ public class TileDrawer {
     private String tileSheetPath = "resources" + "\\" + "resized.gif";
     private BufferedImage[][] tiles;
     private int numTilesAcross;
-
 
     public TileDrawer() {
         boxList = new ArrayList<ArrayList<GridBox>>();
@@ -85,6 +87,7 @@ public class TileDrawer {
         }
         System.out.println("\n");
     }
+
     /*  "Creates" a left column() by making a right column first, then moving it to the left of the first column
         Then, to update the data structure of the arraylist of arraylists, we use Collections.rotate() to move everything up by one. */
     public void addLeftColumn() {
@@ -138,6 +141,39 @@ public class TileDrawer {
             drawX -= tileSize;
 
             colCount--;
+        }
+    }
+
+    public void addTopRow() {
+
+    }
+
+    public void removeTopRow() {
+
+    }
+
+    public void addBottomRow() {
+        int firstX = boxList.get(0).get(0).getX();
+        drawX = firstX;
+
+        int firstY = tileSize + boxList.get((boxList.size() - 1)).get(0).getY();
+        drawY = firstY;
+
+        ArrayList<GridBox> newLine = new ArrayList<GridBox>();
+        for (int col = 0; col < colCount; col++) {
+            newLine.add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
+            drawX += tileSize;
+        }
+        boxList.add(newLine);
+
+        rowCount++;
+    }
+
+    public void removeBottomRow() {
+        int initialSize = boxList.size();
+        if (initialSize != 1) {
+            boxList.remove(boxList.size() - 1);
+            rowCount--;
         }
     }
 

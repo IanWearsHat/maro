@@ -4,7 +4,10 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 /**
- * This class represents a single grid box. One of these will draw only one image (tile) onto the screen with draw().
+ * This class represents a single grid box. 
+ * <p>
+ * One of these will draw only one image (tile) onto the screen with draw().
+ * <p>
  * It holds an x and y position, the image (tile) it will draw, the image's tileIndex from the tileSheet, and the size of the tile.
  */
 public class GridBox {
@@ -34,6 +37,7 @@ public class GridBox {
 
     /**
      * Checks if the user's mouse is hovering over itself.
+     * <p>
      * In TileDrawer, if this returns true, then the box that returns true will change its image
      * to whatever tile the user selected.
      * 

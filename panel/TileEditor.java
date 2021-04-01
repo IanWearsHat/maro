@@ -26,7 +26,6 @@ import java.nio.file.Paths;
  */
 @SuppressWarnings("serial")
 public class TileEditor extends JPanel implements Runnable {
-
     private final long FRAME_DELAY = 1000/60; //60 fps
     private boolean animate = true;
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
@@ -113,6 +112,12 @@ public class TileEditor extends JPanel implements Runnable {
                         break;
                     case 'd':
                         drawer.moveRight = true;
+                        break;
+                    case 'u':
+                        drawer.addBottomRow();
+                        break;
+                    case 'i':
+                        drawer.removeBottomRow();
                         break;
                     case 'h':
                         drawer.removeLeftColumn();
