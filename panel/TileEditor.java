@@ -14,6 +14,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.File;
 import java.nio.file.Files;
@@ -144,6 +147,29 @@ public class TileEditor extends JPanel implements Runnable {
         drawer = new TileDrawer();
         drawer.loadTiles();
         drawer.initializeGrid();
+    }
+    public void importFile(Path path) {
+        try {
+            BufferedReader br = Files.newBufferedReader(path);
+            int colCount = Integer.parseInt(br.readLine());
+            int rowCount = Integer.parseInt(br.readLine());
+            int[][] map = new int[rowCount][colCount];
+
+            String delims = "\\s+";
+
+            for (int row = 0; row < rowCount; row++){
+                String line = br.readLine();
+                String[] tokens = line.split(delims);
+                for(int col = 0; col < colCount; col++){
+                    map[row][col] = Integer.parseInt(tokens[col]);
+                }
+            }
+
+            drawer.importFile(colCount, rowCount, map);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

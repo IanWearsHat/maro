@@ -9,13 +9,13 @@ import javax.imageio.ImageIO;
 public class TileDrawer {
     // TODO: colCount, rowCount, and tileSize need to be inputted from the user
     // We need to be able to scale the entire thing too
-    // There also needs to be a way to add a row above and below and remove a row above and below
+    // needs a way to import a .map file
 
     // "not moving" tile map that basically is what will be exported
     private ArrayList<ArrayList<GridBox>> boxList;
 
-    private int colCount = 3;
-    private int rowCount = 2;
+    private int colCount = 10;
+    private int rowCount = 10;
     private int tileSize = 75;
     
     public boolean moveUp = false;
@@ -76,6 +76,30 @@ public class TileDrawer {
         }
     }
 
+    public void importFile(int colCount, int rowCount, int[][] map) {
+        this.colCount = colCount;
+        this.rowCount = rowCount;
+        drawX = 0;
+        drawY = 0;
+
+        boxList = new ArrayList<ArrayList<GridBox>>();
+
+        for (int row = 0; row < rowCount; row++) {
+            boxList.add(new ArrayList<GridBox>());
+            for (int col = 0; col < colCount; col++) {
+                int rc = map[row][col];
+                int r = rc / numTilesAcross;
+                int c = rc % numTilesAcross;
+                if (r == 0 && c == 0) {r = 1; c = 5;}
+
+                boxList.get(row).add(new GridBox(tiles[r][c], map[row][col], drawX, drawY, tileSize));
+                drawX += tileSize;
+            }
+            drawX = 0;
+            drawY += tileSize;
+        }
+    }
+
     private void printMap() {
         for (int row = 0; row < rowCount; row++) {
             for (int col = 0; col < colCount; col++) {
@@ -99,7 +123,7 @@ public class TileDrawer {
     }
 
     public void removeLeftColumn() {
-        int initialSize = boxList.get(0).size();
+        int initialSize = colCount;
         // so you don't remove a column when there's only one column left
         if (initialSize != 1) {
             for (int row = 0; row < rowCount; row++) {
@@ -113,11 +137,11 @@ public class TileDrawer {
 
     public void addRightColumn() {
         // gets the x coordinate of the last box of the first row
-        int lastX = tileSize + boxList.get(0).get(boxList.get(0).size() - 1).getX();
+        int lastX = tileSize + boxList.get(0).get(colCount - 1).getX();
         drawX = lastX;
 
         // gets the y coordinate of the last box of the first row
-        int lastY = boxList.get(0).get(boxList.get(0).size() - 1).getY();
+        int lastY = boxList.get(0).get(colCount - 1).getY();
         drawY = lastY;
 
         for (int row = 0; row < rowCount; row++) {
@@ -131,10 +155,10 @@ public class TileDrawer {
     }
 
     public void removeRightColumn() {
-        int initialSize = boxList.get(0).size();
+        int initialSize = colCount;
         // so you don't remove a column when there's only one column left
         if (initialSize != 1) {
-            int lastCol = (boxList.get(0).size() - 1);
+            int lastCol = colCount - 1;
             for (int row = 0; row < rowCount; row++) {
                 boxList.get(row).remove(lastCol);
             }
@@ -146,7 +170,7 @@ public class TileDrawer {
 
     public void addTopRow() {
         addBottomRow();
-        for (int row = boxList.size() - 1; row > 0; row--) {
+        for (int row = rowCount - 1; row > 0; row--) {
             Collections.copy(boxList.get(row), boxList.get(row-1));
         }
 
@@ -155,6 +179,7 @@ public class TileDrawer {
 
         int firstY = -tileSize + boxList.get(0).get(0).getY();
         drawY = firstY;
+
         for (int col = 0; col < colCount; col++) {
             boxList.get(0).set(col, new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
             drawX += tileSize;
@@ -170,7 +195,7 @@ public class TileDrawer {
         int firstX = boxList.get(0).get(0).getX();
         drawX = firstX;
 
-        int firstY = tileSize + boxList.get((boxList.size() - 1)).get(0).getY();
+        int firstY = tileSize + boxList.get((rowCount - 1)).get(0).getY();
         drawY = firstY;
 
         ArrayList<GridBox> newLine = new ArrayList<GridBox>();
@@ -184,16 +209,16 @@ public class TileDrawer {
     }
 
     public void removeBottomRow() {
-        int initialSize = boxList.size();
+        int initialSize = rowCount;
         if (initialSize != 1) {
-            boxList.remove(boxList.size() - 1);
+            boxList.remove(rowCount - 1);
             rowCount--;
         }
     }
 
     public void updateTile(int selectedTile, int mouseX, int mouseY) {
-        for (int row = 0; row < boxList.size(); row++) {
-            for (int col = 0; col < boxList.get(row).size(); col++) {
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
                 if (boxList.get(row).get(col).mouseOver(mouseX, mouseY)) {
                     int r = selectedTile / numTilesAcross;
                     int c = selectedTile % numTilesAcross;

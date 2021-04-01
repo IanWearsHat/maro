@@ -3,6 +3,8 @@ import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.nio.file.Path;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
@@ -49,7 +51,22 @@ public class Main {
         JMenuItem importOption = new JMenuItem("Import map file");
         importOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("importing");
+                try {
+                    JFileChooser chooser = new JFileChooser();
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
+                    chooser.setFileFilter(filter);
+
+                    int returnVal = chooser.showOpenDialog(w);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File file = chooser.getSelectedFile();
+                        Path path = file.toPath();
+                        
+                        editor.importFile(path);
+                    }
+                }
+                catch (Exception e) {
+        
+                }
             }
         });
         
