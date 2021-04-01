@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 public class TileDrawer {
     // TODO: colCount, rowCount, and tileSize need to be inputted from the user
     // We need to be able to scale the entire thing too
-    // needs a way to import a .map file
 
     // "not moving" tile map that basically is what will be exported
     private ArrayList<ArrayList<GridBox>> boxList;
@@ -64,6 +63,10 @@ public class TileDrawer {
         }
     }
 
+    /**
+     * Initializes the grid to a default grid with default colCount and rowCount and default air tiles. <p>
+     * Like most methods with drawing in this class, it goes row by row starting from the top and goes left to right for each row.
+     */
     public void initializeGrid() {
         for (int row = 0; row < rowCount; row++) {
             boxList.add(new ArrayList<GridBox>());
@@ -76,21 +79,30 @@ public class TileDrawer {
         }
     }
 
+    /**
+     * Takes the colCount, rowCount, and map array from the file that has been imported and draws the map.
+     * 
+     * @param colCount The number of columns.
+     * @param rowCount The number of rows.
+     * @param map The map array.
+     */
     public void importFile(int colCount, int rowCount, int[][] map) {
         this.colCount = colCount;
         this.rowCount = rowCount;
         drawX = 0;
         drawY = 0;
 
-        boxList = new ArrayList<ArrayList<GridBox>>();
+        // deletes the map currently in the editor and replaces it with a blank one.
+        boxList = new ArrayList<ArrayList<GridBox>>(); 
 
+        // same as the initialize grid method, but uses each tileIndex from the map array instead of a default air tile.
         for (int row = 0; row < rowCount; row++) {
             boxList.add(new ArrayList<GridBox>());
             for (int col = 0; col < colCount; col++) {
                 int rc = map[row][col];
                 int r = rc / numTilesAcross;
                 int c = rc % numTilesAcross;
-                if (r == 0 && c == 0) {r = 1; c = 5;}
+                if (r == 0 && c == 0) {r = 1; c = 5;} // if the tile is air (0), use the default gridBox instead to draw
 
                 boxList.get(row).add(new GridBox(tiles[r][c], map[row][col], drawX, drawY, tileSize));
                 drawX += tileSize;
@@ -162,12 +174,20 @@ public class TileDrawer {
             for (int row = 0; row < rowCount; row++) {
                 boxList.get(row).remove(lastCol);
             }
-            drawX -= tileSize;
 
             colCount--;
         }
     }
 
+    /* Uses a tetris style method of updating the arraylists. First, a new bottom row is created. Then, starting from the
+    second to last row to the first row, we use Collections.copy to copy the list before to the current list.
+    Ex. Start with 3 rows. 
+        addBottomRow() adds 1 more row of blank space to the bottom, meaning we now have 4 rows.
+        3rd row copied to 4th row.
+        2nd row copied to 3rd row.
+        1st row copied to 2nd row.
+        Every box in 1st row replaced with air.
+        So now, every row moves one down. */
     public void addTopRow() {
         addBottomRow();
         for (int row = rowCount - 1; row > 0; row--) {
