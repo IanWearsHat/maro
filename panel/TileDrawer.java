@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 public class TileDrawer {
     // TODO: colCount, rowCount, and tileSize need to be inputted from the user
     // We need to be able to scale the entire thing too
-<<<<<<< HEAD
     // needs to be able to handle a user-imported tilesheet, with user-imported backgrounds, with a default gridbox as its own tile in resources
     // needs to be able to handle files that already exist (probably should be handled in tileEditor)
     // probably needs a control z feature
@@ -21,8 +20,6 @@ public class TileDrawer {
     //  the client sends a request for say, "levelpoggywoggy.map", and the server sends over "levelpoggywoggy.map" over a socket stream
     //  the client then loads up levelpoggywoggy.map
     //  some maps could be locked behind a password
-=======
->>>>>>> f81b527e25f0c1c0e764d46ba21a5d8e502d260c
 
     // "not moving" tile map that basically is what will be exported
     private ArrayList<ArrayList<GridBox>> boxList;
