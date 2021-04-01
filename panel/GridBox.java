@@ -52,8 +52,13 @@ public class GridBox {
         return false;
     }
 
-    /*  Sets the box's image to image and the tileIndex to tileIndex.
-        If the tileIndex is 26 (default gridbox in the tilesheet), set this.tileIndex to 0 (air).  */
+    /**
+     * Sets the box's image to image and the tileIndex to tileIndex.
+     * <p>
+     * If the tileIndex is 26 (default gridbox in the tilesheet), set this.tileIndex to 0 (air).  
+     * @param image The tile to be rendered.
+     * @param tileIndex The tileIndex that tile is.
+     */
     public void setImage(BufferedImage image, int tileIndex) {
         this.image = image;
         this.tileIndex = (tileIndex == 26) ? 0 : tileIndex;
