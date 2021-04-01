@@ -40,6 +40,7 @@ public class TileEditor extends JPanel implements Runnable {
     
     private TileDrawer drawer;
     private int selectedTile = 21;
+    private int saveNumber = 0;
 
     public TileEditor() {
 
@@ -62,7 +63,7 @@ public class TileEditor extends JPanel implements Runnable {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                // createSave();
+                createFile(String.valueOf(saveNumber) + ".map"); // for the control z feature.
             }
         });
 
@@ -179,7 +180,12 @@ public class TileEditor extends JPanel implements Runnable {
 
     /**
      * This method exports a .map file with a specified name to a specified directory.
+     * <p>
      * This is called by the Export button in the dropdown menu for the File Button in the JToolBar at the top.
+     * <p>
+     * If the file already exists in the directory, the user will be asked if they want to overwrite it or not.
+     * <p>
+     * If they overwrite it, the file getes deleted and the new file gets created. Else, it'll just stop running.
      * 
      * @param filePath The directory to export to.
      * @param fileName The name of the file.
@@ -190,12 +196,9 @@ public class TileEditor extends JPanel implements Runnable {
             if (Files.exists(inputPath)) {
                 int option = JOptionPane.showConfirmDialog(
                     this, "File already exists. Would you like to overwrite it?", "Overwrite", JOptionPane.YES_NO_OPTION);
-                if (option == JOptionPane.YES_OPTION) {
-                    Files.delete(inputPath);
-                }
-                else {
-                    throw new Exception("stop");
-                }
+
+                if (option == JOptionPane.YES_OPTION) { Files.delete(inputPath); }
+                else { throw new Exception("stop"); }
             }
             createFile(fileName);
 
