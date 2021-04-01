@@ -145,11 +145,25 @@ public class TileDrawer {
     }
 
     public void addTopRow() {
+        addBottomRow();
+        for (int row = boxList.size() - 1; row > 0; row--) {
+            Collections.copy(boxList.get(row), boxList.get(row-1));
+        }
 
+        int firstX = boxList.get(0).get(0).getX();
+        drawX = firstX;
+
+        int firstY = -tileSize + boxList.get(0).get(0).getY();
+        drawY = firstY;
+        for (int col = 0; col < colCount; col++) {
+            boxList.get(0).set(col, new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
+            drawX += tileSize;
+        }
     }
 
     public void removeTopRow() {
-
+        boxList.remove(0);
+        rowCount--;
     }
 
     public void addBottomRow() {

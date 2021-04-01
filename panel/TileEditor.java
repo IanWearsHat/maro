@@ -113,6 +113,12 @@ public class TileEditor extends JPanel implements Runnable {
                     case 'd':
                         drawer.moveRight = true;
                         break;
+                    case 'n':
+                        drawer.addTopRow();
+                        break;
+                    case 'm':
+                        drawer.removeTopRow();
+                        break;
                     case 'u':
                         drawer.addBottomRow();
                         break;
