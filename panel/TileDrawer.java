@@ -100,8 +100,9 @@ public class TileDrawer {
     public void importFile(int colCount, int rowCount, int[][] map) {
         this.colCount = colCount;
         this.rowCount = rowCount;
-        drawX = 0;
-        drawY = 0;
+        
+        drawX = boxList.get(0).get(0).getX();
+        drawY = boxList.get(0).get(0).getY();
 
         // deletes the map currently in the editor and replaces it with a blank one.
         boxList = new ArrayList<ArrayList<GridBox>>(); 
@@ -118,7 +119,7 @@ public class TileDrawer {
                 boxList.get(row).add(new GridBox(tiles[r][c], map[row][col], drawX, drawY, tileSize));
                 drawX += tileSize;
             }
-            drawX = 0;
+            drawX -= tileSize * colCount;
             drawY += tileSize;
         }
     }

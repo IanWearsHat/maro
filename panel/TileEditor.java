@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.Action;
+import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -14,6 +17,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -40,9 +44,12 @@ public class TileEditor extends JPanel implements Runnable {
     
     private TileDrawer drawer;
     private int selectedTile = 21;
-    private int saveNumber = 0;
+    private int saveNumber = -1;
+
+    private ArrayList<Integer> saveList;
 
     public TileEditor() {
+        saveList = new ArrayList<Integer>();
 
         /*  This allows the user to paint the tile that their mouse is hovering over. 
             If the user left clicks, the selected tile (chosen by the options bar on the left) will be painted.
@@ -50,6 +57,20 @@ public class TileEditor extends JPanel implements Runnable {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (saveList.size() > 0) {
+                    int indexDiff = saveList.get(saveList.size() - 1) - saveNumber;
+                    int endValue = saveList.get(saveList.size() - 1 - indexDiff);
+
+                    while (saveList.get(saveList.size() - 1) != endValue) {
+                        try {
+                            Path path = Paths.get(String.valueOf(saveList.get(saveList.size() - 1)) + ".map");
+                            Files.delete(path);
+                            saveList.remove(saveList.size() - 1);
+                        }
+                        catch (Exception exception) {}
+                    }
+                }
+
                 mouseX = e.getX();
                 mouseY = e.getY();
 
@@ -63,9 +84,44 @@ public class TileEditor extends JPanel implements Runnable {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                createFile(String.valueOf(saveNumber) + ".map"); // for the control z feature.
+                try {
+                    saveNumber++;
+                    if (saveList.size() == 25) {
+                        Path path = Paths.get(String.valueOf(saveList.get(0)) + ".map");
+                        Files.delete(path);
+                        saveList.remove(0);
+                    }
+                    createFile(String.valueOf(saveNumber)); // for the control z feature.
+                    saveList.add(saveNumber);
+                    
+                }
+                catch (Exception exception) {}
             }
         });
+
+        Action undo = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                if (saveNumber != saveList.get(0)) {
+                    Path path = Paths.get(String.valueOf(saveNumber - 1) + ".map");
+                    importFile(path);
+                    saveNumber--;
+                }
+            }
+        };
+        this.getInputMap().put(KeyStroke.getKeyStroke(90, java.awt.event.InputEvent.CTRL_DOWN_MASK), "undo");
+        this.getActionMap().put("undo", undo);
+
+        Action redo = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                if (saveNumber != saveList.get(saveList.size() - 1)) {
+                    Path path = Paths.get(String.valueOf(saveNumber + 1) + ".map");
+                    importFile(path);
+                    saveNumber++;
+                }
+            }
+        };
+        this.getInputMap().put(KeyStroke.getKeyStroke(89, java.awt.event.InputEvent.CTRL_DOWN_MASK), "redo");
+        this.getActionMap().put("redo", redo);
 
         /*  This allows the user to drag their mouse across multiple tiles and paint them all. 
             If the user left click drags, the selected tile (chosen by the options bar on the left) will be painted.
