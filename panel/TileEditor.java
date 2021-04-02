@@ -20,8 +20,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.File;
@@ -35,6 +33,7 @@ import java.nio.file.Paths;
  */
 @SuppressWarnings("serial")
 public class TileEditor extends JPanel implements Runnable {
+    // TODO: Still needs a way to delete all the saves for undo and redo when initializing
     private final long FRAME_DELAY = 1000/60; //60 fps
     private boolean animate = true;
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
