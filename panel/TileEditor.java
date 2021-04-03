@@ -129,7 +129,7 @@ public class TileEditor extends JPanel implements Runnable {
         /*  This allows the user to drag their mouse across multiple tiles and paint them all. 
             If the user left click drags, the selected tile (chosen by the options bar on the left) will be painted.
             If the user right click drags, air will be painted. */
-           this.addMouseMotionListener(new MouseMotionAdapter() {
+        this.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 mouseX = e.getX();

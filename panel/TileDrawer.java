@@ -8,13 +8,10 @@ import javax.imageio.ImageIO;
 
 public class TileDrawer {
     // TODO: colCount, rowCount, and tileSize need to be inputted from the user
-    // We need to be able to scale the entire thing too
     // needs to be able to handle a user-imported tilesheet, with user-imported backgrounds, with a default gridbox as its own tile in resources
-    // needs to be able to handle files that already exist (probably should be handled in tileEditor)
-    // probably needs a control z feature
     // integrate with the game itself as well as sockets
 
-    //  you have the client send their .map file to the server through file streams and whatnot,
+    //  you have the client send their .map file to the server through file streams and whatnot and the server saves that .map file
     //  then when another client wants to see the "marketplace", it asks the server for a list of all the .map files that have been submitted to the server
     //  the server responds with the list, 
     //  the client sends a request for say, "levelpoggywoggy.map", and the server sends over "levelpoggywoggy.map" over a socket stream
