@@ -123,8 +123,6 @@ public class Main {
                 editorThread.interrupt();
                 System.exit(0); 
             }
-            public void windowDeiconified(WindowEvent e) { editor.start(); }
-            public void windowIconified(WindowEvent e) { editor.stop(); }
             public void windowActivated(WindowEvent e) { editor.start(); }
             public void windowDeactivated(WindowEvent e) { editor.stop(); }
         });
