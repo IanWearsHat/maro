@@ -17,6 +17,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -44,6 +46,8 @@ public class TileEditor extends JPanel implements Runnable {
     private TileDrawer drawer;
     private int selectedTile = 21;
     private int saveNumber = -1;
+
+    public static double scale = 1;
 
     private ArrayList<Integer> saveList;
 
@@ -77,7 +81,7 @@ public class TileEditor extends JPanel implements Runnable {
                     drawer.updateTile(selectedTile, mouseX, mouseY);
                 }
                 else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(26, mouseX, mouseY);
+                    drawer.updateTile(0, mouseX, mouseY);
                 }
             }
 
@@ -135,7 +139,22 @@ public class TileEditor extends JPanel implements Runnable {
                     drawer.updateTile(selectedTile, mouseX, mouseY);
                 }
                 else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(26, mouseX, mouseY);
+                    drawer.updateTile(0, mouseX, mouseY);
+                }
+            }
+        });
+
+        this.addMouseWheelListener(new MouseWheelListener() {
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int moveInt = e.getWheelRotation();
+                if (moveInt < 0) {
+                    // scale up
+                    if (scale < 2.5) { scale += 0.2; }
+                    
+                }
+                else if (moveInt > 0) {
+                    // scale down
+                    if (scale > 0.8) { scale -= 0.2; }
                 }
             }
         });
@@ -300,6 +319,7 @@ public class TileEditor extends JPanel implements Runnable {
 
         drawer.draw(g2);
     }
+
 
     /** Enables periodic repaint calls. */
     public synchronized void start() {

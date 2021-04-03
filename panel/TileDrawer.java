@@ -26,7 +26,8 @@ public class TileDrawer {
 
     private int colCount = 10;
     private int rowCount = 10;
-    private int tileSize = 75;
+    private int tileSize = 30;
+    private int tileSizeScaled = (int) (tileSize * TileEditor.scale);
     
     public boolean moveUp = false;
     public boolean moveDown = false;
@@ -37,10 +38,12 @@ public class TileDrawer {
     private int drawX = 0;
     private int drawY = 0;
 
-    private BufferedImage tileSheet;
-    private String tileSheetPath = "resources" + "\\" + "resized.gif";
     private BufferedImage[][] tiles;
     private int numTilesAcross;
+    private BufferedImage tileSheet;
+    private String tileSheetPath = "resources" + "\\" + "grasstileset.gif";
+    private BufferedImage defaultBox;
+    private String defaultBoxPath = "resources" + "\\" + "defaultBox.gif";
 
     public TileDrawer() {
         boxList = new ArrayList<ArrayList<GridBox>>();
@@ -48,7 +51,9 @@ public class TileDrawer {
 
     public void loadTiles() {
         try {
+            defaultBox = ImageIO.read(TileDrawer.class.getResource(defaultBoxPath));
             tileSheet = ImageIO.read(TileDrawer.class.getResource(tileSheetPath));
+            // tileSize = tileSheet.getWidth() / numTilesAcross;
             numTilesAcross = tileSheet.getWidth() / tileSize;
             tiles = new BufferedImage[2][numTilesAcross];
 
@@ -82,11 +87,11 @@ public class TileDrawer {
         for (int row = 0; row < rowCount; row++) {
             boxList.add(new ArrayList<GridBox>());
             for (int col = 0; col < colCount; col++) {
-                boxList.get(row).add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
-                drawX += tileSize;
+                boxList.get(row).add(new GridBox(defaultBox, 0, drawX, drawY, tileSizeScaled));
+                drawX += tileSizeScaled;
             }
             drawX = 0;
-            drawY += tileSize;
+            drawY += tileSizeScaled;
         }
     }
 
@@ -114,13 +119,13 @@ public class TileDrawer {
                 int rc = map[row][col];
                 int r = rc / numTilesAcross;
                 int c = rc % numTilesAcross;
-                if (r == 0 && c == 0) {r = 1; c = 5;} // if the tile is air (0), use the default gridBox instead to draw
-
-                boxList.get(row).add(new GridBox(tiles[r][c], map[row][col], drawX, drawY, tileSize));
-                drawX += tileSize;
+                if (r == 0 && c == 0) { boxList.get(row).add(new GridBox(defaultBox, map[row][col], drawX, drawY, tileSizeScaled)); } // if the tile is air (0), use the default gridBox instead to draw
+                else { boxList.get(row).add(new GridBox(tiles[r][c], map[row][col], drawX, drawY, tileSizeScaled)); }
+                
+                drawX += tileSizeScaled;
             }
-            drawX -= tileSize * colCount;
-            drawY += tileSize;
+            drawX -= tileSizeScaled * colCount;
+            drawY += tileSizeScaled;
         }
     }
 
@@ -136,12 +141,26 @@ public class TileDrawer {
         System.out.println("\n");
     }
 
+    private void scale() {
+        int originX = boxList.get(0).get(0).getX();
+        int originY = boxList.get(0).get(0).getY();
+
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
+                int x = originX + (tileSizeScaled * col);
+                int y = originY + (tileSizeScaled * row);
+
+                boxList.get(row).get(col).scale(x, y, tileSizeScaled);
+            }
+        }
+    }
+
     /*  "Creates" a left column() by making a right column first, then moving it to the left of the first column
         Then, to update the data structure of the arraylist of arraylists, we use Collections.rotate() to move everything up by one. */
     public void addLeftColumn() {
         addRightColumn();
         for (int row = 0; row < rowCount; row++) {
-            boxList.get(row).get(colCount - 1).move(-tileSize * colCount, 0);
+            boxList.get(row).get(colCount - 1).move(-tileSizeScaled * colCount, 0);
             Collections.rotate(boxList.get(row), 1); //https://stackoverflow.com/questions/4938626/moving-items-around-in-an-arraylist 
         }
     }
@@ -153,7 +172,7 @@ public class TileDrawer {
             for (int row = 0; row < rowCount; row++) {
                 boxList.get(row).remove(0);
             }
-            drawX -= tileSize;
+            drawX -= tileSizeScaled;
 
             colCount--;
         }
@@ -161,7 +180,7 @@ public class TileDrawer {
 
     public void addRightColumn() {
         // gets the x coordinate of the last box of the first row
-        int lastX = tileSize + boxList.get(0).get(colCount - 1).getX();
+        int lastX = tileSizeScaled + boxList.get(0).get(colCount - 1).getX();
         drawX = lastX;
 
         // gets the y coordinate of the last box of the first row
@@ -169,11 +188,11 @@ public class TileDrawer {
         drawY = lastY;
 
         for (int row = 0; row < rowCount; row++) {
-            boxList.get(row).add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
-            drawY += tileSize;
+            boxList.get(row).add(new GridBox(defaultBox, 26, drawX, drawY, tileSizeScaled));
+            drawY += tileSizeScaled;
         }
-        drawY -= rowCount * tileSize;
-        drawX += tileSize;
+        drawY -= rowCount * tileSizeScaled;
+        drawX += tileSizeScaled;
 
         colCount++;
     }
@@ -209,12 +228,12 @@ public class TileDrawer {
         int firstX = boxList.get(0).get(0).getX();
         drawX = firstX;
 
-        int firstY = -tileSize + boxList.get(0).get(0).getY();
+        int firstY = -tileSizeScaled + boxList.get(0).get(0).getY();
         drawY = firstY;
 
         for (int col = 0; col < colCount; col++) {
-            boxList.get(0).set(col, new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
-            drawX += tileSize;
+            boxList.get(0).set(col, new GridBox(defaultBox, 26, drawX, drawY, tileSizeScaled));
+            drawX += tileSizeScaled;
         }
     }
 
@@ -230,13 +249,13 @@ public class TileDrawer {
         int firstX = boxList.get(0).get(0).getX();
         drawX = firstX;
 
-        int firstY = tileSize + boxList.get((rowCount - 1)).get(0).getY();
+        int firstY = tileSizeScaled + boxList.get((rowCount - 1)).get(0).getY();
         drawY = firstY;
 
         ArrayList<GridBox> newLine = new ArrayList<GridBox>();
         for (int col = 0; col < colCount; col++) {
-            newLine.add(new GridBox(tiles[1][5], 26, drawX, drawY, tileSize));
-            drawX += tileSize;
+            newLine.add(new GridBox(defaultBox, 26, drawX, drawY, tileSizeScaled));
+            drawX += tileSizeScaled;
         }
         boxList.add(newLine);
 
@@ -257,8 +276,8 @@ public class TileDrawer {
                 if (boxList.get(row).get(col).mouseOver(mouseX, mouseY)) {
                     int r = selectedTile / numTilesAcross;
                     int c = selectedTile % numTilesAcross;
-
-                    boxList.get(row).get(col).setImage(tiles[r][c], selectedTile);
+                    if (r == 0 && c == 0) { boxList.get(row).get(col).setImage(defaultBox, 0); }
+                    else { boxList.get(row).get(col).setImage(tiles[r][c], selectedTile); }
                     break;
                 }
             }
@@ -290,6 +309,8 @@ public class TileDrawer {
     }
 
     public void draw(Graphics surface) {
+        tileSizeScaled = (int) (tileSize * TileEditor.scale);
+        scale();
         if (moveUp) { moveTiles(0, 1 * moveSpeed); }
         if (moveDown) { moveTiles(0, -1 * moveSpeed); }
         if (moveLeft) { moveTiles(1 * moveSpeed, 0); }

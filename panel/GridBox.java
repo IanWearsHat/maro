@@ -19,14 +19,14 @@ public class GridBox {
 
     public GridBox(BufferedImage image, int tileIndex, int x, int y, int size) {
         this.image = image;
-        this.tileIndex = (tileIndex == 26) ? 0 : tileIndex;
+        this.tileIndex = tileIndex;
         this.x = x;
         this.y = y;
         this.size = size;
     }
 
     public void draw(Graphics surface) {
-        surface.drawImage(image, x, y, null);
+        surface.drawImage(image, x, y, size, size, null);
     }
 
     /*  Moves the box by a xOffset and a yOffset. Used with the movement key inputs wasd to simulate movement around an environment. */
@@ -61,7 +61,13 @@ public class GridBox {
      */
     public void setImage(BufferedImage image, int tileIndex) {
         this.image = image;
-        this.tileIndex = (tileIndex == 26) ? 0 : tileIndex;
+        this.tileIndex = tileIndex;
+    }
+
+    public void scale(int x, int y, int size) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
     }
 
     public int getTileIndex() {
