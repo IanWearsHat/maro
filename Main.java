@@ -76,6 +76,13 @@ public class Main {
 
             }
         });
+
+        JMenuItem importBGOption = new JMenuItem("Import background");
+        importTileOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+
+            }
+        });
         
         JMenuItem exportOption = new JMenuItem("Export map file");
         exportOption.addActionListener(new ActionListener() {
@@ -100,6 +107,7 @@ public class Main {
         });
 
         importMenu.add(importTileOption);
+        importMenu.add(importBGOption);
         importMenu.add(importMapOption);
         fileMenu.add(importMenu);
         fileMenu.add(exportOption);
@@ -138,12 +146,13 @@ public class Main {
         w.pack();
         w.setVisible(true);
 
+        editor.firstInit();
+
         Thread editorThread = new Thread(editor);
         editorThread.start();
 
         w.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) { 
-                editor.removeSaves();
+            public void windowClosing(WindowEvent e) {
                 editorThread.interrupt();
                 System.exit(0); 
             }

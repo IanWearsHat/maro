@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
+
 import javax.imageio.ImageIO;
 
 public class TileDrawer {
     // TODO: colCount, rowCount, and tileSize need to be inputted from the user
-    // needs to be able to handle a user-imported tilesheet, with user-imported backgrounds, with a default gridbox as its own tile in resources
+    // needs to be able to handle a user-imported tilesheet, with user-imported backgrounds
     // integrate with the game itself as well as sockets
 
     //  you have the client send their .map file to the server through file streams and whatnot and the server saves that .map file
@@ -45,6 +47,12 @@ public class TileDrawer {
 
     public TileDrawer() {}
 
+    public void set(int colCount, int rowCount) {
+        this.colCount = colCount;
+        this.rowCount = rowCount;
+        newGrid();
+    }
+
     public void loadTiles() {
         try {
             defaultBox = ImageIO.read(TileDrawer.class.getResource(defaultBoxPath));
@@ -75,15 +83,14 @@ public class TileDrawer {
         }
     }
 
+
     /**
      * Initializes the grid to a default grid with default colCount and rowCount and default air tiles. <p>
      * Like most methods with drawing in this class, it goes row by row starting from the top and goes left to right for each row.
      */
-    public void initializeGrid() {
+    public void newGrid() {
         drawX = 0;
         drawY = 0;
-        colCount = 10;
-        rowCount = 10;
         boxList = new ArrayList<ArrayList<GridBox>>();
         for (int row = 0; row < rowCount; row++) {
             boxList.add(new ArrayList<GridBox>());
@@ -103,7 +110,7 @@ public class TileDrawer {
      * @param rowCount The number of rows.
      * @param map The map array.
      */
-    public void importFile(int colCount, int rowCount, int[][] map) {
+    public void importMap(int colCount, int rowCount, int[][] map) {
         this.colCount = colCount;
         this.rowCount = rowCount;
         

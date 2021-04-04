@@ -1,14 +1,18 @@
 package panel;
 
 import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.Box;
 import javax.swing.KeyStroke;
 import javax.swing.Action;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D; 
 import java.awt.RenderingHints;
@@ -19,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -37,7 +42,6 @@ import java.nio.file.Paths;
 public class TileEditor extends JPanel implements Runnable {
     private final long FRAME_DELAY = 1000/60; //60 fps
     private boolean animate = true;
-    private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
 
     private int mouseX;
     private int mouseY;
@@ -222,7 +226,68 @@ public class TileEditor extends JPanel implements Runnable {
 
         drawer = new TileDrawer();
         drawer.loadTiles();
-        drawer.initializeGrid();
+        drawer.newGrid();
+    }
+
+    public void firstInit() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
+        JTextField colField = new JTextField(5);
+        JTextField rowField = new JTextField(5);
+        JButton importTiles = new JButton("Import tile sheet");
+        JButton importBG = new JButton("Import background");
+
+        importTiles.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                importTileSet();
+            }
+        });
+
+        importBG.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                importBG();
+            }
+        });
+
+        JPanel p = new JPanel();
+        p.add(new JLabel("# of columns in editor (max 2000):"));
+        p.add(colField);
+        p.add(Box.createHorizontalStrut(15)); // a spacer
+        p.add(new JLabel("# of rows in editor (max 10):"));
+        p.add(rowField);
+        p.add(Box.createHorizontalStrut(15));
+        p.add(importTiles);
+        p.add(Box.createHorizontalStrut(15));
+        p.add(importBG);
+
+        int colCount = 10;
+        int rowCount = 10;
+        boolean run = true;
+        do {
+            int result = JOptionPane.showConfirmDialog(null, p, 
+                "Please Enter the Number of Columns and Rows.", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                try {
+                    colCount = Integer.parseInt(colField.getText());
+                    rowCount = Integer.parseInt(rowField.getText());
+                    if (colCount <= 2000 && rowCount <= 10) { run = false; }
+                }
+                catch (Exception e) {
+                }
+            }
+            else {
+                run = false;
+
+            }
+        } while (run);
+
+        drawer.set(colCount, rowCount);
+    }
+
+    public void importTileSet() {
+
+    }
+
+    public void importBG() {
+        
     }
 
     public void importFile(Path path) {
@@ -241,8 +306,7 @@ public class TileEditor extends JPanel implements Runnable {
                     map[row][col] = Integer.parseInt(tokens[col]);
                 }
             }
-
-            drawer.importFile(colCount, rowCount, map);
+            drawer.importMap(colCount, rowCount, map);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -266,7 +330,7 @@ public class TileEditor extends JPanel implements Runnable {
             Path inputPath = Paths.get(filePath + File.separator + fileName + ".map");
             if (Files.exists(inputPath)) {
                 int option = JOptionPane.showConfirmDialog(
-                    this, "File already exists. Would you like to overwrite it?", "Overwrite", JOptionPane.YES_NO_OPTION);
+                    this, "File already exists. Would you like to overwrite it?", "Overwrite", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if (option == JOptionPane.YES_OPTION) { Files.delete(inputPath); }
                 else { throw new Exception("stop"); }
@@ -310,12 +374,8 @@ public class TileEditor extends JPanel implements Runnable {
         }
     }
 
-    public void removeSaves() {
-
-    }
-
     public void reset() {
-        drawer.initializeGrid();
+        drawer.set(10, 10);
     }
 
     /*  Called by repaint() in the run method, meaning it's called every frame. */
@@ -323,11 +383,9 @@ public class TileEditor extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setFont(basic);
 
         drawer.draw(g2);
     }
-
 
     /** Enables periodic repaint calls. */
     public synchronized void start() {

@@ -3,6 +3,8 @@ package panel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,7 +21,6 @@ public class OptionsBar extends JPanel {
         super(layout);
         this.editor = editor;
         this.tiles = tiles;
-
         makeOptions();
         setFocusable(false);
     }
@@ -34,7 +35,14 @@ public class OptionsBar extends JPanel {
 
         int r = tileIndex / tiles[0].length;
         int c = tileIndex % tiles[0].length;
-        button.setIcon(new ImageIcon(tiles[r][c]));
+
+        BufferedImage resizedImg = new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+
+        g2.drawImage(tiles[r][c], 0, 0, 60, 60, null);
+        g2.dispose();
+
+        button.setIcon(new ImageIcon(resizedImg));
         return button;
     }
 
