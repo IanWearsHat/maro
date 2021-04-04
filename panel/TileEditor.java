@@ -51,11 +51,13 @@ public class TileEditor extends JPanel implements Runnable {
     
     private TileDrawer drawer;
     private int selectedTile = 21;
+
+    private FileHandler fileHandler;
     
     private ArrayList<Integer> saveList;
     private int saveNumber = -1;
 
-    public TileEditor() {
+    public TileEditor(TileDrawer drawer, FileHandler fileHandler) {
         saveList = new ArrayList<Integer>();
 
         /*  This allows the user to paint the tile that their mouse is hovering over. 
@@ -98,7 +100,7 @@ public class TileEditor extends JPanel implements Runnable {
                         Files.delete(path);
                         saveList.remove(0);
                     }
-                    createFile(String.valueOf(saveNumber)); // for the control z feature.
+                    fileHandler.createMapFile(String.valueOf(saveNumber)); // for the control z feature.
                     saveList.add(saveNumber);
                     
                 }
@@ -110,7 +112,7 @@ public class TileEditor extends JPanel implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 if (saveNumber != saveList.get(0)) {
                     Path path = Paths.get(String.valueOf(saveNumber - 1) + ".map");
-                    importFile(path);
+                    fileHandler.importMap(path);
                     saveNumber--;
                 }
             }
@@ -122,7 +124,7 @@ public class TileEditor extends JPanel implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 if (saveNumber != saveList.get(saveList.size() - 1)) {
                     Path path = Paths.get(String.valueOf(saveNumber + 1) + ".map");
-                    importFile(path);
+                    fileHandler.importMap(path);
                     saveNumber++;
                 }
             }
@@ -227,9 +229,11 @@ public class TileEditor extends JPanel implements Runnable {
             }
         });
 
-        drawer = new TileDrawer();
-        drawer.loadTiles();
-        drawer.newGrid();
+        this.drawer = drawer;
+        this.drawer.loadTiles();
+        this.drawer.newGrid();
+
+        this.fileHandler = fileHandler;
     }
 
     public void firstInit() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
@@ -240,13 +244,13 @@ public class TileEditor extends JPanel implements Runnable {
 
         importTiles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                importTileSet();
+                fileHandler.importTileSet();
             }
         });
 
         importBG.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                importBG();
+                fileHandler.importBG();
             }
         });
 
@@ -278,103 +282,10 @@ public class TileEditor extends JPanel implements Runnable {
             }
             else {
                 run = false;
-
             }
         } while (run);
 
         drawer.set(colCount, rowCount);
-    }
-
-    public void importTileSet() {
-
-    }
-
-    public void importBG() {
-        
-    }
-
-    public void importFile(Path path) {
-        try {
-            BufferedReader br = Files.newBufferedReader(path);
-            int colCount = Integer.parseInt(br.readLine());
-            int rowCount = Integer.parseInt(br.readLine());
-            int[][] map = new int[rowCount][colCount];
-
-            String delims = "\\s+";
-
-            for (int row = 0; row < rowCount; row++){
-                String line = br.readLine();
-                String[] tokens = line.split(delims);
-                for(int col = 0; col < colCount; col++){
-                    map[row][col] = Integer.parseInt(tokens[col]);
-                }
-            }
-            drawer.importMap(colCount, rowCount, map);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * This method exports a .map file with a specified name to a specified directory.
-     * <p>
-     * This is called by the Export button in the dropdown menu for the File Button in the JToolBar at the top.
-     * <p>
-     * If the file already exists in the directory, the user will be asked if they want to overwrite it or not.
-     * <p>
-     * If they overwrite it, the file getes deleted and the new file gets created. Else, it'll just stop running.
-     * 
-     * @param filePath The directory to export to.
-     * @param fileName The name of the file.
-     */
-    public void exportFile(String filePath, String fileName) {
-        try {
-            Path inputPath = Paths.get(filePath + File.separator + fileName + ".map");
-            if (Files.exists(inputPath)) {
-                int option = JOptionPane.showConfirmDialog(
-                    this, "File already exists. Would you like to overwrite it?", "Overwrite", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-                if (option == JOptionPane.YES_OPTION) { Files.delete(inputPath); }
-                else { throw new Exception("stop"); }
-            }
-            createFile(fileName);
-
-            /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
-                This then moves the file from this directory to the intended specified directory. */
-            
-            Path filePathDest = Paths.get(fileName + ".map");
-            Files.move(filePathDest, inputPath);
-            JOptionPane.showMessageDialog(this, "File " + fileName + " sucessfully exported to " + filePath + " !");
-        }
-        catch(Exception e) {}
-    }
-
-    private void createFile(String fileName) {
-        try {
-            File file = new File(fileName + ".map");
-            file.deleteOnExit();
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            String toWrite = String.valueOf(drawer.getColCount()) + "\n" + String.valueOf(drawer.getRowCount()) + "\n";
-            writer.write(toWrite);
-            
-            /*  This writes every single grid box's tile ID to the .map file. It goes row by row until it hits the last box. 
-                It adds a space after every tile ID except at the end of a row. When it hits the end of a row, it adds a new line. */
-            ArrayList<ArrayList<GridBox>> boxList = drawer.getBoxList();
-            for (int row = 0, rowCount = drawer.getRowCount(); row < rowCount; row++) {
-                for (int col = 0, colCount = drawer.getColCount(); col < colCount; col++) {
-                    toWrite = String.valueOf(boxList.get(row).get(col).getTileIndex());
-                    if (col + 1 < colCount) { toWrite += " "; }
-                    writer.write(toWrite);
-                }
-                if (row + 1 < rowCount) { writer.write("\n"); }
-            }
-            writer.close();
-        }
-        catch (Exception e) {
-
-        }
     }
 
     public void reset() {

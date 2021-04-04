@@ -17,7 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import panel.FileHandler;
 import panel.OptionsBar;
+import panel.TileDrawer;
 import panel.TileEditor;
 import panel.Window;
 
@@ -28,7 +31,9 @@ public class Main {
         Window w = new Window();
         JPanel p = new JPanel(new BorderLayout());
 
-        TileEditor editor = new TileEditor();
+        TileDrawer drawer = new TileDrawer();
+        FileHandler fileHandler = new FileHandler(drawer);
+        TileEditor editor = new TileEditor(drawer, fileHandler);
         p.add(editor, BorderLayout.CENTER);
 
         OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
@@ -64,7 +69,7 @@ public class Main {
                         File file = chooser.getSelectedFile();
                         Path path = file.toPath();
                         
-                        editor.importFile(path);
+                        fileHandler.importMap(path);
                     }
                 }
                 catch (Exception e) {
@@ -99,7 +104,7 @@ public class Main {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         String filePath = chooser.getCurrentDirectory().getPath();
                         String fileName = chooser.getSelectedFile().getName();
-                        editor.exportFile(filePath, fileName);
+                        fileHandler.exportFile(filePath, fileName);
                     }
                 }
                 catch (Exception e) {
