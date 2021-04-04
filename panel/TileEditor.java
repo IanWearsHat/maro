@@ -45,11 +45,9 @@ public class TileEditor extends JPanel implements Runnable {
     
     private TileDrawer drawer;
     private int selectedTile = 21;
-    private int saveNumber = -1;
-
-    public static double scale = 1;
-
+    
     private ArrayList<Integer> saveList;
+    private int saveNumber = -1;
 
     public TileEditor() {
         saveList = new ArrayList<Integer>();
@@ -149,12 +147,12 @@ public class TileEditor extends JPanel implements Runnable {
                 int moveInt = e.getWheelRotation();
                 if (moveInt < 0) {
                     // scale up
-                    if (scale < 2.5) { scale += 0.2; }
+                    drawer.scale(1);
                     
                 }
                 else if (moveInt > 0) {
                     // scale down
-                    if (scale > 0.8) { scale -= 0.2; }
+                    drawer.scale(0);
                 }
             }
         });
@@ -308,6 +306,10 @@ public class TileEditor extends JPanel implements Runnable {
         catch (Exception e) {
 
         }
+    }
+
+    public void reset() {
+        drawer.initializeGrid();
     }
 
     /*  Called by repaint() in the run method, meaning it's called every frame. */

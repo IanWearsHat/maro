@@ -34,6 +34,12 @@ public class GridBox {
         x += xOffset;
         y += yOffset;
     }
+    
+    public void scale(int x, int y, int size) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+    }
 
     /**
      * Checks if the user's mouse is hovering over itself.
@@ -62,12 +68,6 @@ public class GridBox {
     public void setImage(BufferedImage image, int tileIndex) {
         this.image = image;
         this.tileIndex = tileIndex;
-    }
-
-    public void scale(int x, int y, int size) {
-        this.x = x;
-        this.y = y;
-        this.size = size;
     }
 
     public int getTileIndex() {

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -39,16 +40,16 @@ public class Main {
         JButton fileButton = new JButton("File");  
         bar.add(fileButton);
         JButton editButton = new JButton("Edit");
-        bar.add(editButton);  
-        bar.addSeparator();
-
-        
+        bar.add(editButton);
+        JButton viewButton = new JButton("View");
+        bar.add(viewButton);
 
         // creation of the file menu as well as the options for it
         JPopupMenu fileMenu = new JPopupMenu();
+        JMenu importMenu = new JMenu("Import");
 
-        JMenuItem importOption = new JMenuItem("Import map file");
-        importOption.addActionListener(new ActionListener() {
+        JMenuItem importMapOption = new JMenuItem("Import map file");
+        importMapOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     JFileChooser chooser = new JFileChooser();
@@ -66,6 +67,13 @@ public class Main {
                 catch (Exception e) {
         
                 }
+            }
+        });
+
+        JMenuItem importTileOption = new JMenuItem("Import tile sheet");
+        importTileOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+
             }
         });
         
@@ -91,27 +99,42 @@ public class Main {
             }
         });
 
-        fileMenu.add(importOption);
+        importMenu.add(importTileOption);
+        importMenu.add(importMapOption);
+        fileMenu.add(importMenu);
         fileMenu.add(exportOption);
 
-        //makes it so the file button drops down the menu for file
+        // makes it so the file button drops down the menu for file
         fileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 fileMenu.show(fileButton, 0, fileButton.getHeight());
             }
         });
-        bar.add(fileMenu);
+
+        // creation of edit menu and all things under edit
+        JPopupMenu editMenu = new JPopupMenu();
+
+        JMenuItem resetMapOption = new JMenuItem("Reset tile map");
+        resetMapOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                editor.reset();
+            }
+        });
+
+        editMenu.add(resetMapOption);
+
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                editMenu.show(editButton, 0, editButton.getHeight());
+            }
+        });
 
         // adding the toolbar to the panel
         p.add(bar, BorderLayout.PAGE_START);
 
-
-
-
         
         //adding the panel to the window
         w.add(p);
-        w.setFocusable(true);
         w.pack();
         w.setVisible(true);
 
@@ -126,7 +149,6 @@ public class Main {
             public void windowActivated(WindowEvent e) { editor.start(); }
             public void windowDeactivated(WindowEvent e) { editor.stop(); }
         });
-
         
     }
 }

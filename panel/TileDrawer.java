@@ -23,8 +23,9 @@ public class TileDrawer {
 
     private int colCount = 10;
     private int rowCount = 10;
+    private double scale = 1;
     private int tileSize = 30;
-    private int tileSizeScaled = (int) (tileSize * TileEditor.scale);
+    private int tileSizeScaled = (int) (tileSize * scale);
     
     public boolean moveUp = false;
     public boolean moveDown = false;
@@ -42,9 +43,7 @@ public class TileDrawer {
     private BufferedImage defaultBox;
     private String defaultBoxPath = "resources" + "\\" + "defaultBox.gif";
 
-    public TileDrawer() {
-        boxList = new ArrayList<ArrayList<GridBox>>();
-    }
+    public TileDrawer() {}
 
     public void loadTiles() {
         try {
@@ -81,6 +80,11 @@ public class TileDrawer {
      * Like most methods with drawing in this class, it goes row by row starting from the top and goes left to right for each row.
      */
     public void initializeGrid() {
+        drawX = 0;
+        drawY = 0;
+        colCount = 10;
+        rowCount = 10;
+        boxList = new ArrayList<ArrayList<GridBox>>();
         for (int row = 0; row < rowCount; row++) {
             boxList.add(new ArrayList<GridBox>());
             for (int col = 0; col < colCount; col++) {
@@ -91,6 +95,7 @@ public class TileDrawer {
             drawY += tileSizeScaled;
         }
     }
+    
 
     /**
      * Takes the colCount, rowCount, and map array from the file that has been imported and draws the map.
@@ -138,7 +143,13 @@ public class TileDrawer {
         System.out.println("\n");
     }
 
-    private void scale() {
+    public void scale(int direction) {
+        if (direction == 1){
+            if (scale < 2.6) { scale += 0.2; }
+        }
+        else if (scale > 0.8) { scale -= 0.2; }
+        tileSizeScaled = (int) (tileSize * scale);
+
         int originX = boxList.get(0).get(0).getX();
         int originY = boxList.get(0).get(0).getY();
 
@@ -185,7 +196,7 @@ public class TileDrawer {
         drawY = lastY;
 
         for (int row = 0; row < rowCount; row++) {
-            boxList.get(row).add(new GridBox(defaultBox, 26, drawX, drawY, tileSizeScaled));
+            boxList.get(row).add(new GridBox(defaultBox, 0, drawX, drawY, tileSizeScaled));
             drawY += tileSizeScaled;
         }
         drawY -= rowCount * tileSizeScaled;
@@ -251,7 +262,7 @@ public class TileDrawer {
 
         ArrayList<GridBox> newLine = new ArrayList<GridBox>();
         for (int col = 0; col < colCount; col++) {
-            newLine.add(new GridBox(defaultBox, 26, drawX, drawY, tileSizeScaled));
+            newLine.add(new GridBox(defaultBox, 0, drawX, drawY, tileSizeScaled));
             drawX += tileSizeScaled;
         }
         boxList.add(newLine);
@@ -306,8 +317,6 @@ public class TileDrawer {
     }
 
     public void draw(Graphics surface) {
-        tileSizeScaled = (int) (tileSize * TileEditor.scale);
-        scale();
         if (moveUp) { moveTiles(0, 1 * moveSpeed); }
         if (moveDown) { moveTiles(0, -1 * moveSpeed); }
         if (moveLeft) { moveTiles(1 * moveSpeed, 0); }
