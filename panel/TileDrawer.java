@@ -95,7 +95,6 @@ public class TileDrawer {
             drawY += tileSizeScaled;
         }
     }
-    
 
     /**
      * Takes the colCount, rowCount, and map array from the file that has been imported and draws the map.
@@ -144,7 +143,7 @@ public class TileDrawer {
     }
 
     public void scale(int direction) {
-        if (direction == 1){
+        if (direction == 1) {
             if (scale < 2.6) { scale += 0.2; }
         }
         else if (scale > 0.8) { scale -= 0.2; }
@@ -174,9 +173,8 @@ public class TileDrawer {
     }
 
     public void removeLeftColumn() {
-        int initialSize = colCount;
         // so you don't remove a column when there's only one column left
-        if (initialSize != 1) {
+        if (colCount != 1) {
             for (int row = 0; row < rowCount; row++) {
                 boxList.get(row).remove(0);
             }
@@ -206,9 +204,8 @@ public class TileDrawer {
     }
 
     public void removeRightColumn() {
-        int initialSize = colCount;
         // so you don't remove a column when there's only one column left
-        if (initialSize != 1) {
+        if (colCount != 1) {
             int lastCol = colCount - 1;
             for (int row = 0; row < rowCount; row++) {
                 boxList.get(row).remove(lastCol);
@@ -246,8 +243,7 @@ public class TileDrawer {
     }
 
     public void removeTopRow() {
-        int initialSize = rowCount;
-        if (initialSize != 1) {
+        if (rowCount != 1) {
             boxList.remove(0);
             rowCount--;
         }
@@ -271,8 +267,7 @@ public class TileDrawer {
     }
 
     public void removeBottomRow() {
-        int initialSize = rowCount;
-        if (initialSize != 1) {
+        if (rowCount != 1) {
             boxList.remove(rowCount - 1);
             rowCount--;
         }

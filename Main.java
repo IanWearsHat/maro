@@ -143,12 +143,13 @@ public class Main {
 
         w.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) { 
+                editor.removeSaves();
                 editorThread.interrupt();
                 System.exit(0); 
             }
             public void windowActivated(WindowEvent e) { editor.start(); }
             public void windowDeactivated(WindowEvent e) { editor.stop(); }
         });
-        
+
     }
 }

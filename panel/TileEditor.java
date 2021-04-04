@@ -35,7 +35,6 @@ import java.nio.file.Paths;
  */
 @SuppressWarnings("serial")
 public class TileEditor extends JPanel implements Runnable {
-    // TODO: Still needs a way to delete all the saves for undo and redo when initializing
     private final long FRAME_DELAY = 1000/60; //60 fps
     private boolean animate = true;
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
@@ -286,7 +285,10 @@ public class TileEditor extends JPanel implements Runnable {
 
     private void createFile(String fileName) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".map"));
+            File file = new File(fileName + ".map");
+            file.deleteOnExit();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             String toWrite = String.valueOf(drawer.getColCount()) + "\n" + String.valueOf(drawer.getRowCount()) + "\n";
             writer.write(toWrite);
             
@@ -306,6 +308,10 @@ public class TileEditor extends JPanel implements Runnable {
         catch (Exception e) {
 
         }
+    }
+
+    public void removeSaves() {
+
     }
 
     public void reset() {
