@@ -1,6 +1,8 @@
 package panel;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -40,6 +42,7 @@ import java.nio.file.Paths;
  */
 @SuppressWarnings("serial")
 public class TileEditor extends JPanel implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger( TileEditor.class.getName() );
     private final long FRAME_DELAY = 1000/60; //60 fps
     private boolean animate = true;
 

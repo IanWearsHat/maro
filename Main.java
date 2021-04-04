@@ -5,6 +5,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
@@ -20,6 +22,7 @@ import panel.TileEditor;
 import panel.Window;
 
 public class Main {
+    private static final Logger LOGGER = Logger.getLogger( Main.class.getName() );
     public static void main(String[] args) {
         System.out.println("maromaromaromaro");
         Window w = new Window();

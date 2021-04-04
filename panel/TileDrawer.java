@@ -1,6 +1,8 @@
 package panel;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Collections;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -9,6 +11,7 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 public class TileDrawer {
+    private static final Logger LOGGER = Logger.getLogger( TileDrawer.class.getName() );
     // TODO: colCount, rowCount, and tileSize need to be inputted from the user
     // needs to be able to handle a user-imported tilesheet, with user-imported backgrounds
     // integrate with the game itself as well as sockets
@@ -77,9 +80,10 @@ public class TileDrawer {
                     tiles[1][col] = subimage;
             }
 
+
         }
         catch(Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Unable to open file.", e);
         }
     }
 
