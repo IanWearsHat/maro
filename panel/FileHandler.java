@@ -49,7 +49,20 @@ public class FileHandler {
     }
 
     public static void importBG() {
-        
+        try {
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Tile Sheet (.gif)", "gif");
+            chooser.setFileFilter(filter);
+
+            int returnVal = chooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                
+                drawer.loadBackground(file);
+            }
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Unable to import background.", e);
+        }
     }
 
     public static void importMapFromDirectory() {

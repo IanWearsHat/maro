@@ -44,8 +44,8 @@ public class TileDrawer {
     private BufferedImage[][] tiles;
     private int numTilesAcross;
     private int numTilesHeight;
+    private BufferedImage bg = null;
     private BufferedImage tileSheet;
-    private String tileSheetPath = "resources" + "\\" + "grasstileset.gif";
     private BufferedImage defaultBox;
     private String defaultBoxPath = "resources" + "\\" + "defaultBox.gif";
 
@@ -61,6 +61,15 @@ public class TileDrawer {
         this.colCount = colCount;
         this.rowCount = rowCount;
         newGrid();
+    }
+
+    public void loadBackground(File bgPath) {
+        try {
+            bg = ImageIO.read(bgPath);
+        }
+        catch (Exception e) {
+
+        }
     }
 
     public void loadTiles(File tileSheetPath) {
@@ -338,6 +347,16 @@ public class TileDrawer {
         if (moveDown) { moveTiles(0, -1 * moveSpeed); }
         if (moveLeft) { moveTiles(1 * moveSpeed, 0); }
         if (moveRight) { moveTiles(-1 * moveSpeed, 0); }
+
+        if (bg != null) {
+            surface.drawImage(
+                bg, 
+                boxList.get(boxList.size() - 1).get(0).getX(), 
+                boxList.get(boxList.size() - 1).get(0).getY() + tileSizeScaled - bg.getHeight(), 
+                bg.getWidth(),
+                bg.getHeight(), 
+                null);
+        }
 
         for (int row = 0; row < boxList.size(); row++) {
             for (int col = 0; col < boxList.get(row).size(); col++) {
