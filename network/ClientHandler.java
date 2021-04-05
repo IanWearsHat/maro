@@ -1,10 +1,14 @@
 package network;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientHandler implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger( ClientHandler.class.getName() );
 
     private int clientID;
     private String username;
@@ -35,8 +39,8 @@ public class ClientHandler implements Runnable {
                 outStream.writeObject(new MessagePacket(inputName + " says: " + message));
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not send message.", e);
         }
     }
     
@@ -64,7 +68,7 @@ public class ClientHandler implements Runnable {
             outStream.writeObject(new MessagePacket("Please enter your username: ")); // first thing the handler does is ask for a username, which will identify who has said what later on
             Packet receivedPacket = (Packet) inStream.readObject();
             username = ((MessagePacket) receivedPacket).message;
-            System.out.println("Name: " + username);
+            LOGGER.log(Level.INFO, username + " has joined.");
             
             outStream.reset(); 
             /* so the client doesn't throw a StreamCorruptedException.
@@ -88,13 +92,16 @@ public class ClientHandler implements Runnable {
                 }
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not connect to client.", e);
+        } 
+        catch (ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "Could not read packet.", e);
         }
 
         //tell every client that a certain client has left. This only runs when the try block finishes, meaning the client leaves. 
         broadcast(true, username + " has left the game.");
-        System.out.println(username + " has lost connection. Handler " + clientID + " closing."); // server message to server terminal to indicate that a client has lost connection. 
+        LOGGER.log(Level.INFO, username + " has lost connection. Handler " + clientID + " closing."); // server message to server terminal to indicate that a client has lost connection. 
     }
 
     public String getName() {
@@ -103,10 +110,6 @@ public class ClientHandler implements Runnable {
 
     public int getClientID() {
         return clientID;
-    }
-
-    public ObjectOutputStream getOutStream() {
-        return outStream;
     }
 
 }

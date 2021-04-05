@@ -1,11 +1,16 @@
 package network;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServerSide implements Runnable {
+    //TODO: needs to kill threads properly
+    private static final Logger LOGGER = Logger.getLogger( ServerSide.class.getName() );
 
     private final int PORT = 9696;
 
@@ -20,9 +25,6 @@ public class ServerSide implements Runnable {
 
     private void startServer() {
         try {
-            //TODO: setup port forwarding so networks can connect instead of only local networks
-            //edit: done :D
-
             //also, thread for networking has to be made so it starts in Game class
 
             /* Creates a ServerSocket bound to the port specified.
@@ -36,9 +38,9 @@ public class ServerSide implements Runnable {
             //TODO: this loop needs to be exited somehow, meaning it can't just be while(true)
             
             while (true) {
-                System.out.println("Waiting for connection...");
+                LOGGER.log(Level.INFO, "Listening for connection...");
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Established connection to client!");
+                LOGGER.log(Level.INFO, "Established connection to client from " + clientSocket.getInetAddress());
                 
                 clientList.add(clientSocket);
 
@@ -46,18 +48,13 @@ public class ServerSide implements Runnable {
                 handler = new ClientHandler(playerNumber);
                 handlerList.add(handler);
 
+                LOGGER.log(Level.INFO, "Starting client handler thread " + playerNumber);
                 new Thread(handler).start();
             }
-
         }
-        catch (SocketException e) {
-            
+        catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not connect to client.", e);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
     }
 
     @Override

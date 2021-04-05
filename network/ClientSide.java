@@ -11,8 +11,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientSide implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger( ClientSide.class.getName() );
 
     private volatile boolean kill = false;
 
@@ -50,9 +53,9 @@ public class ClientSide implements Runnable {
 
             /* Attempts to connect to the remote address at the port specified.
             Port is the same as the port specified in port forwarding for router. */
-            System.out.println("Attempting Connection...");
+            LOGGER.log(Level.INFO, "Attempting connection to server...");
             clientSocket.connect(new InetSocketAddress(remoteAddress, 9696), 10 * 1000);
-            System.out.println("Connected to server!");
+            LOGGER.log(Level.INFO, "Connected to server!");
 
             /* Creates input and output streams for the socket */
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream()); 
@@ -73,8 +76,12 @@ public class ClientSide implements Runnable {
                             // it would receive other clients' positions from the server and render them accordingly on its screen.
                         }
                     }
-                    catch (Exception e) {
-                        e.printStackTrace();
+                    catch (ClassNotFoundException e) {
+                        LOGGER.log(Level.SEVERE, "Packet wasn't a Packet object, killing input reader thread.", e);
+                        kill = true;
+                    } 
+                    catch (IOException e) {
+                        LOGGER.log(Level.SEVERE, "Could not read packet, killing input reader thread.", e);
                         kill = true;
                     }
                 }
@@ -94,19 +101,13 @@ public class ClientSide implements Runnable {
 
         }
         catch (ConnectException | SocketTimeoutException e) {
-            e.printStackTrace();
-            System.out.println("No server found. Exiting...");
-            // System.exit(1);
+            LOGGER.log(Level.SEVERE, "No server found. Exiting...", e);
         }
         catch (SocketException e) {
-            System.out.println("Invalid IP");
-            // System.exit(1);
+            LOGGER.log(Level.SEVERE, "Invalid IP.", e);
         }
         catch (IOException e) {
             e.printStackTrace();
-            // System.exit(1);
-        }
-        catch (Exception e) {
         }
         
         kill = true;
