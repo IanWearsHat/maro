@@ -8,25 +8,69 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FileHandler {
-    private TileDrawer drawer;
+    private static final Logger LOGGER = Logger.getLogger( FileHandler.class.getName() );
+    private static TileDrawer drawer;
+    private static OptionsBar optionsBar;
+    private static Window window;
+    private static JFileChooser chooser;
 
-    public FileHandler(TileDrawer drawer) {
-        this.drawer = drawer;
+    public FileHandler(TileDrawer drawer, OptionsBar optionsBar, Window w) {
+        FileHandler.drawer = drawer;
+        FileHandler.optionsBar = optionsBar;
+        FileHandler.window = w;
+        chooser = new JFileChooser();
     }
 
-    public void importTileSet() {
+    public static void importTileSet() {
+        try {
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Tile Sheet (.gif)", "gif");
+            chooser.setFileFilter(filter);
 
+            int returnVal = chooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                
+                drawer.loadTiles(file);
+                optionsBar.makeOptions();
+                window.pack();
+            }
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Unable to import tile sheet.", e);
+        }
     }
 
-    public void importBG() {
+    public static void importBG() {
         
     }
 
-    public void importMap(Path path) {
+    public static void importMapFromDirectory() {
+        try {
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
+            chooser.setFileFilter(filter);
+
+            int returnVal = chooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                Path path = file.toPath();
+                
+                importMap(path);
+            }
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Unable to import file.", e);
+        }
+    }
+
+    public static void importMap(Path path) {
         try {
             BufferedReader br = Files.newBufferedReader(path);
             int colCount = Integer.parseInt(br.readLine());
@@ -61,29 +105,39 @@ public class FileHandler {
      * @param filePath The directory to export to.
      * @param fileName The name of the file.
      */
-    public void exportFile(String filePath, String fileName) {
+    public static void exportFile() {
         try {
-            Path inputPath = Paths.get(filePath + File.separator + fileName + ".map");
-            if (Files.exists(inputPath)) {
-                int option = JOptionPane.showConfirmDialog(
-                    null, "File already exists. Would you like to overwrite it?", "Overwrite", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
+            chooser.setFileFilter(filter);
 
-                if (option == JOptionPane.YES_OPTION) { Files.delete(inputPath); }
-                else { throw new Exception("stop"); }
+            int returnVal = chooser.showSaveDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                String filePath = chooser.getCurrentDirectory().getPath();
+                String fileName = chooser.getSelectedFile().getName();
+                Path inputPath = Paths.get(filePath + File.separator + fileName + ".map");
+                if (Files.exists(inputPath)) {
+                    int option = JOptionPane.showConfirmDialog(
+                        null, "File already exists. Would you like to overwrite it?", "Overwrite", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+    
+                    if (option == JOptionPane.YES_OPTION) { Files.delete(inputPath); }
+                    else { throw new Exception("stop"); }
+                }
+                createMapFile(fileName);
+    
+                /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
+                    This then moves the file from this directory to the intended specified directory. */
+                
+                Path filePathDest = Paths.get(fileName + ".map");
+                Files.move(filePathDest, inputPath);
+                JOptionPane.showMessageDialog(null, "File " + fileName + " sucessfully exported to " + filePath + " !");
             }
-            createMapFile(fileName);
 
-            /*  Workaround for not being able to create the file directly in the directory. The file is created here in the working directory.
-                This then moves the file from this directory to the intended specified directory. */
             
-            Path filePathDest = Paths.get(fileName + ".map");
-            Files.move(filePathDest, inputPath);
-            JOptionPane.showMessageDialog(null, "File " + fileName + " sucessfully exported to " + filePath + " !");
         }
         catch(Exception e) {}
     }
 
-    public void createMapFile(String fileName) {
+    public static void createMapFile(String fileName) {
         try {
             File file = new File(fileName + ".map");
             file.deleteOnExit();

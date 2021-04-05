@@ -51,13 +51,11 @@ public class TileEditor extends JPanel implements Runnable {
     
     private TileDrawer drawer;
     private int selectedTile = 21;
-
-    private FileHandler fileHandler;
     
     private ArrayList<Integer> saveList;
     private int saveNumber = -1;
 
-    public TileEditor(TileDrawer drawer, FileHandler fileHandler) {
+    public TileEditor(TileDrawer drawer) {
         saveList = new ArrayList<Integer>();
 
         /*  This allows the user to paint the tile that their mouse is hovering over. 
@@ -100,7 +98,7 @@ public class TileEditor extends JPanel implements Runnable {
                         Files.delete(path);
                         saveList.remove(0);
                     }
-                    fileHandler.createMapFile(String.valueOf(saveNumber)); // for the control z feature.
+                    FileHandler.createMapFile(String.valueOf(saveNumber)); // for the control z feature.
                     saveList.add(saveNumber);
                     
                 }
@@ -112,7 +110,7 @@ public class TileEditor extends JPanel implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 if (saveNumber != saveList.get(0)) {
                     Path path = Paths.get(String.valueOf(saveNumber - 1) + ".map");
-                    fileHandler.importMap(path);
+                    FileHandler.importMap(path);
                     saveNumber--;
                 }
             }
@@ -124,7 +122,7 @@ public class TileEditor extends JPanel implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 if (saveNumber != saveList.get(saveList.size() - 1)) {
                     Path path = Paths.get(String.valueOf(saveNumber + 1) + ".map");
-                    fileHandler.importMap(path);
+                    FileHandler.importMap(path);
                     saveNumber++;
                 }
             }
@@ -230,27 +228,23 @@ public class TileEditor extends JPanel implements Runnable {
         });
 
         this.drawer = drawer;
-        this.drawer.loadTiles();
-        this.drawer.newGrid();
-
-        this.fileHandler = fileHandler;
     }
 
-    public void firstInit() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
-        JTextField colField = new JTextField(5);
-        JTextField rowField = new JTextField(5);
+    public void setup() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
+        JTextField colField = new JTextField(2);
+        JTextField rowField = new JTextField(2);
         JButton importTiles = new JButton("Import tile sheet");
         JButton importBG = new JButton("Import background");
 
         importTiles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                fileHandler.importTileSet();
+                FileHandler.importTileSet();
             }
         });
 
         importBG.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                fileHandler.importBG();
+                FileHandler.importBG();
             }
         });
 
@@ -269,8 +263,7 @@ public class TileEditor extends JPanel implements Runnable {
         int rowCount = 10;
         boolean run = true;
         do {
-            int result = JOptionPane.showConfirmDialog(null, p, 
-                "Please Enter the Number of Columns and Rows.", JOptionPane.OK_CANCEL_OPTION);
+            int result = JOptionPane.showConfirmDialog(null, p, "Welcome", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 try {
                     colCount = Integer.parseInt(colField.getText());
@@ -278,6 +271,7 @@ public class TileEditor extends JPanel implements Runnable {
                     if (colCount <= 2000 && rowCount <= 10) { run = false; }
                 }
                 catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number.", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else {
@@ -340,5 +334,9 @@ public class TileEditor extends JPanel implements Runnable {
 
     public BufferedImage[][] getTiles() {
         return drawer.getTiles();
+    }
+
+    public int getTileCount() {
+        return drawer.getTileCount();
     }
 }

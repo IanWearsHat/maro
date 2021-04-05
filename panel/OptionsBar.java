@@ -16,13 +16,25 @@ import java.awt.image.BufferedImage;
 public class OptionsBar extends JPanel {
     private TileEditor editor;
     private BufferedImage[][] tiles;
+    private int numTiles;
 
-    public OptionsBar(TileEditor editor, BufferedImage[][] tiles, GridLayout layout) {
+    public OptionsBar(TileEditor editor, GridLayout layout) {
         super(layout);
         this.editor = editor;
-        this.tiles = tiles;
-        makeOptions();
+
         setFocusable(false);
+    }
+
+    public void makeOptions() {
+        tiles = editor.getTiles();
+        numTiles = editor.getTileCount();
+
+        for (int i = 0; i < numTiles; i++) {
+            JButton button = createButton(i);
+            add(button);
+            button.setVisible(true);
+        }
+
     }
 
     private JButton createButton(int tileIndex) {
@@ -44,23 +56,6 @@ public class OptionsBar extends JPanel {
 
         button.setIcon(new ImageIcon(resizedImg));
         return button;
-    }
-
-    private void makeOptions() {
-        JButton button = new JButton();
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                editor.setSelectedTile(26);
-            }
-        });
-
-        button.setIcon(new ImageIcon(tiles[0][0]));
-        add(button);
-
-        for (int i = 1; i <= 25; i++) {
-            add(createButton(i));
-        }
-
     }
 
 

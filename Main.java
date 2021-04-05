@@ -32,13 +32,14 @@ public class Main {
         JPanel p = new JPanel(new BorderLayout());
 
         TileDrawer drawer = new TileDrawer();
-        FileHandler fileHandler = new FileHandler(drawer);
-        TileEditor editor = new TileEditor(drawer, fileHandler);
+        TileEditor editor = new TileEditor(drawer);
         p.add(editor, BorderLayout.CENTER);
 
-        OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
+        OptionsBar optionsBar = new OptionsBar(editor, new GridLayout(0, 2));
         //                          new Dimension(length, height)
         optionsBar.setPreferredSize(new Dimension(180, 100));
+        new FileHandler(drawer, optionsBar, w);
+
         p.add(optionsBar, BorderLayout.LINE_START);
 
         //setting up toolbar
@@ -54,66 +55,45 @@ public class Main {
 
         // creation of the file menu as well as the options for it
         JPopupMenu fileMenu = new JPopupMenu();
+
+        JMenuItem setupOption = new JMenuItem("Setup project");
+        setupOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                editor.setup();
+            }
+        });
+
         JMenu importMenu = new JMenu("Import");
 
         JMenuItem importMapOption = new JMenuItem("Import map file");
         importMapOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    JFileChooser chooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
-                    chooser.setFileFilter(filter);
-
-                    int returnVal = chooser.showOpenDialog(w);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = chooser.getSelectedFile();
-                        Path path = file.toPath();
-                        
-                        fileHandler.importMap(path);
-                    }
-                }
-                catch (Exception e) {
-        
-                }
+                FileHandler.importMapFromDirectory();
             }
         });
 
         JMenuItem importTileOption = new JMenuItem("Import tile sheet");
         importTileOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-
+                FileHandler.importTileSet();
             }
         });
 
         JMenuItem importBGOption = new JMenuItem("Import background");
         importTileOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-
+                FileHandler.importBG();
             }
         });
         
         JMenuItem exportOption = new JMenuItem("Export map file");
         exportOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    JFileChooser chooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
-                    chooser.setFileFilter(filter);
-
-                    int returnVal = chooser.showSaveDialog(w);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        String filePath = chooser.getCurrentDirectory().getPath();
-                        String fileName = chooser.getSelectedFile().getName();
-                        fileHandler.exportFile(filePath, fileName);
-                    }
-                }
-                catch (Exception e) {
-        
-                }
-
+                FileHandler.exportFile();
             }
         });
 
+        fileMenu.add(setupOption);
         importMenu.add(importTileOption);
         importMenu.add(importBGOption);
         importMenu.add(importMapOption);
@@ -151,10 +131,10 @@ public class Main {
         
         //adding the panel to the window
         w.add(p);
-        w.pack();
         w.setVisible(true);
+        w.pack();
 
-        editor.firstInit();
+        editor.setup();
 
         Thread editorThread = new Thread(editor);
         editorThread.start();

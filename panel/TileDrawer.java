@@ -43,12 +43,19 @@ public class TileDrawer {
 
     private BufferedImage[][] tiles;
     private int numTilesAcross;
+    private int numTilesHeight;
     private BufferedImage tileSheet;
     private String tileSheetPath = "resources" + "\\" + "grasstileset.gif";
     private BufferedImage defaultBox;
     private String defaultBoxPath = "resources" + "\\" + "defaultBox.gif";
 
-    public TileDrawer() {}
+    public TileDrawer() {
+        try {
+            defaultBox = ImageIO.read(TileDrawer.class.getResource(defaultBoxPath));
+            newGrid();
+        }
+        catch (Exception e) {}
+    }
 
     public void set(int colCount, int rowCount) {
         this.colCount = colCount;
@@ -56,12 +63,12 @@ public class TileDrawer {
         newGrid();
     }
 
-    public void loadTiles() {
+    public void loadTiles(File tileSheetPath) {
         try {
-            defaultBox = ImageIO.read(TileDrawer.class.getResource(defaultBoxPath));
-            tileSheet = ImageIO.read(TileDrawer.class.getResource(tileSheetPath));
+            tileSheet = ImageIO.read(tileSheetPath);
             // tileSize = tileSheet.getWidth() / numTilesAcross;
             numTilesAcross = tileSheet.getWidth() / tileSize;
+            numTilesHeight = tileSheet.getHeight() / tileSize;
             tiles = new BufferedImage[2][numTilesAcross];
 
             BufferedImage subimage;
@@ -316,6 +323,10 @@ public class TileDrawer {
 
     public BufferedImage[][] getTiles() {
         return tiles;
+    }
+
+    public int getTileCount() {
+        return numTilesAcross * numTilesHeight;
     }
 
     public ArrayList<ArrayList<GridBox>> getBoxList() {
