@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 // this should handle whatever is on the left side of the screen, or the options bar, or where b1 currently is in Main.java
 // maybe it extends Jcomponent or sth
@@ -18,9 +19,12 @@ public class OptionsBar extends JPanel {
     private BufferedImage[][] tiles;
     private int numTiles;
 
+    private ArrayList<JButton> buttonList;
+
     public OptionsBar(TileEditor editor, GridLayout layout) {
         super(layout);
         this.editor = editor;
+        buttonList = new ArrayList<JButton>();
 
         setFocusable(false);
     }
@@ -29,12 +33,18 @@ public class OptionsBar extends JPanel {
         tiles = editor.getTiles();
         numTiles = editor.getTileCount();
 
+        // erase all existing buttons (if any to begin with)
+        for (JButton button : buttonList) {
+            buttonList.remove(button);
+            remove(button);
+        }
+        // creates a button for every tile
         for (int i = 0; i < numTiles; i++) {
             JButton button = createButton(i);
+            buttonList.add(button);
             add(button);
             button.setVisible(true);
         }
-
     }
 
     private JButton createButton(int tileIndex) {
