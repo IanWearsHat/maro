@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 
 public class TileDrawer {
     private static final Logger LOGGER = Logger.getLogger( TileDrawer.class.getName() );
-    // TODO: colCount, rowCount, and tileSize need to be inputted from the user
     // integrate with the game itself as well as sockets
 
     //  you have the client send their .map file to the server through file streams and whatnot and the server saves that .map file
@@ -348,9 +347,10 @@ public class TileDrawer {
         return boxList;
     }
     
-    public void setDimensions(int colCount, int rowCount) {
+    public void setDimensions(int colCount, int rowCount, int tileSize) {
         this.colCount = colCount;
         this.rowCount = rowCount;
+        this.tileSize = tileSize;
         newGrid();
     }
 

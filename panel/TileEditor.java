@@ -238,6 +238,7 @@ public class TileEditor extends JPanel implements Runnable {
     public void firstInit() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
         JTextField colField = new JTextField(4);
         JTextField rowField = new JTextField(4);
+        JTextField tileSizeField = new JTextField(4);
         JButton importTilesButton = new JButton("Import tile sheet");
         JButton importBGButton = new JButton("Import background");
 
@@ -260,12 +261,16 @@ public class TileEditor extends JPanel implements Runnable {
         p.add(new JLabel("# of rows in editor (max 10):"));
         p.add(rowField);
         p.add(Box.createHorizontalStrut(15));
+        p.add(new JLabel("Pixel dimensions of tile: "));
+        p.add(tileSizeField);
+        p.add(Box.createHorizontalStrut(15));
         p.add(importTilesButton);
         p.add(Box.createHorizontalStrut(15));
         p.add(importBGButton);
 
         int colCount = 10;
         int rowCount = 10;
+        int tileSize = 30;
         boolean run = true;
         do {
             int result = JOptionPane.showConfirmDialog(null, p, "Welcome", JOptionPane.OK_CANCEL_OPTION);
@@ -273,9 +278,10 @@ public class TileEditor extends JPanel implements Runnable {
                 try {
                     colCount = Integer.parseInt(colField.getText());
                     rowCount = Integer.parseInt(rowField.getText());
+                    tileSize = Integer.parseInt(tileSizeField.getText());
                     if (colCount <= 2000 && rowCount <= 10) {
                         run = false;
-                        drawer.setDimensions(colCount, rowCount);
+                        drawer.setDimensions(colCount, rowCount, tileSize);
                     }
                 }
                 catch (Exception e) {
@@ -291,6 +297,7 @@ public class TileEditor extends JPanel implements Runnable {
     public void setDimensions() {
         JTextField colField = new JTextField(4);
         JTextField rowField = new JTextField(4);
+        JTextField tileSizeField = new JTextField(4);
 
         JPanel p = new JPanel();
         p.add(new JLabel("# of columns in editor (max 2000):"));
@@ -298,9 +305,13 @@ public class TileEditor extends JPanel implements Runnable {
         p.add(Box.createHorizontalStrut(15)); // a spacer
         p.add(new JLabel("# of rows in editor (max 10):"));
         p.add(rowField);
+        p.add(Box.createHorizontalStrut(15));
+        p.add(new JLabel("Pixel dimensions of tile: "));
+        p.add(tileSizeField);
 
         int colCount = 10;
         int rowCount = 10;
+        int tileSize = 30;
         boolean run = true;
         do {
             int result = JOptionPane.showConfirmDialog(null, p, "Set number of columns and rows", JOptionPane.OK_CANCEL_OPTION);
@@ -308,9 +319,10 @@ public class TileEditor extends JPanel implements Runnable {
                 try {
                     colCount = Integer.parseInt(colField.getText());
                     rowCount = Integer.parseInt(rowField.getText());
+                    tileSize = Integer.parseInt(tileSizeField.getText());
                     if (colCount <= 2000 && rowCount <= 10) {
                         run = false;
-                        drawer.setDimensions(colCount, rowCount);
+                        drawer.setDimensions(colCount, rowCount, tileSize);
                     }
                 }
                 catch (Exception e) {
