@@ -7,13 +7,11 @@ import java.util.Collections;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 
 public class TileDrawer {
     private static final Logger LOGGER = Logger.getLogger( TileDrawer.class.getName() );
     // TODO: colCount, rowCount, and tileSize need to be inputted from the user
-    // needs to be able to handle a user-imported tilesheet, with user-imported backgrounds
     // integrate with the game itself as well as sockets
 
     //  you have the client send their .map file to the server through file streams and whatnot and the server saves that .map file
@@ -48,6 +46,7 @@ public class TileDrawer {
     private BufferedImage tileSheet;
     private BufferedImage defaultBox;
     private String defaultBoxPath = "resources" + "\\" + "defaultBox.gif";
+    private boolean hasTiles;
 
     public TileDrawer() {
         try {
@@ -60,9 +59,10 @@ public class TileDrawer {
         }
     }
 
-    public void set(int colCount, int rowCount) {
-        this.colCount = colCount;
-        this.rowCount = rowCount;
+    public void reset() {
+        colCount = 10;
+        rowCount = 10;
+        scale = 1;
         newGrid();
     }
 
@@ -98,8 +98,7 @@ public class TileDrawer {
                         tileSize);
                     tiles[1][col] = subimage;
             }
-
-
+            hasTiles = true;
         }
         catch(Exception e) {
             LOGGER.log(Level.SEVERE, "Unable to open file.", e);
@@ -325,6 +324,10 @@ public class TileDrawer {
         }
     }
 
+    public boolean hasTiles() {
+        return hasTiles;
+    }
+
     public int getRowCount() {
         return rowCount;
     }
@@ -343,6 +346,12 @@ public class TileDrawer {
 
     public ArrayList<ArrayList<GridBox>> getBoxList() {
         return boxList;
+    }
+    
+    public void setDimensions(int colCount, int rowCount) {
+        this.colCount = colCount;
+        this.rowCount = rowCount;
+        newGrid();
     }
 
     public void draw(Graphics surface) {

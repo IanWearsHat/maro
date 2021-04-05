@@ -27,6 +27,7 @@ import panel.Window;
 public class Main {
     private static final Logger LOGGER = Logger.getLogger( Main.class.getName() );
     public static void main(String[] args) {
+        // TODO: needs a button that allows the user to toggle between "zoom mode" and "tile select mode", and maybe hotkeys to toggle between the two modes
         System.out.println("maromaromaromaro");
         Window w = new Window();
         JPanel p = new JPanel(new BorderLayout());
@@ -36,8 +37,7 @@ public class Main {
         p.add(editor, BorderLayout.CENTER);
 
         OptionsBar optionsBar = new OptionsBar(editor, new GridLayout(0, 2));
-        //                          new Dimension(length, height)
-        optionsBar.setPreferredSize(new Dimension(180, 100));
+        optionsBar.setPreferredSize(new Dimension(140, 100));
         new FileHandler(drawer, optionsBar, w);
 
         p.add(optionsBar, BorderLayout.LINE_START);
@@ -56,10 +56,12 @@ public class Main {
         // creation of the file menu as well as the options for it
         JPopupMenu fileMenu = new JPopupMenu();
 
-        JMenuItem setupOption = new JMenuItem("Setup project");
-        setupOption.addActionListener(new ActionListener() {
+        JMenu setupMenu = new JMenu("Set up project");
+
+        JMenuItem setDimensionsOption = new JMenuItem("Set dimensions");
+        setDimensionsOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                editor.setup();
+                editor.setDimensions();
             }
         });
 
@@ -93,7 +95,8 @@ public class Main {
             }
         });
 
-        fileMenu.add(setupOption);
+        setupMenu.add(setDimensionsOption);
+        fileMenu.add(setupMenu);
         importMenu.add(importTileOption);
         importMenu.add(importBGOption);
         importMenu.add(importMapOption);
@@ -113,7 +116,7 @@ public class Main {
         JMenuItem resetMapOption = new JMenuItem("Reset tile map");
         resetMapOption.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                editor.reset();
+                drawer.reset();
             }
         });
 
@@ -134,7 +137,7 @@ public class Main {
         w.setVisible(true);
         w.pack();
 
-        editor.setup();
+        editor.firstInit();
 
         Thread editorThread = new Thread(editor);
         editorThread.start();

@@ -1,15 +1,14 @@
 package panel;
 
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
-
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 // this should handle whatever is on the left side of the screen, or the options bar, or where b1 currently is in Main.java
 // maybe it extends Jcomponent or sth

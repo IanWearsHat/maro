@@ -28,10 +28,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,21 +38,24 @@ import java.nio.file.Paths;
  */
 @SuppressWarnings("serial")
 public class TileEditor extends JPanel implements Runnable {
+    // TODO: needs a way to display to the user info like the number of columns and rows, etc.
     private static final Logger LOGGER = Logger.getLogger( TileEditor.class.getName() );
-    private final long FRAME_DELAY = 1000/60; //60 fps
+    private final long FRAME_DELAY = 1000/60L; //60 fps
     private boolean animate = true;
 
     private int mouseX;
     private int mouseY;
     
     private TileDrawer drawer;
-    private int selectedTile = 21;
+    private int selectedTile;
     
     private ArrayList<Integer> saveList;
-    private int saveNumber = -1;
+    private int saveNumber;
 
     public TileEditor(TileDrawer drawer) {
         saveList = new ArrayList<Integer>();
+        saveNumber = -1;
+        selectedTile = 2;
 
         /*  This allows the user to paint the tile that their mouse is hovering over. 
             If the user left clicks, the selected tile (chosen by the options bar on the left) will be painted.
@@ -64,45 +63,49 @@ public class TileEditor extends JPanel implements Runnable {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (saveList.size() > 0) {
-                    int indexDiff = saveList.get(saveList.size() - 1) - saveNumber;
-                    int endValue = saveList.get(saveList.size() - 1 - indexDiff);
+                if (drawer.hasTiles()) {
+                    if (saveList.size() > 0) {
+                        int indexDiff = saveList.get(saveList.size() - 1) - saveNumber;
+                        int endValue = saveList.get(saveList.size() - 1 - indexDiff);
 
-                    while (saveList.get(saveList.size() - 1) != endValue) {
-                        try {
-                            Path path = Paths.get(String.valueOf(saveList.get(saveList.size() - 1)) + ".map");
-                            Files.delete(path);
-                            saveList.remove(saveList.size() - 1);
+                        while (saveList.get(saveList.size() - 1) != endValue) {
+                            try {
+                                Path path = Paths.get(String.valueOf(saveList.get(saveList.size() - 1)) + ".map");
+                                Files.delete(path);
+                                saveList.remove(saveList.size() - 1);
+                            }
+                            catch (Exception exception) {}
                         }
-                        catch (Exception exception) {}
                     }
-                }
 
-                mouseX = e.getX();
-                mouseY = e.getY();
+                    mouseX = e.getX();
+                    mouseY = e.getY();
 
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    drawer.updateTile(selectedTile, mouseX, mouseY);
-                }
-                else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(0, mouseX, mouseY);
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        drawer.updateTile(selectedTile, mouseX, mouseY);
+                    }
+                    else if (SwingUtilities.isRightMouseButton(e)) {
+                        drawer.updateTile(0, mouseX, mouseY);
+                    }
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                try {
-                    saveNumber++;
-                    if (saveList.size() == 25) {
-                        Path path = Paths.get(String.valueOf(saveList.get(0)) + ".map");
-                        Files.delete(path);
-                        saveList.remove(0);
+                if (drawer.hasTiles()) {
+                    try {
+                        saveNumber++;
+                        if (saveList.size() == 25) {
+                            Path path = Paths.get(String.valueOf(saveList.get(0)) + ".map");
+                            Files.delete(path);
+                            saveList.remove(0);
+                        }
+                        FileHandler.createMapFile(String.valueOf(saveNumber)); // for the control z feature.
+                        saveList.add(saveNumber);
+                        
                     }
-                    FileHandler.createMapFile(String.valueOf(saveNumber)); // for the control z feature.
-                    saveList.add(saveNumber);
-                    
+                    catch (Exception exception) {}
                 }
-                catch (Exception exception) {}
             }
         });
 
@@ -136,14 +139,16 @@ public class TileEditor extends JPanel implements Runnable {
         this.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                mouseX = e.getX();
-                mouseY = e.getY();
+                if (drawer.hasTiles()) {
+                    mouseX = e.getX();
+                    mouseY = e.getY();
 
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    drawer.updateTile(selectedTile, mouseX, mouseY);
-                }
-                else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(0, mouseX, mouseY);
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        drawer.updateTile(selectedTile, mouseX, mouseY);
+                    }
+                    else if (SwingUtilities.isRightMouseButton(e)) {
+                        drawer.updateTile(0, mouseX, mouseY);
+                    }
                 }
             }
         });
@@ -230,19 +235,19 @@ public class TileEditor extends JPanel implements Runnable {
         this.drawer = drawer;
     }
 
-    public void setup() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
-        JTextField colField = new JTextField(2);
-        JTextField rowField = new JTextField(2);
-        JButton importTiles = new JButton("Import tile sheet");
-        JButton importBG = new JButton("Import background");
+    public void firstInit() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
+        JTextField colField = new JTextField(4);
+        JTextField rowField = new JTextField(4);
+        JButton importTilesButton = new JButton("Import tile sheet");
+        JButton importBGButton = new JButton("Import background");
 
-        importTiles.addActionListener(new ActionListener() {
+        importTilesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 FileHandler.importTileSet();
             }
         });
 
-        importBG.addActionListener(new ActionListener() {
+        importBGButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 FileHandler.importBG();
             }
@@ -255,9 +260,9 @@ public class TileEditor extends JPanel implements Runnable {
         p.add(new JLabel("# of rows in editor (max 10):"));
         p.add(rowField);
         p.add(Box.createHorizontalStrut(15));
-        p.add(importTiles);
+        p.add(importTilesButton);
         p.add(Box.createHorizontalStrut(15));
-        p.add(importBG);
+        p.add(importBGButton);
 
         int colCount = 10;
         int rowCount = 10;
@@ -268,7 +273,10 @@ public class TileEditor extends JPanel implements Runnable {
                 try {
                     colCount = Integer.parseInt(colField.getText());
                     rowCount = Integer.parseInt(rowField.getText());
-                    if (colCount <= 2000 && rowCount <= 10) { run = false; }
+                    if (colCount <= 2000 && rowCount <= 10) {
+                        run = false;
+                        drawer.setDimensions(colCount, rowCount);
+                    }
                 }
                 catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Please enter a valid number.", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -278,12 +286,41 @@ public class TileEditor extends JPanel implements Runnable {
                 run = false;
             }
         } while (run);
-
-        drawer.set(colCount, rowCount);
     }
 
-    public void reset() {
-        drawer.set(10, 10);
+    public void setDimensions() {
+        JTextField colField = new JTextField(4);
+        JTextField rowField = new JTextField(4);
+
+        JPanel p = new JPanel();
+        p.add(new JLabel("# of columns in editor (max 2000):"));
+        p.add(colField);
+        p.add(Box.createHorizontalStrut(15)); // a spacer
+        p.add(new JLabel("# of rows in editor (max 10):"));
+        p.add(rowField);
+
+        int colCount = 10;
+        int rowCount = 10;
+        boolean run = true;
+        do {
+            int result = JOptionPane.showConfirmDialog(null, p, "Set number of columns and rows", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                try {
+                    colCount = Integer.parseInt(colField.getText());
+                    rowCount = Integer.parseInt(rowField.getText());
+                    if (colCount <= 2000 && rowCount <= 10) {
+                        run = false;
+                        drawer.setDimensions(colCount, rowCount);
+                    }
+                }
+                catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else {
+                run = false;
+            }
+        } while (run);
     }
 
     /*  Called by repaint() in the run method, meaning it's called every frame. */
