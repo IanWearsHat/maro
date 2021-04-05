@@ -44,7 +44,7 @@ public class TileDrawer {
     private BufferedImage[][] tiles;
     private int numTilesAcross;
     private int numTilesHeight;
-    private BufferedImage bg = null;
+    private BufferedImage bg;
     private BufferedImage tileSheet;
     private BufferedImage defaultBox;
     private String defaultBoxPath = "resources" + "\\" + "defaultBox.gif";
@@ -52,9 +52,12 @@ public class TileDrawer {
     public TileDrawer() {
         try {
             defaultBox = ImageIO.read(TileDrawer.class.getResource(defaultBoxPath));
+            bg = null;
             newGrid();
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "TileDrawer could not initialize.", e);
+        }
     }
 
     public void set(int colCount, int rowCount) {
@@ -68,7 +71,7 @@ public class TileDrawer {
             bg = ImageIO.read(bgPath);
         }
         catch (Exception e) {
-
+            LOGGER.log(Level.SEVERE, "Could not load background", e);
         }
     }
 
@@ -352,9 +355,9 @@ public class TileDrawer {
             surface.drawImage(
                 bg, 
                 boxList.get(boxList.size() - 1).get(0).getX(), 
-                boxList.get(boxList.size() - 1).get(0).getY() + tileSizeScaled - bg.getHeight(), 
-                bg.getWidth(),
-                bg.getHeight(), 
+                boxList.get(boxList.size() - 1).get(0).getY() + tileSizeScaled - (int) (bg.getHeight() * scale), 
+                (int) (bg.getWidth() * scale),
+                (int) (bg.getHeight() * scale), 
                 null);
         }
 

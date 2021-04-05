@@ -22,10 +22,10 @@ public class FileHandler {
     private static Window window;
     private static JFileChooser chooser;
 
-    public FileHandler(TileDrawer drawer, OptionsBar optionsBar, Window w) {
+    public FileHandler(TileDrawer drawer, OptionsBar optionsBar, Window window) {
         FileHandler.drawer = drawer;
         FileHandler.optionsBar = optionsBar;
-        FileHandler.window = w;
+        FileHandler.window = window;
         chooser = new JFileChooser();
     }
 
@@ -44,7 +44,7 @@ public class FileHandler {
             }
         }
         catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Unable to import tile sheet.", e);
+            LOGGER.log(Level.WARNING, "Unable to import tile sheet.", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class FileHandler {
             }
         }
         catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Unable to import background.", e);
+            LOGGER.log(Level.WARNING, "Unable to import background.", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class FileHandler {
             }
         }
         catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Unable to import file.", e);
+            LOGGER.log(Level.WARNING, "Unable to import file.", e);
         }
     }
 
@@ -102,7 +102,7 @@ public class FileHandler {
             drawer.importMap(colCount, rowCount, map);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Could not import .map file.", e);
         }
     }
 
@@ -147,7 +147,9 @@ public class FileHandler {
 
             
         }
-        catch(Exception e) {}
+        catch(Exception e) {
+            LOGGER.log(Level.WARNING, "Could not export file.", e);
+        }
     }
 
     public static void createMapFile(String fileName) {
@@ -173,7 +175,7 @@ public class FileHandler {
             writer.close();
         }
         catch (Exception e) {
-
+            LOGGER.log(Level.WARNING, "Could not create map file.", e);
         }
     }
 
