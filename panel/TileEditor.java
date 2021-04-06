@@ -40,6 +40,8 @@ import java.nio.file.Paths;
 public class TileEditor extends JPanel implements Runnable {
     // TODO: needs a way to display to the user info like the number of columns and rows, etc.
     private static final Logger LOGGER = Logger.getLogger( TileEditor.class.getName() );
+    public static int length;
+    public static int height;
     private final long FRAME_DELAY = 1000/60L; //60 fps
     private boolean animate = true;
 
@@ -228,6 +230,10 @@ public class TileEditor extends JPanel implements Runnable {
                     case 'l':
                         drawer.removeRightColumn();
                         break;
+                    case 'r':
+                        LOGGER.log(Level.INFO, "painting");
+                        repaint();
+                        break;
                 }
             }
         });
@@ -235,7 +241,10 @@ public class TileEditor extends JPanel implements Runnable {
         this.drawer = drawer;
     }
 
-    public void firstInit() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
+    public void firstInit(int length, int height) { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
+        TileEditor.length = length;
+        TileEditor.height = height;
+        
         JTextField colField = new JTextField(4);
         JTextField rowField = new JTextField(4);
         JTextField tileSizeField = new JTextField(4);

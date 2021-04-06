@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Collections;
+import java.util.Date;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -372,9 +373,12 @@ public class TileDrawer {
 
         for (int row = 0; row < boxList.size(); row++) {
             for (int col = 0; col < boxList.get(row).size(); col++) {
-                boxList.get(row).get(col).draw(surface);
+                if (boxList.get(row).get(col).inWindow()) {
+                    boxList.get(row).get(col).draw(surface);
+                }
             }
         }
+        
     }
 
 }

@@ -58,6 +58,13 @@ public class GridBox {
         return false;
     }
 
+    public boolean inWindow() {
+        if (x + size > 0 && x < TileEditor.length && y + size > 0 && y < TileEditor.height) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Sets the box's image to image and the tileIndex to tileIndex.
      * <p>

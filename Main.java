@@ -137,7 +137,7 @@ public class Main {
         w.setVisible(true);
         w.pack();
 
-        editor.firstInit();
+        editor.firstInit(editor.getWidth(), editor.getHeight());
 
         Thread editorThread = new Thread(editor);
         editorThread.start();
