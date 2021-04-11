@@ -2,6 +2,7 @@ package Game.GameState;
 
 import java.util.ArrayList;
 
+import javax.swing.JPanel;
 import javax.swing.event.MenuDragMouseEvent;
 
 import java.awt.event.MouseEvent;
@@ -20,14 +21,14 @@ public class GameStateManger {
     
 
 
-    public GameStateManger(){
+    public GameStateManger(JPanel gp){
         gameStates = new ArrayList<GameState>();
 
         currentState = MENUSTATE;
         gameStates.add(new MenuState(this));
         gameStates.add(new LevelMenuState(this));
         gameStates.add(new Level1State(this));
-        gameStates.add(new TileMapState(this));
+        gameStates.add(new TileMapState(this, gp));
 
 
     }

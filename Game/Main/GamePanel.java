@@ -79,7 +79,7 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
 
         running = true;
         
-        gam = new GameStateManger();
+        gam = new GameStateManger(this);
 
     }
 
@@ -135,90 +135,15 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
         }
 
         if (gam.getCurrentState() == 3){
+            
             repaint();
+
         }
     }
 
     private void draw() {
 
-        if(gam.getCurrentState() !=3){
-        paintComponent(g);
         gam.draw(g);
-        }
-
-        if (gam.getCurrentState() == 3 && canSwith == true){
-
-        editor = new TileEditor();
-        optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
-        optionsBar.setPreferredSize(new Dimension(180, 100));
-
-        bar = new JToolBar();
-        fileButton = new JButton("File");
-        fileMenu = new JPopupMenu();
-        editButton = new JButton("Edit");
-
-        add(editor, BorderLayout.CENTER);
-
-        optionsBar.setPreferredSize(new Dimension(180, 100));
-        add(optionsBar, BorderLayout.LINE_START);
-
-        //setting up toolbar
-        bar.setFloatable(false);
- 
-        bar.add(fileButton);
-        bar.add(editButton);  
-        bar.addSeparator();
-
-        // creation of the file menu as well as the options for it
-
-        JMenuItem importOption = new JMenuItem("Import map file");
-        importOption.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                System.out.println("importing");
-            }
-        });
-        
-        JMenuItem exportOption = new JMenuItem("Export map file");
-        exportOption.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                try {
-                    JFileChooser chooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
-                    chooser.setFileFilter(filter);
-
-                    int returnVal = chooser.showSaveDialog(game);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        String filePath = chooser.getCurrentDirectory().getPath();
-                        String fileName = chooser.getSelectedFile().getName();
-                        editor.exportFile(filePath, fileName);
-                        
-                        JOptionPane.showMessageDialog(game, "File " + fileName + " sucessfully exported to " + filePath + " !");
-                    }
-                }
-                catch (Exception e) {
-        
-                }
-
-            }
-        });
-
-        fileMenu.add(importOption);
-        fileMenu.add(exportOption);
-
-        //makes it so the file button drops down the menu for file
-        fileButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                fileMenu.show(fileButton, 0, fileButton.getHeight());
-            }
-        });
-        bar.add(fileMenu);
-
-        // adding the toolbar to the panel
-        super.add(bar, BorderLayout.PAGE_START);
-
-        paintComponent(g);
-        //gam.draw(g);
-        }
 
     }
 

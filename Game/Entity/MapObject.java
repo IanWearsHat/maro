@@ -63,6 +63,7 @@ public abstract class MapObject {
     protected double maxSpeed;
     protected double stopSpeed;
     protected double fallSpeed;
+    protected double maxFallSpeed;
     protected double jumpStart;
     protected double stopJumpSpeed;
 

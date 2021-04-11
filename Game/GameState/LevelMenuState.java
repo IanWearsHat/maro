@@ -11,7 +11,7 @@ import Game.Main.Game;
 import Game.Resources.Background;
 import Game.GameState.*;
 
-public class LevelMenuState extends GameState implements ActionListener{
+public class LevelMenuState extends GameState{
 
     private Background bg;
 
@@ -24,7 +24,6 @@ public class LevelMenuState extends GameState implements ActionListener{
     private int w = 0;
     private float alpha = 1f;
     private Font font;
-    private Timer fadeOut= new Timer(20, this);
 
     private String[][] levelOptions  = {
         {"Level 1","Level 2", "Level 3"},
@@ -70,7 +69,6 @@ public class LevelMenuState extends GameState implements ActionListener{
     @Override
     public void draw(Graphics2D g) {
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        bg.setComposite(alpha);
         // TODO Auto-generated method stub
         bg.draw(g);
         
@@ -121,7 +119,7 @@ public class LevelMenuState extends GameState implements ActionListener{
             currentChoiceCol = 0;
             currentChoiceRow = 0;
             w = 0;
-            fadeOut.start();
+            gsm.setState(GameStateManger.MENUSTATE);
             //gsm.setState(GameStateManger.MENUSTATE);
         }
     }
@@ -129,7 +127,6 @@ public class LevelMenuState extends GameState implements ActionListener{
     @Override
     public void keyPressed(int k) {
         // TODO Auto-generated method stub
-        System.out.println(w);
 
         if(k == KeyEvent.VK_ENTER){
             select();
@@ -175,17 +172,6 @@ public class LevelMenuState extends GameState implements ActionListener{
         // TODO Auto-generated method stub
         
     }
-    
-    public void actionPerformed(ActionEvent e) {
-        alpha += -0.01f;
-        if (alpha <= 0) {
-          alpha = 0;
-          fadeOut.stop();
-          alpha = 1f;
-          gsm.setState(GameStateManger.MENUSTATE);
-        }
-      }
-
 
     @Override
     public void mousePressed(MouseEvent e) {

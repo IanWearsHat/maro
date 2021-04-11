@@ -59,7 +59,6 @@ public class Background {
 
         if(x < 0){
             g.drawImage(image, (int)x + GamePanel.width, (int) y, null);
-            System.out.println(x);
         }
 
         if(x == -GamePanel.width){
@@ -68,7 +67,6 @@ public class Background {
 
         if(x > 0){
             g.drawImage(image, (int)x - GamePanel.width, (int) y, null);
-            System.out.println(x);
         }
     }
 

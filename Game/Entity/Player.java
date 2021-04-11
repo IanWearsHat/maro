@@ -24,6 +24,8 @@ public class Player extends MapObject {
     private int manaMax;
     private String[] spells = {};
     private int magicSpellDamage;
+    private int[] SpellCost = {};
+
     //private ArrayList<MagicSpell>  magicSpell;
 
     //animations
@@ -33,9 +35,31 @@ public class Player extends MapObject {
     private static final int IDLE = 0;
     private static final int WALKING = 1;
     private static final int RUNINING = 2;
+    private static final int PERFORMINGMAGIC = 3;
 
     public Player(TileMap tile) {
         super(tile);
+
+        width = 30;
+        height = 30;
+        cwidth = 20;
+        cheight = 20;
+
+        moveSpeed = 0.3;
+        maxSpeed = 1.6;
+        stopSpeed = 0.4;
+        fallSpeed = 0.15;
+        maxFallSpeed = 4.0;
+        jumpStart = -4.8;
+        stopJumpSpeed = 0.3;
+
+        facingRight = true;
+
+        health = maxHealth = 5;
+        fire = maxFire = 2500;
+
+
+
         //TODO Auto-generated constructor stub
     }
  
