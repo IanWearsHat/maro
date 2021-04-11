@@ -36,9 +36,6 @@ public class ClientSide implements Runnable {
     public void startClient() {
 
         try {
-            //TODO: setup port forwarding so networks can connect instead of only local networks
-            //also, thread for networking has to be made so it starts in Game class
-
             // creates an input stream from the keyboard so the user can provide input
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("Enter IP: ");

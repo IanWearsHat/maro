@@ -10,6 +10,7 @@ import network.packet.*;
 
 public class ClientHandler implements Runnable {
     private static final Logger LOGGER = Logger.getLogger( ClientHandler.class.getName() );
+    boolean running = true;
 
     private int clientID;
     private String username;
@@ -79,7 +80,7 @@ public class ClientHandler implements Runnable {
             output stream was already used, but these previous lines are the first instance of an outstream being used, so that doesn't work.  */
 
             String inputLine;
-            boolean running = true;
+            
             while (running) {
                 receivedPacket = (Packet) inStream.readObject();
                 inputLine = ((MessagePacket) receivedPacket).message;
@@ -103,6 +104,10 @@ public class ClientHandler implements Runnable {
         //tell every client that a certain client has left. This only runs when the try block finishes, meaning the client leaves. 
         broadcast(true, username + " has left the game.");
         LOGGER.log(Level.INFO, username + " has lost connection. Handler " + clientID + " closing."); // server message to server terminal to indicate that a client has lost connection. 
+    }
+
+    public void stop() {
+        running = false;
     }
 
     public String getName() {
