@@ -1,4 +1,4 @@
-package network;
+package network.packet;
 // An information class to be serialized and sent from client handlers to clients, who will deserialize the class
 
 // The second packet type is for updating a player's position and state in the (hopefully) multiplayer game.

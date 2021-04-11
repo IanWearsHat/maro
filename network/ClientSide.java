@@ -13,6 +13,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import network.packet.*;
 
 public class ClientSide implements Runnable {
     private static final Logger LOGGER = Logger.getLogger( ClientSide.class.getName() );

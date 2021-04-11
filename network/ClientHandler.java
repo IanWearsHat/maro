@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import network.packet.*;
 
 public class ClientHandler implements Runnable {
     private static final Logger LOGGER = Logger.getLogger( ClientHandler.class.getName() );

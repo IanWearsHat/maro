@@ -1,4 +1,4 @@
-package network;
+package network.packet;
 // An information class to be serialized and sent from client handlers to clients, who will deserialize the class
 
 // The first packet type is just a message packet from the server, whether it's from another client or from the server itself.
