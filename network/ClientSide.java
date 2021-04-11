@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.nio.channels.ClosedByInterruptException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import network.packet.*;
@@ -19,23 +20,14 @@ public class ClientSide implements Runnable {
     private static final Logger LOGGER = Logger.getLogger( ClientSide.class.getName() );
 
     private volatile boolean kill = false;
+    private boolean running = true;
 
     public ClientSide() {}
-
-    // will be expanded eventually to fit Jframe so that messages from the server won't mix up with your input
-    private String userPrompt(BufferedReader in) {
-        try {
-            System.out.print("You: ");
-            String input = in.readLine();
-            return input;
-        }
-        catch (Exception e) {}
-        return null;
-    }
 
     public void startClient() {
 
         try {
+            //TODO: the userinput while loop should be a thread that can be interrupted by the waiting for message from server thread
             // creates an input stream from the keyboard so the user can provide input
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("Enter IP: ");
@@ -59,9 +51,33 @@ public class ClientSide implements Runnable {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream()); 
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
+            /* Waits for the user to input something in the terminal. 
+            When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
+            Thread userInputThread = new Thread(() -> {
+                try {
+                    while (running) {
+                        System.out.print("You: ");
+                        String userInput = stdIn.readLine();
+                        if (!userInput.equals(null)) {
+                            out.writeObject(new MessagePacket(userInput));
+                            // out.reset();
+                        }
+                        else {
+                            running = false;
+                        }
+                    }
+                }
+                catch (ClosedByInterruptException e) {
+                    LOGGER.info("interrupted");
+                }
+                catch (Exception e) {
+
+                }
+            });
+
             //this thread has to run so that the client can wait for a message from the server
             //while also waiting for an input from the user.
-            new Thread(() -> {
+            Thread messageReceiver = new Thread(() -> {
                 while (!kill) {
                     try {
                         Packet receivedPacket = (Packet) in.readObject();
@@ -77,26 +93,17 @@ public class ClientSide implements Runnable {
                     catch (ClassNotFoundException e) {
                         LOGGER.log(Level.SEVERE, "Packet wasn't a Packet object, killing input reader thread.", e);
                         kill = true;
+                        userInputThread.interrupt();
+                        running = false;
                     } 
                     catch (IOException e) {
                         LOGGER.log(Level.SEVERE, "Could not read packet, killing input reader thread.", e);
                         kill = true;
+                        userInputThread.interrupt();
+                        running = false;
                     }
                 }
-            }).start();
-
-            /* first thing you need to do is type in your name*/
-            String userInput;
-            userInput = stdIn.readLine();
-            out.writeObject(new MessagePacket(userInput));
-
-            /* Waits for the user to input something in the terminal. 
-            When the user hits the return key, the input is sent to the server through the out stream (out.println(userInput)). */
-            while ((userInput = userPrompt(stdIn)) != null) {
-                out.writeObject(new MessagePacket(userInput));
-                // out.reset();
-            }
-
+            });
         }
         catch (ConnectException | SocketTimeoutException e) {
             LOGGER.log(Level.SEVERE, "No server found. Exiting...", e);
