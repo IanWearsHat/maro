@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -25,6 +27,7 @@ public class OptionsBar extends JPanel {
         this.editor = editor;
         buttonList = new ArrayList<JButton>();
 
+        setPreferredSize(new Dimension(140, 100));
         setFocusable(false);
     }
 

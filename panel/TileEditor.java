@@ -240,10 +240,13 @@ public class TileEditor extends JPanel implements Runnable {
 
         this.drawer = drawer;
     }
-
-    public void firstInit(int length, int height) { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
+    
+    public void setPanelDimensions(int length, int height) {
         TileEditor.length = length;
         TileEditor.height = height;
+    }
+
+    public void firstInit() { // https://stackoverflow.com/questions/6555040/multiple-input-in-joptionpane-showinputdialog/6555051
         
         JTextField colField = new JTextField(4);
         JTextField rowField = new JTextField(4);
@@ -303,7 +306,7 @@ public class TileEditor extends JPanel implements Runnable {
         } while (run);
     }
 
-    public void setDimensions() {
+    public void setDimensionsOption() {
         JTextField colField = new JTextField(4);
         JTextField rowField = new JTextField(4);
         JTextField tileSizeField = new JTextField(4);

@@ -22,9 +22,9 @@ public class FileHandler {
     private static Window window;
     private static JFileChooser chooser;
 
-    public FileHandler(TileDrawer drawer, OptionsBar optionsBar, Window window) {
-        FileHandler.drawer = drawer;
-        FileHandler.optionsBar = optionsBar;
+    public FileHandler(Window window) {
+        FileHandler.drawer = Window.tileDrawer;
+        FileHandler.optionsBar = Window.optionsBar;
         FileHandler.window = window;
         chooser = new JFileChooser();
     }
