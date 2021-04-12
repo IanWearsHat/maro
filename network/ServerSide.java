@@ -62,7 +62,7 @@ public class ServerSide implements Runnable {
                 clientList.add(clientSocket);
 
                 int playerNumber = clientList.size() - 1;
-                handler = new ClientHandler(playerNumber);
+                handler = new ClientHandler(playerNumber, clientSocket);
                 handlerList.add(handler);
 
                 LOGGER.log(Level.INFO, "Starting client handler thread " + playerNumber);

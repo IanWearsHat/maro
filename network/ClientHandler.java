@@ -19,8 +19,9 @@ public class ClientHandler implements Runnable {
     private ObjectOutputStream outStream;
     private ObjectInputStream inStream;
     
-    public ClientHandler(int id) {
+    public ClientHandler(int id, Socket socket) {
         clientID = id;
+        clientSocket = socket;
     }
 
     /**
@@ -62,8 +63,6 @@ public class ClientHandler implements Runnable {
     
     public void run() {
         try {
-            clientSocket = ServerSide.clientList.get(clientID);
-
             outStream = new ObjectOutputStream(clientSocket.getOutputStream()); 
             inStream = new ObjectInputStream(clientSocket.getInputStream());
             
@@ -103,7 +102,9 @@ public class ClientHandler implements Runnable {
 
         //tell every client that a certain client has left. This only runs when the try block finishes, meaning the client leaves. 
         broadcast(true, username + " has left the game.");
-        LOGGER.log(Level.INFO, username + " has lost connection. Handler " + clientID + " closing."); // server message to server terminal to indicate that a client has lost connection. 
+        LOGGER.log(Level.INFO, username + " has lost connection. Handler " + clientID + " closing."); // server message to server terminal to indicate that a client has lost connection.
+        
+        ServerSide.clientList.remove(ServerSide.clientList.indexOf(clientSocket));
     }
 
     public void stop() {

@@ -23,7 +23,6 @@ public class ClientSide implements Runnable {
     public ClientSide() {}
 
     public void startClient() {
-
         try {
             //TODO: the userinput while loop should be a thread that can be interrupted by the waiting for message from server thread
             // creates an input stream from the keyboard so the user can provide input
