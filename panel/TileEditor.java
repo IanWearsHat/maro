@@ -44,6 +44,7 @@ public class TileEditor extends JPanel implements Runnable {
     public static int height;
     private final long FRAME_DELAY = 1000/60L; //60 fps
     private boolean animate = true;
+    public boolean zoomState = false;
 
     private int mouseX;
     private int mouseY;
@@ -65,29 +66,39 @@ public class TileEditor extends JPanel implements Runnable {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (drawer.hasTiles()) {
-                    if (saveList.size() > 0) {
-                        int indexDiff = saveList.get(saveList.size() - 1) - saveNumber;
-                        int endValue = saveList.get(saveList.size() - 1 - indexDiff);
-
-                        while (saveList.get(saveList.size() - 1) != endValue) {
-                            try {
-                                Path path = Paths.get(String.valueOf(saveList.get(saveList.size() - 1)) + ".map");
-                                Files.delete(path);
-                                saveList.remove(saveList.size() - 1);
-                            }
-                            catch (Exception exception) {}
-                        }
-                    }
-
-                    mouseX = e.getX();
-                    mouseY = e.getY();
-
+                if (zoomState) {
                     if (SwingUtilities.isLeftMouseButton(e)) {
-                        drawer.updateTile(selectedTile, mouseX, mouseY);
+                        drawer.scale(1);
                     }
                     else if (SwingUtilities.isRightMouseButton(e)) {
-                        drawer.updateTile(0, mouseX, mouseY);
+                        drawer.scale(0);
+                    }
+                }
+                else {
+                    if (drawer.hasTiles()) {
+                        if (saveList.size() > 0) {
+                            int indexDiff = saveList.get(saveList.size() - 1) - saveNumber;
+                            int endValue = saveList.get(saveList.size() - 1 - indexDiff);
+
+                            while (saveList.get(saveList.size() - 1) != endValue) {
+                                try {
+                                    Path path = Paths.get(String.valueOf(saveList.get(saveList.size() - 1)) + ".map");
+                                    Files.delete(path);
+                                    saveList.remove(saveList.size() - 1);
+                                }
+                                catch (Exception exception) {}
+                            }
+                        }
+
+                        mouseX = e.getX();
+                        mouseY = e.getY();
+
+                        if (SwingUtilities.isLeftMouseButton(e)) {
+                            drawer.updateTile(selectedTile, mouseX, mouseY);
+                        }
+                        else if (SwingUtilities.isRightMouseButton(e)) {
+                            drawer.updateTile(0, mouseX, mouseY);
+                        }
                     }
                 }
             }

@@ -92,6 +92,8 @@ public class Window extends JFrame {
         bar.add(editButton);
         JButton viewButton = new JButton("View");
         bar.add(viewButton);
+        JButton zoomButton = new JButton("Zoom");
+        bar.add(zoomButton);
 
         // creation of the file menu as well as the options for it
         JPopupMenu fileMenu = new JPopupMenu();
@@ -164,6 +166,12 @@ public class Window extends JFrame {
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 editMenu.show(editButton, 0, editButton.getHeight());
+            }
+        });
+
+        zoomButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                tileEditor.zoomState = !tileEditor.zoomState;
             }
         });
 
