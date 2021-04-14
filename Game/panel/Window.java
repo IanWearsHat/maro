@@ -17,6 +17,7 @@ public class Window extends JFrame {
         setFocusable(true);
         setResizable(false);
         requestFocus();
+        System.out.println("HI");
     }
 
     private void init() {

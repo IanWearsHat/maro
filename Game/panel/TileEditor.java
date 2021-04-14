@@ -1,11 +1,7 @@
 package Game.panel;
 
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.Action;
-import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
-import javax.swing.event.MouseInputListener;
 
 import java.util.ArrayList;
 import java.awt.Font;
@@ -192,6 +188,7 @@ public class TileEditor extends JPanel implements Runnable {
         while (true) {
             if (animationEnabled()) {
                 repaint();
+                System.out.println("hi");
             }
             try {
                 Thread.sleep(FRAME_DELAY);

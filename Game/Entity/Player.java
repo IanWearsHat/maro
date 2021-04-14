@@ -22,10 +22,9 @@ public class Player extends MapObject {
 
     private int mana;
     private int manaMax;
-    private String[] spells = {};
-    private int magicSpellDamage;
+    private int[] SpellDamage = {};
     private int[] SpellCost = {};
-
+    
     //private ArrayList<MagicSpell>  magicSpell;
 
     //animations

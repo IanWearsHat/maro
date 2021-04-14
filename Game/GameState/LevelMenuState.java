@@ -11,7 +11,7 @@ import Game.Main.Game;
 import Game.Resources.Background;
 import Game.GameState.*;
 
-public class LevelMenuState extends GameState{
+public class LevelMenuState extends GameState implements ActionListener{
 
     private Background bg;
 
@@ -24,6 +24,7 @@ public class LevelMenuState extends GameState{
     private int w = 0;
     private float alpha = 1f;
     private Font font;
+    private Timer fadeOut= new Timer(20, this);
 
     private String[][] levelOptions  = {
         {"Level 1","Level 2", "Level 3"},
@@ -69,6 +70,7 @@ public class LevelMenuState extends GameState{
     @Override
     public void draw(Graphics2D g) {
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        bg.setComposite(alpha);
         // TODO Auto-generated method stub
         bg.draw(g);
         
@@ -101,7 +103,7 @@ public class LevelMenuState extends GameState{
             gsm.setState(GameStateManger.LEVEL1STATE);
         }
         if (currentChoiceCol == 1 && currentChoiceRow == 0){
-            gsm.setState(GameStateManger.TILEMAPSTATE);
+            gsm.setState(GameStateManger.LEVEL1STATE);
         }
         if (currentChoiceCol == 2 && currentChoiceRow == 0){
             gsm.setState(GameStateManger.LEVEL1STATE);
@@ -120,13 +122,13 @@ public class LevelMenuState extends GameState{
             currentChoiceRow = 0;
             w = 0;
             gsm.setState(GameStateManger.MENUSTATE);
-            //gsm.setState(GameStateManger.MENUSTATE);
         }
     }
 
     @Override
     public void keyPressed(int k) {
         // TODO Auto-generated method stub
+        System.out.println(w);
 
         if(k == KeyEvent.VK_ENTER){
             select();
@@ -172,6 +174,13 @@ public class LevelMenuState extends GameState{
         // TODO Auto-generated method stub
         
     }
+    
+    public void actionPerformed(ActionEvent e) {
+        alpha += -0.01f;
+        if (alpha <= 0) {
+          fadeOut.stop();
+         }
+      }
 
     @Override
     public void mousePressed(MouseEvent e) {

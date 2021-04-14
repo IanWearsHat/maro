@@ -42,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
     private JButton fileButton = new JButton("File");
     private JPopupMenu fileMenu = new JPopupMenu();
     private JButton editButton = new JButton("Edit");
-    private boolean canSwith = true;
+    private boolean canSwith = false;
 
     //image
     private BufferedImage image;
@@ -54,7 +54,6 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
 
 
     public GamePanel(Game game){
-        super(new BorderLayout());
         this.game = game;
         setPreferredSize(new Dimension(width, height));
         setFocusable(true);
@@ -119,7 +118,6 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
         if(gam.getCurrentState() == 3 && canSwith == true){
         }
         else if(gam.getCurrentState() !=3){
-            canSwith = true;
             remove(bar);
             remove(fileMenu);
             remove(editor);
@@ -127,15 +125,22 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
     }
 
     private void drawToScreen() {
-        
+
+
+
         if(gam.getCurrentState() !=3){
+
+        requestFocus();
+
         Graphics g2 = getGraphics();
         g2.drawImage(image, 0, 0, width, height, null);
         g2.dispose();
+
         }
 
         if (gam.getCurrentState() == 3){
             
+            game.pack();
             repaint();
 
         }
@@ -143,7 +148,9 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
 
     private void draw() {
 
-        gam.draw(g);
+        if(gam.getCurrentState() !=3){
+            gam.draw(g);
+        }
 
     }
 

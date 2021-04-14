@@ -37,12 +37,22 @@ public class TileMapState extends GameState{
     private GameStateManger gs;
     private JPanel gp;
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
+    private boolean didInit = false;
 
 
     public TileMapState(GameStateManger gs, JPanel gp){
 
         this.gs = gs;
         this.gp = gp;
+
+        init();
+
+        didInit = true;
+
+    }
+
+    @Override
+    public void init() {
 
         TileEditor editor = new TileEditor();
         gp.add(editor, BorderLayout.CENTER);
@@ -61,8 +71,23 @@ public class TileMapState extends GameState{
         JButton editButton = new JButton("Edit");
         bar.add(editButton);  
         bar.addSeparator();
+        JButton leaveButton = new JButton("Leave");
+        bar.add(leaveButton);
+        bar.addSeparator();
 
-        
+        leaveButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                // TODO Auto-generated method stub
+                gp.remove(bar);
+                gp.remove(optionsBar);
+                gp.remove(editor);
+                gs.setState(GameStateManger.MENUSTATE);
+                didInit = false;
+            }
+            
+        });
 
         // creation of the file menu as well as the options for it
         JPopupMenu fileMenu = new JPopupMenu();
@@ -111,14 +136,6 @@ public class TileMapState extends GameState{
 
         // adding the toolbar to the panel
         gp.add(bar, BorderLayout.PAGE_START);
-
-        drawer = new TileDrawer();
-        drawer.loadTiles();
-        drawer.initializeGrid();
-    }
-
-    @Override
-    public void init() {
         // TODO Auto-generated method stub
         
     }
@@ -126,7 +143,14 @@ public class TileMapState extends GameState{
     @Override
     public void update() {
         // TODO Auto-generated method stub
-        
+        if(didInit == true){
+
+        }
+        if(didInit == false){
+            init();
+
+            didInit = true;
+        }
     }
 
     @Override
@@ -147,6 +171,7 @@ public class TileMapState extends GameState{
         switch(k) {
             case KeyEvent.VK_UP:
                 drawer.moveUp = true;
+                System.out.println("GAYYYYYY");
                 break;
             case KeyEvent.VK_DOWN:
                 drawer.moveDown = true;
