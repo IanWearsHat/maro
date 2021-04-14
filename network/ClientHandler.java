@@ -86,7 +86,7 @@ public class ClientHandler implements Runnable {
 
                 if (inputLine != null ) {
                     broadcast(false, inputLine);
-                    System.out.println(username + " says: " + inputLine);
+                    System.out.println(username + ": " + inputLine);
                 }
                 else {
                     running = false;

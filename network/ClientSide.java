@@ -13,14 +13,19 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import chat.ChatRenderer;
 import network.packet.*;
 
 public class ClientSide implements Runnable {
     private static final Logger LOGGER = Logger.getLogger( ClientSide.class.getName() );
 
     private volatile boolean kill = false;
+    private ChatRenderer chatRenderer;
 
-    public ClientSide() {}
+    public ClientSide(ChatRenderer renderer) {
+        chatRenderer = renderer;
+    }
 
     public void startClient() {
         try {
@@ -87,6 +92,7 @@ public class ClientSide implements Runnable {
                 try {
                     Packet receivedPacket = (Packet) in.readObject();
                     if (receivedPacket instanceof MessagePacket) {
+                        chatRenderer.addChat(((MessagePacket) receivedPacket).message);
                         System.out.println(((MessagePacket) receivedPacket).message);
                     }
                     else if (receivedPacket instanceof PlayerPacket) {

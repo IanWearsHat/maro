@@ -87,6 +87,7 @@ public class ServerSide implements Runnable {
         for (Socket socket : clientList) {
             try {
                 socket.close();
+                clientList.remove(socket);
                 LOGGER.info("closing socket");
             }
             catch (Exception e) {
