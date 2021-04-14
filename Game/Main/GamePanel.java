@@ -36,12 +36,12 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
     private long targetTime = 1000/fps;
 
     //tile editor
-    private TileEditor editor = new TileEditor();
-    private OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
-    private JToolBar bar = new JToolBar();
-    private JButton fileButton = new JButton("File");
-    private JPopupMenu fileMenu = new JPopupMenu();
-    private JButton editButton = new JButton("Edit");
+    // private TileEditor editor = new TileEditor();
+    // private OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
+    // private JToolBar bar = new JToolBar();
+    // private JButton fileButton = new JButton("File");
+    // private JPopupMenu fileMenu = new JPopupMenu();
+    // private JButton editButton = new JButton("Edit");
     private boolean canSwith = false;
 
     //image
@@ -96,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
             start = System.nanoTime();
 
             update();
-            check();
+            // check();
             draw();
             drawToScreen();
 
@@ -113,16 +113,16 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
         }
     }
 
-    private void check(){
+    // private void check(){
 
-        if(gam.getCurrentState() == 3 && canSwith == true){
-        }
-        else if(gam.getCurrentState() !=3){
-            remove(bar);
-            remove(fileMenu);
-            remove(editor);
-        }
-    }
+    //     if(gam.getCurrentState() == 3 && canSwith == true){
+    //     }
+    //     else if(gam.getCurrentState() !=3){
+    //         remove(bar);
+    //         remove(fileMenu);
+    //         remove(editor);
+    //     }
+    // }
 
     private void drawToScreen() {
 

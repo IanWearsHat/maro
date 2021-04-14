@@ -3,6 +3,8 @@ package Game.GameState;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -14,6 +16,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,6 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Game.Main.Game;
 import Game.Resources.TileMap;
+import Game.panel.FileHandler;
 import Game.panel.OptionsBar;
 import Game.panel.TileDrawer;
 import Game.panel.TileEditor;
@@ -36,6 +40,9 @@ public class TileMapState extends GameState{
     private int selectedTile;
     private GameStateManger gs;
     private JPanel gp;
+    private OptionsBar optionsBar;
+    private TileEditor tileEditor;
+    private JToolBar toolBar;
     private Font basic = new Font("TimesRoman", Font.PLAIN, 30);
     private boolean didInit = false;
 
@@ -53,27 +60,133 @@ public class TileMapState extends GameState{
 
     @Override
     public void init() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-        TileEditor editor = new TileEditor();
-        gp.add(editor, BorderLayout.CENTER);
+        drawer = new TileDrawer();
+        tileEditor = new TileEditor(drawer);
+        optionsBar = new OptionsBar(tileEditor, new GridLayout(0, 2));
+        toolBar = createToolBar();
 
-        OptionsBar optionsBar = new OptionsBar(editor, editor.getTiles(), new GridLayout(0, 2));
-        //                          new Dimension(length, height)
-        optionsBar.setPreferredSize(new Dimension(180, 100));
-        gp.add(optionsBar, BorderLayout.LINE_START);
+        mainPanel.add(tileEditor, BorderLayout.CENTER);
+        mainPanel.add(optionsBar, BorderLayout.LINE_START);
+        mainPanel.add(toolBar, BorderLayout.PAGE_START);
 
-        //setting up toolbar
+        gp.add(mainPanel);
+
+        tileEditor.setPanelDimensions(tileEditor.getWidth(), tileEditor.getHeight());
+        tileEditor.firstInit();
+
+        gp.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                tileEditor.setPanelDimensions(tileEditor.getWidth(), tileEditor.getHeight());
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {}
+
+            @Override
+            public void componentMoved(ComponentEvent e) {}
+
+            @Override
+            public void componentShown(ComponentEvent e) {}
+        });
+        
+    }
+
+    private JToolBar createToolBar() {
         JToolBar bar = new JToolBar();
-        bar.setFloatable(false);
 
         JButton fileButton = new JButton("File");  
         bar.add(fileButton);
         JButton editButton = new JButton("Edit");
-        bar.add(editButton);  
-        bar.addSeparator();
-        JButton leaveButton = new JButton("Leave");
+        bar.add(editButton);
+        JButton viewButton = new JButton("View");
+        bar.add(viewButton);
+        JButton zoomButton = new JButton("Zoom");
+        bar.add(zoomButton);
+        JButton leaveButton = new JButton("Exit");
         bar.add(leaveButton);
-        bar.addSeparator();
+
+        // creation of the file menu as well as the options for it
+        JPopupMenu fileMenu = new JPopupMenu();
+
+        JMenu setupMenu = new JMenu("Set up project");
+        JMenuItem setDimensionsOption = new JMenuItem("Set dimensions");
+        setDimensionsOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                tileEditor.setDimensionsOption();
+            }
+        });
+
+        JMenu importMenu = new JMenu("Import");
+        JMenuItem importMapOption = new JMenuItem("Import map file");
+        importMapOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                FileHandler.importMapFromDirectory();
+            }
+        });
+
+        JMenuItem importTileOption = new JMenuItem("Import tile sheet");
+        importTileOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                FileHandler.importTileSet();
+            }
+        });
+
+        JMenuItem importBGOption = new JMenuItem("Import background");
+        importTileOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                FileHandler.importBG();
+            }
+        });
+        
+        JMenuItem exportOption = new JMenuItem("Export map file");
+        exportOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                FileHandler.exportFile();
+            }
+        });
+
+        setupMenu.add(setDimensionsOption);
+        importMenu.add(importTileOption);
+        importMenu.add(importBGOption);
+        importMenu.add(importMapOption);
+
+        fileMenu.add(setupMenu);
+        fileMenu.add(importMenu);
+        fileMenu.add(exportOption);
+
+        // makes it so the file button drops down the menu for file
+        fileButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                fileMenu.show(fileButton, 0, fileButton.getHeight());
+            }
+        });
+
+        // creation of edit menu and all things under edit
+        JPopupMenu editMenu = new JPopupMenu();
+
+        JMenuItem resetMapOption = new JMenuItem("Reset tile map");
+        resetMapOption.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                drawer.reset();
+            }
+        });
+
+        editMenu.add(resetMapOption);
+
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                editMenu.show(editButton, 0, editButton.getHeight());
+            }
+        });
+
+        zoomButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                tileEditor.zoomState = !tileEditor.zoomState;
+            }
+        });
 
         leaveButton.addActionListener(new ActionListener(){
 
@@ -82,62 +195,15 @@ public class TileMapState extends GameState{
                 // TODO Auto-generated method stub
                 gp.remove(bar);
                 gp.remove(optionsBar);
-                gp.remove(editor);
+                gp.remove(tileEditor);
                 gs.setState(GameStateManger.MENUSTATE);
                 didInit = false;
             }
             
         });
 
-        // creation of the file menu as well as the options for it
-        JPopupMenu fileMenu = new JPopupMenu();
-
-        JMenuItem importOption = new JMenuItem("Import map file");
-        importOption.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                System.out.println("importing");
-            }
-        });
-        
-        JMenuItem exportOption = new JMenuItem("Export map file");
-        exportOption.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                try {
-                    JFileChooser chooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Map file (*.map)", "map");
-                    chooser.setFileFilter(filter);
-
-                    int returnVal = chooser.showSaveDialog(gp);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        String filePath = chooser.getCurrentDirectory().getPath();
-                        String fileName = chooser.getSelectedFile().getName();
-                        editor.exportFile(filePath, fileName);
-                        
-                        JOptionPane.showMessageDialog(gp, "File " + fileName + " sucessfully exported to " + filePath + " !");
-                    }
-                }
-                catch (Exception e) {
-        
-                }
-
-            }
-        });
-
-        fileMenu.add(importOption);
-        fileMenu.add(exportOption);
-
-        //makes it so the file button drops down the menu for file
-        fileButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                fileMenu.show(fileButton, 0, fileButton.getHeight());
-            }
-        });
-        bar.add(fileMenu);
-
-        // adding the toolbar to the panel
-        gp.add(bar, BorderLayout.PAGE_START);
-        // TODO Auto-generated method stub
-        
+        bar.setFloatable(false);
+        return bar;
     }
 
     @Override
