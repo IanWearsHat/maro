@@ -105,6 +105,7 @@ public class ClientHandler implements Runnable {
         LOGGER.log(Level.INFO, username + " has lost connection. Handler " + clientID + " closing."); // server message to server terminal to indicate that a client has lost connection.
         
         ServerSide.clientList.remove(ServerSide.clientList.indexOf(clientSocket));
+        ServerSide.handlerList.remove(this);
     }
 
     public void stop() {
@@ -117,6 +118,10 @@ public class ClientHandler implements Runnable {
 
     public int getClientID() {
         return clientID;
+    }
+
+    public String toString() {
+        return "Handler for " + username;
     }
 
 }

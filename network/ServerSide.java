@@ -33,12 +33,7 @@ public class ServerSide implements Runnable {
             Port is the same as the port specified in port forwarding for router. */
             ServerSocket serverSocket = new ServerSocket(PORT);
 
-            /* All this class does is wait for a client to attempt connection. When the client successfully connects,
-            a socket is created on the server's end that connects to the client socket. The server
-            socket (called "clientSocke" here for readability) is stored and the code proceeds. */
-
-            //TODO: this loop needs to be exited somehow, meaning it can't just be while(true)
-            
+            // this allows someone to issue server commands through the server terminal
             new Thread(() -> {
                 try {
                     BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -49,11 +44,23 @@ public class ServerSide implements Runnable {
                             run = false;
                             serverSocket.close();
                         }
+                        else if (userInput.equals("printList")) {
+                            for (Socket socket : clientList) {
+                                System.out.println(socket);
+                            }
+                            System.out.println("");
+                            for (ClientHandler handler : handlerList) {
+                                System.out.println(handler);
+                            }
+                        }
                     }
                 }
                 catch (Exception e) {}
             }).start();
 
+            /* All this class does is wait for a client to attempt connection. When the client successfully connects,
+            a socket is created on the server's end that connects to the client socket. The server
+            socket (called "clientSocket" here for readability) is stored and the code proceeds. */
             while (run) {
                 LOGGER.log(Level.INFO, "Listening for connection...");
                 Socket clientSocket = serverSocket.accept();
@@ -71,7 +78,8 @@ public class ServerSide implements Runnable {
             
         }
         catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not connect to client.", e);
+            LOGGER.log(Level.SEVERE, "Could not connect to client. Stopping...");
+            System.exit(1);
         }
     }
 
@@ -99,9 +107,7 @@ public class ServerSide implements Runnable {
     }
 
     public static void main(String[] args) {
-        new Thread(
-            new ServerSide()
-            ).start();
+        new Thread( new ServerSide() ).start();
     }
     
 }
