@@ -100,7 +100,7 @@ public class LevelMenuState extends GameState implements ActionListener{
 
     private void select(){
         if (currentChoiceCol == 0 && currentChoiceRow == 0){
-            gsm.setState(GameStateManger.LEVEL1STATE);
+            gsm.setState(GameStateManger.TILEMAPSTATE);
         }
         if (currentChoiceCol == 1 && currentChoiceRow == 0){
             gsm.setState(GameStateManger.LEVEL1STATE);

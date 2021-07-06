@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
     private Game game;
 
 
-    public GamePanel(Game game){
+    public GamePanel(Game game) {
         this.game = game;
         setPreferredSize(new Dimension(width, height));
         setFocusable(true);
@@ -84,14 +84,13 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         init();
 
         long start;
         long elapsed;
         long wait;
 
-        while(running){
+        while (running) {
 
             start = System.nanoTime();
 
@@ -104,10 +103,10 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
 
             wait = targetTime - elapsed/1000000000;
 
-            try{
+            try {
                 Thread.sleep(wait);
             }
-            catch(Exception e){
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -125,20 +124,16 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
     // }
 
     private void drawToScreen() {
+        if (gam.getCurrentState() != 3) {
 
+            requestFocus();
 
-
-        if(gam.getCurrentState() !=3){
-
-        requestFocus();
-
-        Graphics g2 = getGraphics();
-        g2.drawImage(image, 0, 0, width, height, null);
-        g2.dispose();
-
+            Graphics g2 = getGraphics();
+            g2.drawImage(image, 0, 0, width, height, null);
+            g2.dispose();
         }
 
-        if (gam.getCurrentState() == 3){
+        if (gam.getCurrentState() == 3) {
             
             game.pack();
             repaint();
@@ -147,11 +142,9 @@ public class GamePanel extends JPanel implements Runnable,KeyListener,MouseInput
     }
 
     private void draw() {
-
-        if(gam.getCurrentState() !=3){
+        if (gam.getCurrentState() != 3){
             gam.draw(g);
         }
-
     }
 
     private void update() {

@@ -3,9 +3,10 @@ package Game.Main;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 
-public class Game extends JFrame{
+@SuppressWarnings("serial")
+public class Game extends JFrame {
 
-    public Game(){
+    public Game() {
 
         setContentPane(new GamePanel(this));
         setLayout(new BorderLayout());
@@ -14,5 +15,4 @@ public class Game extends JFrame{
         setVisible(true);
         pack();
     }
-    
 }

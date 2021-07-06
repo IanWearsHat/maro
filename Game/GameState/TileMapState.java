@@ -27,12 +27,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Game.Main.Game;
 import Game.Resources.TileMap;
-import Game.panel.FileHandler;
-import Game.panel.OptionsBar;
-import Game.panel.TileDrawer;
-import Game.panel.TileEditor;
-
-public class TileMapState extends GameState{
+import Game.panel.*;
+public class TileMapState extends GameState {
 
     private int mouseX;
     private int mouseY;
@@ -52,9 +48,9 @@ public class TileMapState extends GameState{
         this.gs = gs;
         this.gp = gp;
 
-        init();
+        // init();
 
-        didInit = true;
+        // didInit = true;
 
     }
 
@@ -92,6 +88,7 @@ public class TileMapState extends GameState{
             public void componentShown(ComponentEvent e) {}
         });
         
+        didInit = true;
     }
 
     private JToolBar createToolBar() {
@@ -182,11 +179,11 @@ public class TileMapState extends GameState{
             }
         });
 
-        zoomButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                tileEditor.zoomState = !tileEditor.zoomState;
-            }
-        });
+        // zoomButton.addActionListener(new ActionListener() {
+        //     public void actionPerformed(ActionEvent ae) {
+        //         tileEditor.zoomState = !tileEditor.zoomState;
+        //     }
+        // });
 
         leaveButton.addActionListener(new ActionListener(){
 
@@ -245,7 +242,7 @@ public class TileMapState extends GameState{
             case KeyEvent.VK_LEFT:
                 drawer.moveLeft = true;
                 break;
-            case KeyEvent.VK_R:
+            case KeyEvent.VK_RIGHT:
                 drawer.moveRight = true;
                 break;
         }
@@ -264,7 +261,7 @@ public class TileMapState extends GameState{
             case KeyEvent.VK_LEFT:
                 drawer.moveLeft = false;
                 break;
-            case KeyEvent.VK_R:
+            case KeyEvent.VK_RIGHT:
                 drawer.moveRight = false;
                 break;
         }
@@ -277,13 +274,13 @@ public class TileMapState extends GameState{
          mouseX = e.getX();
          mouseY = e.getY();
 
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    drawer.updateTile(selectedTile, mouseX, mouseY);
-                    System.out.println("pressed");
-                }
-                else if (SwingUtilities.isRightMouseButton(e)) {
-                    drawer.updateTile(0, mouseX, mouseY);
-                }
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                drawer.updateTile(selectedTile, mouseX, mouseY);
+                System.out.println("pressed");
+            }
+            else if (SwingUtilities.isRightMouseButton(e)) {
+                drawer.updateTile(0, mouseX, mouseY);
+            }
     }
 
     @Override

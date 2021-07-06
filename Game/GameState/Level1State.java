@@ -16,7 +16,7 @@ public class Level1State extends GameState{
 
     public Level1State(GameStateManger gsm){
         this.gsm = gsm;
-        init();
+        // init();
     }
 
     @Override
