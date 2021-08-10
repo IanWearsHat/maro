@@ -128,7 +128,6 @@ public class LevelMenuState extends GameState implements ActionListener{
     @Override
     public void keyPressed(int k) {
         // TODO Auto-generated method stub
-        System.out.println(w);
 
         if(k == KeyEvent.VK_ENTER){
             select();

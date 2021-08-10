@@ -27,10 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Game.Main.Game;
 import Game.Resources.TileMap;
-import Game.panel.FileHandler;
-import Game.panel.OptionsBar;
-import Game.panel.TileDrawer;
-import Game.panel.TileEditor;
+import Game.panel.*;
 
 public class TileMapState extends GameState{
 
@@ -52,10 +49,9 @@ public class TileMapState extends GameState{
         this.gs = gs;
         this.gp = gp;
 
-        init();
+        //init();
 
         didInit = true;
-
     }
 
     @Override
@@ -72,9 +68,9 @@ public class TileMapState extends GameState{
         mainPanel.add(toolBar, BorderLayout.PAGE_START);
 
         gp.add(mainPanel);
+        tileEditor.firstInit();
 
         tileEditor.setPanelDimensions(tileEditor.getWidth(), tileEditor.getHeight());
-        tileEditor.firstInit();
 
         gp.addComponentListener(new ComponentListener() {
             @Override
@@ -182,11 +178,11 @@ public class TileMapState extends GameState{
             }
         });
 
-        zoomButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                tileEditor.zoomState = !tileEditor.zoomState;
-            }
-        });
+        // zoomButton.addActionListener(new ActionListener() {
+        //     public void actionPerformed(ActionEvent ae) {
+        //         tileEditor.zoomState = !tileEditor.zoomState;
+        //     }
+        // });
 
         leaveButton.addActionListener(new ActionListener(){
 
@@ -204,6 +200,7 @@ public class TileMapState extends GameState{
 
         bar.setFloatable(false);
         return bar;
+        
     }
 
     @Override
@@ -212,11 +209,13 @@ public class TileMapState extends GameState{
         if(didInit == true){
 
         }
-        if(didInit == false){
+        if(gs.getCurrentState() == GameStateManger.TILEMAPSTATE){
+            System.out.print("HIIIIII");
             init();
 
             didInit = true;
         }
+        
     }
 
     @Override

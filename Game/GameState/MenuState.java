@@ -85,6 +85,7 @@ public class MenuState extends GameState{
         }
         if(currentChoice == 1){
             // 
+            gsm.setState(GameStateManger.TILEMAPSTATE);
         }
          if(currentChoice == 2){
              //Quits
